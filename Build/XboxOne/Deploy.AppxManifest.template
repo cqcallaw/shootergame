@@ -1,0 +1,236 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Package xmlns="http://schemas.microsoft.com/appx/2010/manifest" xmlns:mx="http://schemas.microsoft.com/appx/2013/xbox/manifest" IgnorableNamespaces="mx">
+
+	<!--- 'Name' and 'Version' appear in the package path created by deploy  -->
+	<Identity Name="%GAME%"
+					Publisher="CN=Epic Games, O=Epic Games, L=Cary, S=North Carolina, C=US"
+					Version="1.0.0.0" />
+
+	<Properties>
+		<DisplayName>%GAME%</DisplayName>
+		<PublisherDisplayName>PublisherDisplayName</PublisherDisplayName>
+		<Logo>Resources\StoreLogo.png</Logo>
+		<Description>%GAME%</Description>
+	</Properties>
+
+	<Prerequisites>
+		<OSMinVersion>6.2</OSMinVersion>
+		<OSMaxVersionTested>6.2</OSMaxVersionTested>
+		<mx:ApplicationEnvironment>title</mx:ApplicationEnvironment>
+		<mx:OSName>era</mx:OSName>
+	</Prerequisites>
+
+	<Resources>
+		<Resource Language="en-us"/>
+	</Resources>
+
+	<Applications>
+
+		<!--- Debug config -->
+		<!--- 'Id' is in the aumid returned from deploy  -->
+		<!--- 'Executable' must match the .exe produced by the build  -->
+		<Application Id="%GAME%Debug"
+				Executable="%PROJECT%\Binaries\XboxOne\%GAME%-XboxOne-Debug.exe"
+				EntryPoint="%GAME%.App">
+			<!--- all fields except DisplayName not yet implemented -->
+			<VisualElements
+					DisplayName="%GAME% (Debug)"
+					Logo="Resources\Logo.png"
+					SmallLogo="Resources\SmallLogo.png"
+					Description="%GAME%"
+					ForegroundText="dark"
+					BackgroundColor="#000040">
+				<DefaultTile WideLogo="Resources\WideLogo.png" />
+				<SplashScreen Image="Resources\SplashScreen.png" />
+			</VisualElements>
+			<Extensions>
+				<mx:Extension Category="xbox.live">
+					<mx:XboxLive TitleId="45783947" PrimaryServiceConfigId="51590100-937b-4771-ba83-c8b045783947" />
+				</mx:Extension>
+				<mx:Extension Category="windows.xbox.networking">
+					<mx:XboxNetworkingManifest>
+						<mx:SocketDescriptions>
+							<mx:SocketDescription Name="GameSocketUdp" SecureIpProtocol="Udp" BoundPort="7777">
+								<mx:AllowedUsages>
+									<mx:SecureDeviceSocketUsage Type="Initiate" />
+									<mx:SecureDeviceSocketUsage Type="Accept" />
+									<mx:SecureDeviceSocketUsage Type="SendGameData" />
+									<mx:SecureDeviceSocketUsage Type="ReceiveGameData" />
+								</mx:AllowedUsages>
+							</mx:SocketDescription>
+						</mx:SocketDescriptions>
+						<mx:SecureDeviceAssociationTemplates>
+							<mx:SecureDeviceAssociationTemplate Name="GameTrafficUdp" InitiatorSocketDescription="GameSocketUdp" AcceptorSocketDescription="GameSocketUdp" MultiplayerSessionRequirement="None">
+								<mx:AllowedUsages>
+									<mx:SecureDeviceAssociationUsage Type="Default" />
+								</mx:AllowedUsages>
+							</mx:SecureDeviceAssociationTemplate>
+						</mx:SecureDeviceAssociationTemplates>
+					</mx:XboxNetworkingManifest>
+				</mx:Extension>
+			</Extensions>		
+		</Application>
+
+		<!--- Test config -->
+		<!--- 'Id' is in the aumid returned from deploy  -->
+		<!--- 'Executable' must match the .exe produced by the build  -->
+		<Application Id="%GAME%Test"
+				Executable="%PROJECT%\Binaries\XboxOne\%GAME%-XboxOne-Test.exe"
+				EntryPoint="%GAME%.App">
+			<!--- all fields except DisplayName not yet implemented -->
+			<VisualElements
+					DisplayName="%GAME% (Test)"
+					Logo="Resources\Logo.png"
+					SmallLogo="Resources\SmallLogo.png"
+					Description="%GAME%"
+					ForegroundText="dark"
+					BackgroundColor="#000040">
+				<DefaultTile WideLogo="Resources\WideLogo.png" />
+				<SplashScreen Image="Resources\SplashScreen.png" />
+			</VisualElements>
+			<Extensions>
+				<mx:Extension Category="xbox.live">
+					<mx:XboxLive TitleId="45783947" PrimaryServiceConfigId="51590100-937b-4771-ba83-c8b045783947" />
+				</mx:Extension>
+				<mx:Extension Category="windows.xbox.networking">
+					<mx:XboxNetworkingManifest>
+						<mx:SocketDescriptions>
+							<mx:SocketDescription Name="GameSocketUdp" SecureIpProtocol="Udp" BoundPort="7777">
+								<mx:AllowedUsages>
+									<mx:SecureDeviceSocketUsage Type="Initiate" />
+									<mx:SecureDeviceSocketUsage Type="Accept" />
+									<mx:SecureDeviceSocketUsage Type="SendGameData" />
+									<mx:SecureDeviceSocketUsage Type="ReceiveGameData" />
+								</mx:AllowedUsages>
+							</mx:SocketDescription>
+						</mx:SocketDescriptions>
+						<mx:SecureDeviceAssociationTemplates>
+							<mx:SecureDeviceAssociationTemplate Name="GameTrafficUdp" InitiatorSocketDescription="GameSocketUdp" AcceptorSocketDescription="GameSocketUdp" MultiplayerSessionRequirement="None">
+								<mx:AllowedUsages>
+									<mx:SecureDeviceAssociationUsage Type="Default" />
+								</mx:AllowedUsages>
+							</mx:SecureDeviceAssociationTemplate>
+						</mx:SecureDeviceAssociationTemplates>
+					</mx:XboxNetworkingManifest>
+				</mx:Extension>
+			</Extensions>		
+		</Application>
+
+		<!--- Release config -->
+		<!--- 'Id' is in the aumid returned from deploy  -->
+		<!--- 'Executable' must match the .exe produced by the build  -->
+		<Application Id="%GAME%"
+				Executable="%PROJECT%\Binaries\XboxOne\%GAME%.exe"
+				EntryPoint="%GAME%.App">
+			<!--- all fields except DisplayName not yet implemented -->
+			<VisualElements
+					DisplayName="%GAME%"
+					Logo="Resources\Logo.png"
+					SmallLogo="Resources\SmallLogo.png"
+					Description="%GAME%"
+					ForegroundText="dark"
+					BackgroundColor="#000040">
+				<DefaultTile WideLogo="Resources\WideLogo.png" />
+				<SplashScreen Image="Resources\SplashScreen.png" />
+			</VisualElements>
+			<Extensions>
+				<mx:Extension Category="xbox.live">
+					<mx:XboxLive TitleId="45783947" PrimaryServiceConfigId="51590100-937b-4771-ba83-c8b045783947" />
+				</mx:Extension>
+				<mx:Extension Category="windows.xbox.networking">
+					<mx:XboxNetworkingManifest>
+						<mx:SocketDescriptions>
+							<mx:SocketDescription Name="GameSocketUdp" SecureIpProtocol="Udp" BoundPort="7777">
+								<mx:AllowedUsages>
+									<mx:SecureDeviceSocketUsage Type="Initiate" />
+									<mx:SecureDeviceSocketUsage Type="Accept" />
+									<mx:SecureDeviceSocketUsage Type="SendGameData" />
+									<mx:SecureDeviceSocketUsage Type="ReceiveGameData" />
+								</mx:AllowedUsages>
+							</mx:SocketDescription>
+						</mx:SocketDescriptions>
+						<mx:SecureDeviceAssociationTemplates>
+							<mx:SecureDeviceAssociationTemplate Name="GameTrafficUdp" InitiatorSocketDescription="GameSocketUdp" AcceptorSocketDescription="GameSocketUdp" MultiplayerSessionRequirement="None">
+								<mx:AllowedUsages>
+									<mx:SecureDeviceAssociationUsage Type="Default" />
+								</mx:AllowedUsages>
+							</mx:SecureDeviceAssociationTemplate>
+						</mx:SecureDeviceAssociationTemplates>
+					</mx:XboxNetworkingManifest>
+				</mx:Extension>
+			</Extensions>		
+		</Application>
+		
+		<!--- Shipping config -->
+		<!--- 'Id' is in the aumid returned from deploy  -->
+		<!--- 'Executable' must match the .exe produced by the build  -->
+		<Application Id="%GAME%Shipping"
+				Executable="%PROJECT%\Binaries\XboxOne\%GAME%-XboxOne-Shipping.exe"
+				EntryPoint="%GAME%.App">
+			<!--- all fields except DisplayName not yet implemented -->
+			<VisualElements
+					DisplayName="%GAME% (Shipping)"
+					Logo="Resources\Logo.png"
+					SmallLogo="Resources\SmallLogo.png"
+					Description="%GAME%"
+					ForegroundText="dark"
+					BackgroundColor="#000040">
+				<DefaultTile WideLogo="Resources\WideLogo.png" />
+				<SplashScreen Image="Resources\SplashScreen.png" />
+			</VisualElements>
+			<Extensions>
+				<mx:Extension Category="xbox.live">
+					<mx:XboxLive TitleId="45783947" PrimaryServiceConfigId="51590100-937b-4771-ba83-c8b045783947" />
+				</mx:Extension>
+				<mx:Extension Category="windows.xbox.networking">
+					<mx:XboxNetworkingManifest>
+						<mx:SocketDescriptions>
+							<mx:SocketDescription Name="GameSocketUdp" SecureIpProtocol="Udp" BoundPort="7777">
+								<mx:AllowedUsages>
+									<mx:SecureDeviceSocketUsage Type="Initiate" />
+									<mx:SecureDeviceSocketUsage Type="Accept" />
+									<mx:SecureDeviceSocketUsage Type="SendGameData" />
+									<mx:SecureDeviceSocketUsage Type="ReceiveGameData" />
+								</mx:AllowedUsages>
+							</mx:SocketDescription>
+						</mx:SocketDescriptions>
+						<mx:SecureDeviceAssociationTemplates>
+							<mx:SecureDeviceAssociationTemplate Name="GameTrafficUdp" InitiatorSocketDescription="GameSocketUdp" AcceptorSocketDescription="GameSocketUdp" MultiplayerSessionRequirement="None">
+								<mx:AllowedUsages>
+									<mx:SecureDeviceAssociationUsage Type="Default" />
+								</mx:AllowedUsages>
+							</mx:SecureDeviceAssociationTemplate>
+						</mx:SecureDeviceAssociationTemplates>
+					</mx:XboxNetworkingManifest>
+				</mx:Extension>
+			</Extensions>		
+		</Application>
+
+	</Applications>
+	<Capabilities>
+		<Capability Name="internetClientServer" />
+		<mx:Capability Name="kinectAudio" />
+		<mx:Capability Name="kinectGamechat" />
+	</Capabilities>
+	<Extensions>
+		<Extension Category="windows.activatableClass.inProcessServer">
+			<InProcessServer>
+				<Path>Microsoft.Xbox.Services.dll</Path>
+				<ActivatableClass ActivatableClassId="Microsoft.Xbox.Services.XboxLiveContext" ThreadingModel="both" />
+				<ActivatableClass ActivatableClassId="Microsoft.Xbox.Services.TitleStorage.TitleStorageBlobMetadata" ThreadingModel="both" />
+				<ActivatableClass ActivatableClassId="Microsoft.Xbox.Services.Multiplayer.MultiplayerQualityOfServiceMeasurements" ThreadingModel="both" />
+				<ActivatableClass ActivatableClassId="Microsoft.Xbox.Services.Multiplayer.MultiplayerSession" ThreadingModel="both" />
+				<ActivatableClass ActivatableClassId="Microsoft.Xbox.Services.Multiplayer.MultiplayerSessionReference" ThreadingModel="both" />
+				<ActivatableClass ActivatableClassId="Microsoft.Xbox.Services.Social.SocialGroupConstants" ThreadingModel="both" />
+				<ActivatableClass ActivatableClassId="Microsoft.Xbox.Services.Configuration" ThreadingModel="both" />
+				<ActivatableClass ActivatableClassId="Microsoft.Xbox.Services.Presence.PresenceData" ThreadingModel="both" />
+			</InProcessServer>
+		</Extension>
+		<Extension Category="windows.activatableClass.inProcessServer">
+			<InProcessServer>
+				<Path>Microsoft.Xbox.GameChat.dll</Path>
+				<ActivatableClass ActivatableClassId="Microsoft.Xbox.GameChat.ChatManager" ThreadingModel="both" />
+			</InProcessServer>
+		</Extension>
+	</Extensions>
+</Package>
