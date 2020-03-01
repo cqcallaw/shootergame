@@ -79,7 +79,8 @@
 		"WindowsNoEditor",
 		"XboxOne",
 		"Switch",
-		"Quail"
+		"Quail",
+		"LinuxNoEditor"
 	],
 	"EpicSampleNameHash": "3868556100"
 }
