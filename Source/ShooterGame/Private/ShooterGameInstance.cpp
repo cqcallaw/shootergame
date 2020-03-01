@@ -90,7 +90,7 @@ UShooterGameInstance::UShooterGameInstance(const FObjectInitializer& ObjectIniti
 	CurrentState = ShooterGameInstanceState::None;
 }
 
-void UShooterGameInstance::Init() 
+void UShooterGameInstance::Init()
 {
 	Super::Init();
 
@@ -138,7 +138,7 @@ void UShooterGameInstance::Init()
 	{
 		SessionInterface->AddOnSessionFailureDelegate_Handle( FOnSessionFailureDelegate::CreateUObject( this, &UShooterGameInstance::HandleSessionFailure ) );
 	}
-	
+
 	OnEndSessionCompleteDelegate = FOnEndSessionCompleteDelegate::CreateUObject(this, &UShooterGameInstance::OnEndSessionComplete);
 
 	// Register delegate for ticker callback
@@ -169,9 +169,9 @@ void UShooterGameInstance::HandleNetworkConnectionStatusChanged( const FString& 
 #if SHOOTER_CONSOLE_UI
 	// If we are disconnected from server, and not currently at (or heading to) the welcome screen
 	// then display a message on consoles
-	if (	OnlineMode != EOnlineMode::Offline && 
+	if (	OnlineMode != EOnlineMode::Offline &&
 			PendingState != ShooterGameInstanceState::WelcomeScreen &&
-			CurrentState != ShooterGameInstanceState::WelcomeScreen && 
+			CurrentState != ShooterGameInstanceState::WelcomeScreen &&
 			ConnectionStatus != EOnlineServerConnectionStatus::Connected &&
 			ConnectionStatus != EOnlineServerConnectionStatus::Normal)
 	{
@@ -186,14 +186,14 @@ void UShooterGameInstance::HandleNetworkConnectionStatusChanged( const FString& 
 		const FText ReturnReason	= NSLOCTEXT( "NetworkFailures", "ServiceUnavailable", "Connection has been lost." );
 #endif
 		const FText OKButton		= NSLOCTEXT( "DialogButtons", "OKAY", "OK" );
-		
+
 		UWorld* const World = GetWorld();
 		AShooterGameMode* const GameMode = World != NULL ? Cast<AShooterGameMode>(World->GetAuthGameMode()) : NULL;
 		if (GameMode)
 		{
 			GameMode->AbortMatch();
 		}
-		
+
 		ShowMessageThenGotoState( ReturnReason, OKButton, FText::GetEmpty(), ShooterGameInstanceState::MainMenu );
 	}
 
@@ -222,7 +222,7 @@ void UShooterGameInstance::HandleSessionFailure( const FUniqueNetId& NetId, ESes
 		const FText ReturnReason	= NSLOCTEXT( "NetworkFailures", "ServiceUnavailable", "Connection has been lost." );
 #endif
 		const FText OKButton		= NSLOCTEXT( "DialogButtons", "OKAY", "OK" );
-		
+
 		ShowMessageThenGotoState( ReturnReason, OKButton,  FText::GetEmpty(), ShooterGameInstanceState::MainMenu );
 	}
 #endif
@@ -261,12 +261,12 @@ void UShooterGameInstance::OnUserCanPlayInvite(const FUniqueNetId& UserId, EUser
 		WelcomeMenuUI->LockControls(false);
 	}
 
-	if (PrivilegeResults == (uint32)IOnlineIdentity::EPrivilegeResults::NoFailures)	
+	if (PrivilegeResults == (uint32)IOnlineIdentity::EPrivilegeResults::NoFailures)
 	{
 		if (UserId == *PendingInvite.UserId)
 		{
 			PendingInvite.bPrivilegesCheckedAndAllowed = true;
-		}		
+		}
 	}
 	else
 	{
@@ -363,6 +363,17 @@ void UShooterGameInstance::StartGameInstance()
 			}
 		}
 	}
+
+	// handle benchmark start
+	if (FParse::Param(FCommandLine::Get(), TEXT("benchmark"))) {
+		const FString StartURL = FString::Printf(TEXT("/Game/Maps/Highrise?game=FFA"));
+		SetOnlineMode(EOnlineMode::Offline);
+		// Game instance will handle success, failure and dialogs
+		this->HostGame(nullptr, TEXT("FFA"), StartURL);
+		return;
+	}
+
+
 #endif
 
 	GotoInitialState();
@@ -389,7 +400,7 @@ FGameInstancePIEResult UShooterGameInstance::StartPlayInEditorGameInstance(ULoca
 	{
 		GotoState(ShooterGameInstanceState::WelcomeScreen);
 	}
-	else 
+	else
 #endif	// SHOOTER_CONSOLE_UI
 	if (CurrentMapName == MainMenuMap)
 	{
@@ -407,7 +418,7 @@ FGameInstancePIEResult UShooterGameInstance::StartPlayInEditorGameInstance(ULoca
 
 FName UShooterGameInstance::GetInitialState()
 {
-#if SHOOTER_CONSOLE_UI	
+#if SHOOTER_CONSOLE_UI
 	// Start in the welcome screen state on consoles
 	return ShooterGameInstanceState::WelcomeScreen;
 #else
@@ -421,7 +432,7 @@ void UShooterGameInstance::GotoInitialState()
 	GotoState(GetInitialState());
 }
 
-const FName UShooterGameInstance::GetCurrentState() const 
+const FName UShooterGameInstance::GetCurrentState() const
 {
 	return CurrentState;
 }
@@ -660,9 +671,9 @@ void UShooterGameInstance::BeginNewState(FName NewState, FName PrevState)
 }
 
 void UShooterGameInstance::BeginPendingInviteState()
-{	
+{
 	if (LoadFrontEndMap(MainMenuMap))
-	{				
+	{
 		StartOnlinePrivilegeTask(IOnlineIdentity::FOnGetUserPrivilegeCompleteDelegate::CreateUObject(this, &UShooterGameInstance::OnUserCanPlayInvite), EUserPrivileges::CanPlayOnline, PendingInvite.UserId);
 	}
 	else
@@ -743,7 +754,7 @@ void UShooterGameInstance::BeginMainMenuState()
 
 	// Disallow splitscreen
 	UGameViewportClient* GameViewportClient = GetGameViewportClient();
-	
+
 	if (GameViewportClient)
 	{
 		GetGameViewportClient()->SetForceDisableSplitscreen(true);
@@ -943,7 +954,7 @@ void UShooterGameInstance::CleanupSessionOnReturnToMenu()
 
 void UShooterGameInstance::LabelPlayerAsQuitter(ULocalPlayer* LocalPlayer) const
 {
-	AShooterPlayerState* const PlayerState = LocalPlayer && LocalPlayer->PlayerController ? Cast<AShooterPlayerState>(LocalPlayer->PlayerController->PlayerState) : nullptr;	
+	AShooterPlayerState* const PlayerState = LocalPlayer && LocalPlayer->PlayerController ? Cast<AShooterPlayerState>(LocalPlayer->PlayerController->PlayerState) : nullptr;
 	if(PlayerState)
 	{
 		PlayerState->SetQuitter(true);
@@ -1126,7 +1137,7 @@ bool UShooterGameInstance::PlayDemo(ULocalPlayer* LocalPlayer, const FString& De
 
 	// Play the demo
 	PlayReplay(DemoName);
-	
+
 	return true;
 }
 
@@ -1336,7 +1347,7 @@ bool UShooterGameInstance::Tick(float DeltaSeconds)
 			{
 				if (LocalPlayers[i] && LocalPlayers[i]->GetControllerId() == -1)
 				{
-					ShooterViewport->ShowDialog( 
+					ShooterViewport->ShowDialog(
 						LocalPlayers[i],
 						EShooterDialogType::ControllerDisconnected,
 						FText::Format(NSLOCTEXT("ProfileMessages", "PlayerReconnectControllerFmt", "Player {0}, please reconnect your controller."), FText::AsNumber(i + 1)),
@@ -1438,7 +1449,7 @@ void UShooterGameInstance::HandleSignInChangeMessaging()
 		const FText OKButton		= NSLOCTEXT( "DialogButtons", "OKAY", "OK" );
 
 		ShowMessageThenGotoState(ReturnReason, OKButton, FText::GetEmpty(), GetInitialState());
-#else								
+#else
 		GotoInitialState();
 #endif
 	}
@@ -1446,7 +1457,7 @@ void UShooterGameInstance::HandleSignInChangeMessaging()
 
 void UShooterGameInstance::HandleUserLoginChanged(int32 GameUserIndex, ELoginStatus::Type PreviousLoginStatus, ELoginStatus::Type LoginStatus, const FUniqueNetId& UserId)
 {
-	// On Switch, accounts can play in LAN games whether they are signed in online or not. 
+	// On Switch, accounts can play in LAN games whether they are signed in online or not.
 #if PLATFORM_SWITCH
 	const bool bDowngraded = LoginStatus == ELoginStatus::NotLoggedIn || (GetOnlineMode() == EOnlineMode::Online && LoginStatus == ELoginStatus::UsingLocalProfile);
 #else
@@ -1522,7 +1533,7 @@ void UShooterGameInstance::HandleAppSuspend()
 {
 	// Players will lose connection on resume. However it is possible the game will exit before we get a resume, so we must kick off round end events here.
 	UE_LOG( LogOnline, Warning, TEXT( "UShooterGameInstance::HandleAppSuspend" ) );
-	UWorld* const World = GetWorld(); 
+	UWorld* const World = GetWorld();
 	AShooterGameState* const GameState = World != NULL ? World->GetGameState<AShooterGameState>() : NULL;
 
 	if ( CurrentState != ShooterGameInstanceState::None && CurrentState != GetInitialState() )
@@ -1624,7 +1635,7 @@ void UShooterGameInstance::HandleControllerPairingChanged( int GameUserIndex, co
 {
 	UE_LOG(LogOnlineGame, Log, TEXT("UShooterGameInstance::HandleControllerPairingChanged GameUserIndex %d PreviousUser '%s' NewUser '%s'"),
 		GameUserIndex, *PreviousUser.ToString(), *NewUser.ToString());
-	
+
 	if ( CurrentState == ShooterGameInstanceState::WelcomeScreen )
 	{
 		// Don't care about pairing changes at welcome screen
@@ -1655,7 +1666,7 @@ void UShooterGameInstance::HandleControllerPairingChanged( int GameUserIndex, co
 			// If a player that previously selected "continue without saving" signs into this controller, move them back to welcome screen
 			HandleSignInChangeMessaging();
 		}
-		
+
 		return;
 	}
 
@@ -1665,7 +1676,7 @@ void UShooterGameInstance::HandleControllerPairingChanged( int GameUserIndex, co
 	// See if the newly assigned profile is in our local player list
 	ULocalPlayer * NewLocalPlayer			= FindLocalPlayerFromUniqueNetId( NewUser );
 
-	// If the local player being controlled is not the target of the pairing change, then give them a chance 
+	// If the local player being controlled is not the target of the pairing change, then give them a chance
 	// to continue controlling the old player with this controller
 	if ( ControlledLocalPlayer != nullptr && ControlledLocalPlayer != NewLocalPlayer )
 	{
@@ -1673,7 +1684,7 @@ void UShooterGameInstance::HandleControllerPairingChanged( int GameUserIndex, co
 
 		if ( ShooterViewport != nullptr )
 		{
-			ShooterViewport->ShowDialog( 
+			ShooterViewport->ShowDialog(
 				nullptr,
 				EShooterDialogType::Generic,
 				NSLOCTEXT("ProfileMessages", "PairingChanged", "Your controller has been paired to another profile, would you like to switch to this new profile now? Selecting YES will sign out of the previous profile."),
@@ -1841,7 +1852,7 @@ bool UShooterGameInstance::ValidatePlayerForOnlinePlay(ULocalPlayer* LocalPlayer
 			const FText Msg				= NSLOCTEXT("NetworkFailures", "ServiceDisconnected", "You must be connected to the Xbox LIVE service to play online.");
 			const FText OKButtonString	= NSLOCTEXT("DialogButtons", "OKAY", "OK");
 
-			ShooterViewport->ShowDialog( 
+			ShooterViewport->ShowDialog(
 				NULL,
 				EShooterDialogType::Generic,
 				Msg,
@@ -1864,7 +1875,7 @@ bool UShooterGameInstance::ValidatePlayerForOnlinePlay(ULocalPlayer* LocalPlayer
 			const FText Msg				= NSLOCTEXT("NetworkFailures", "MustBeSignedIn", "You must be signed in to play online");
 			const FText OKButtonString	= NSLOCTEXT("DialogButtons", "OKAY", "OK");
 
-			ShooterViewport->ShowDialog( 
+			ShooterViewport->ShowDialog(
 				NULL,
 				EShooterDialogType::Generic,
 				Msg,
@@ -1936,7 +1947,7 @@ void UShooterGameInstance::StartOnlinePrivilegeTask(const IOnlineIdentity::FOnGe
 
 	IOnlineIdentityPtr Identity = Online::GetIdentityInterface(GetWorld());
 	if (Identity.IsValid() && UserId.IsValid())
-	{		
+	{
 		Identity->GetUserPrivilege(*UserId, Privilege, Delegate);
 	}
 	else
@@ -1956,7 +1967,7 @@ void UShooterGameInstance::CleanupOnlinePrivilegeTask()
 }
 
 void UShooterGameInstance::DisplayOnlinePrivilegeFailureDialogs(const FUniqueNetId& UserId, EUserPrivileges::Type Privilege, uint32 PrivilegeResults)
-{	
+{
 	// Show warning that the user cannot play due to age restrictions
 	UShooterGameViewportClient * ShooterViewport = Cast<UShooterGameViewportClient>(GetGameViewportClient());
 	TWeakObjectPtr<ULocalPlayer> OwningPlayer;
@@ -1974,7 +1985,7 @@ void UShooterGameInstance::DisplayOnlinePrivilegeFailureDialogs(const FUniqueNet
 			}
 		}
 	}
-	
+
 	if (ShooterViewport != NULL && OwningPlayer.IsValid())
 	{
 		if ((PrivilegeResults & (uint32)IOnlineIdentity::EPrivilegeResults::AccountTypeFailure) != 0)
@@ -2083,7 +2094,7 @@ void UShooterGameInstance::BeginHostingQuickMatch()
 	GotoState(ShooterGameInstanceState::Playing);
 
 	// Travel to the specified match URL
-	GetWorld()->ServerTravel(GetQuickMatchUrl());	
+	GetWorld()->ServerTravel(GetQuickMatchUrl());
 }
 
 void UShooterGameInstance::OnPlayTogetherEventReceived(const int32 UserIndex, const TArray<TSharedPtr<const FUniqueNetId>>& UserIdList)

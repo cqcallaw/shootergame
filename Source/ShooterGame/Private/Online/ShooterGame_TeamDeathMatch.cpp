@@ -9,7 +9,7 @@
 AShooterGame_TeamDeathMatch::AShooterGame_TeamDeathMatch(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
 	NumTeams = 2;
-	bDelayedStart = true;
+	bDelayedStart = !bBenchmarkMode;
 }
 
 void AShooterGame_TeamDeathMatch::PostLogin(APlayerController* NewPlayer)
@@ -125,10 +125,10 @@ bool AShooterGame_TeamDeathMatch::IsSpawnpointAllowed(APlayerStart* SpawnPoint, 
 }
 
 void AShooterGame_TeamDeathMatch::InitBot(AShooterAIController* AIC, int32 BotNum)
-{	
+{
 	AShooterPlayerState* BotPlayerState = CastChecked<AShooterPlayerState>(AIC->PlayerState);
 	const int32 TeamNum = ChooseTeam(BotPlayerState);
-	BotPlayerState->SetTeamNum(TeamNum);		
+	BotPlayerState->SetTeamNum(TeamNum);
 
 	Super::InitBot(AIC, BotNum);
 }

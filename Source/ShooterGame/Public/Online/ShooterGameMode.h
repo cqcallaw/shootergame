@@ -14,7 +14,7 @@ class FUniqueNetId;
 UCLASS(config=Game)
 class AShooterGameMode : public AGameMode
 {
-	GENERATED_UCLASS_BODY()	
+	GENERATED_UCLASS_BODY()
 
 	/** The bot pawn class */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=GameMode)
@@ -77,7 +77,7 @@ class AShooterGameMode : public AGameMode
 	void CreateBotControllers();
 
 	/** Create a bot */
-	AShooterAIController* CreateBot(int32 BotNum);	
+	AShooterAIController* CreateBot(int32 BotNum);
 
 	virtual void PostInitProperties() override;
 
@@ -114,13 +114,15 @@ protected:
 
 	UPROPERTY(config)
 	TSubclassOf<AShooterPlayerController> PlatformPlayerControllerClass;
-	
+
 	/** Handle for efficient management of DefaultTimer timer */
 	FTimerHandle TimerHandle_DefaultTimer;
 
 	bool bNeedsBotCreation;
 
-	bool bAllowBots;		
+	bool bAllowBots;
+
+	bool bBenchmarkMode;
 
 	/** spawning all bots for this game */
 	void StartBots();
@@ -141,9 +143,9 @@ protected:
 	virtual bool IsSpawnpointPreferred(APlayerStart* SpawnPoint, AController* Player) const;
 
 	/** Returns game session class to use */
-	virtual TSubclassOf<AGameSession> GetGameSessionClass() const override;	
+	virtual TSubclassOf<AGameSession> GetGameSessionClass() const override;
 
-public:	
+public:
 
 	/** finish current match and lock players */
 	UFUNCTION(exec)
