@@ -1,0 +1,20 @@
+{
+	"AchievementEventName" : "TempActivateAchiement",
+	"AchievementMap" : 
+	{
+		"ACH_FRAG_SOMEONE" : 1,
+		"ACH_SOME_KILLS" : 2,
+		"ACH_LOTS_KILLS" : 3,
+		"ACH_FINISH_MATCH" : 4,
+		"ACH_LOTS_MATCHES" : 5,
+		"ACH_FIRST_WIN" : 6,
+		"ACH_LOTS_WIN" : 7,
+		"ACH_MANY_WIN" : 8,
+		"ACH_SHOOT_BULLETS" : 9,
+		"ACH_SHOOT_ROCKETS" : 10,
+		"ACH_GOOD_SCORE" : 11,
+		"ACH_GREAT_SCORE" : 12,
+		"ACH_PLAY_SANCTUARY" : 13,
+		"ACH_PLAY_HIGHRISE" : 14
+	}
+}
