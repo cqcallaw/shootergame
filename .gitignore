@@ -1,3 +1,4 @@
+.vs
 .vscode
 .kdev4
 Binaries
@@ -16,3 +17,4 @@ Makefile
 Build
 Packages
 *BuiltData.uasset
+*.sln
