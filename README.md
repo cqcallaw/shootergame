@@ -21,4 +21,4 @@ _-vulkan_: Render the game using the Vulkan graphics API (supported on Linux and
 
 _-dx11:_ Render the game using the DX11 graphics API (supported on Windows only)
 
-_-benchmark:_ Launch the Shooter game in benchmarking mode. In this mode, the game will launch directly into a Free-for-All match with no bots, then automatically after 60 seconds.
+_-benchmark:_ Launch the Shooter game in benchmarking mode. In this mode, the game will launch directly into a Free-for-All match with no bots, then automatically quit after 60 seconds.
