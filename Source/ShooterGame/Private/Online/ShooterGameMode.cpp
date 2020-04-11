@@ -33,6 +33,7 @@ AShooterGameMode::AShooterGameMode(const FObjectInitializer& ObjectInitializer) 
 	if (bBenchmarkMode) {
 		UE_LOG(LogShooter, Warning, TEXT("Running benchmark"));
 	}
+
 	bAllowBots = !bBenchmarkMode;
 	bNeedsBotCreation = bBenchmarkMode;
 	bUseSeamlessTravel = FParse::Param(FCommandLine::Get(), TEXT("NoSeamlessTravel")) ? false : true;
@@ -171,18 +172,21 @@ void AShooterGameMode::HandleMatchHasStarted()
 	Super::HandleMatchHasStarted();
 
 	AShooterGameState* const MyGameState = Cast<AShooterGameState>(GameState);
+
+	uint32 timeout = RoundTime;
 	if (bBenchmarkMode) {
-		//run benchmark for 60 seconds
-		MyGameState->RemainingTime = 60;
+		timeout = 60; // default timeout of 60 seconds for benchmark mode
 		UShooterGameInstance* const GameInstance = Cast<UShooterGameInstance>(GetGameInstance());
 		UGameViewportClient* const Viewport = GameInstance->GetGameViewportClient();
 		if (ensure(Viewport))
 		{
 			Viewport->ConsoleCommand("stat FPS");
 		}
-	} else {
-		MyGameState->RemainingTime = RoundTime;
 	}
+
+	// allow command line to override default timeouts
+	FParse::Value(FCommandLine::Get(), TEXT("timeout"), timeout);
+	MyGameState->RemainingTime = timeout;
 
 	StartBots();
 
@@ -192,6 +196,9 @@ void AShooterGameMode::HandleMatchHasStarted()
 		AShooterPlayerController* PC = Cast<AShooterPlayerController>(*It);
 		if (PC)
 		{
+			if (bBenchmarkMode) {
+				PC->SetCinematicMode(true, false, false, true, true);
+			}
 			PC->ClientGameStarted();
 		}
 	}
