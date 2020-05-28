@@ -5,9 +5,25 @@ The Unreal Engine Shooter Game demo with quality-of-life improvements. Improveme
 # Setup
 
 ## Linux
-1. [Build Unreal Engine 4 from source](https://wiki.unrealengine.com/Building_On_Linux#Building)
-2. [Generate project files](https://wiki.unrealengine.com/Building_On_Linux#Generating_project_files_for_your_project)
-3. [Open project in UEd](https://wiki.unrealengine.com/Building_On_Linux#Opening_your_project)
+1. [Build Unreal Engine 4 from source](https://www.ue4community.wiki/Legacy/Building_On_Linux#Building):
+   ```
+   $ git clone https://github.com/EpicGames/UnrealEngine.git
+   $ # or if you are using ssh authentication:
+   $ # git clone git@github.com:EpicGames/UnrealEngine.git
+   $ cd UnrealEngine
+   $ ./Setup.sh
+   $ ./GenerateProjectFiles.sh
+   $ make
+   ```
+2. Clone Shooter Game source
+3. [Generate project files](https://www.ue4community.wiki/Legacy/Building_On_Linux#Generating_project_files_for_your_project):
+   ```
+   $ ./GenerateProjectFiles.sh -project="/path/to/ShooterGame/clone/ShooterGame.uproject" -game -engine
+   ```
+3. [Open the project in UEd](https://www.ue4community.wiki/Legacy/Building_On_Linux#Opening_your_project):
+   ```
+   $ ./UE4Editor "/path/to/ShooterGame/clone/ShooterGame.uproject"
+   ```
 
 ## Windows
 1. [Setup Visual Studio](https://docs.unrealengine.com/en-US/Programming/Development/VisualStudioSetup/index.html) (the Community edition works)
