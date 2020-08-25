@@ -3,8 +3,8 @@
 #pragma once
 
 #include "ShooterGame.h"
-#include "OnlineIdentityInterface.h"
-#include "OnlineSessionInterface.h"
+#include "Interfaces/OnlineIdentityInterface.h"
+#include "Interfaces/OnlineSessionInterface.h"
 #include "Engine/GameInstance.h"
 #include "Engine/NetworkDelegates.h"
 #include "ShooterGameInstance.generated.h"
@@ -56,7 +56,7 @@ struct FShooterPlayTogetherInfo
 	{
 		UserIdList.Append(InUserIdList);
 	}
-	
+
 	int32 UserIndex;
 	TArray<TSharedPtr<const FUniqueNetId>> UserIdList;
 };
@@ -120,7 +120,7 @@ public:
 	void SetPendingInvite(const FShooterPendingInvite& InPendingInvite);
 
 	bool PlayDemo(ULocalPlayer* LocalPlayer, const FString& DemoName);
-	
+
 	/** Travel directly to the named session */
 	void TravelToSession(const FName& SessionName);
 
@@ -287,7 +287,7 @@ private:
 	void HandleNetworkConnectionStatusChanged(const FString& ServiceName, EOnlineServerConnectionStatus::Type LastConnectionStatus, EOnlineServerConnectionStatus::Type ConnectionStatus );
 
 	void HandleSessionFailure( const FUniqueNetId& NetId, ESessionFailure::Type FailureType );
-	
+
 	void OnPreLoadMap(const FString& MapName);
 	void OnPostLoadMap(UWorld*);
 	void OnPostDemoPlay();
@@ -400,10 +400,10 @@ private:
 	FReply OnPairingUseNewProfile();
 
 	// Callback to handle controller pairing changes.
-	void HandleControllerPairingChanged(int GameUserIndex, const FUniqueNetId& PreviousUser, const FUniqueNetId& NewUser);
+	void HandleControllerPairingChanged(int GameUserIndex, const FControllerPairingChangedUserInfo PreviousUserInfo, const FControllerPairingChangedUserInfo NewUserInfo);
 
 	// Handle confirming the controller disconnected dialog.
-	FReply OnControllerReconnectConfirm();	
+	FReply OnControllerReconnectConfirm();
 
 protected:
 	bool HandleOpenCommand(const TCHAR* Cmd, FOutputDevice& Ar, UWorld* InWorld);

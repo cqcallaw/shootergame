@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "SlateWidgetStyleContainerBase.h"
+#include "Styling/SlateWidgetStyleContainerBase.h"
 #include "ShooterMenuSoundsWidgetStyle.generated.h"
 
 /**
@@ -24,14 +24,14 @@ struct FShooterMenuSoundsStyle : public FSlateWidgetStyle
 
 	/**
 	 * The sound that should play when starting the game
-	 */	
+	 */
 	UPROPERTY(EditAnywhere, Category=Sound)
 	FSlateSound StartGameSound;
 	FShooterMenuSoundsStyle& SetStartGameSound(const FSlateSound& InStartGameSound) { StartGameSound = InStartGameSound; return *this; }
 
 	/**
 	 * The sound that should play when exiting the game
-	 */	
+	 */
 	UPROPERTY(EditAnywhere, Category=Sound)
 	FSlateSound ExitGameSound;
 	FShooterMenuSoundsStyle& SetExitGameSound(const FSlateSound& InExitGameSound) { ExitGameSound = InExitGameSound; return *this; }

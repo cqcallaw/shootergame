@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "SlateWidgetStyleContainerBase.h"
+#include "Styling/SlateWidgetStyleContainerBase.h"
 #include "ShooterOptionsWidgetStyle.generated.h"
 
 /**
@@ -24,14 +24,14 @@ struct FShooterOptionsStyle : public FSlateWidgetStyle
 
 	/**
 	 * The sound the options should play when changes are accepted
-	 */	
+	 */
 	UPROPERTY(EditAnywhere, Category=Sound)
 	FSlateSound AcceptChangesSound;
 	FShooterOptionsStyle& SetAcceptChangesSound(const FSlateSound& InAcceptChangesSound) { AcceptChangesSound = InAcceptChangesSound; return *this; }
 
 	/**
 	 * The sound the options should play when changes are discarded
-	 */	
+	 */
 	UPROPERTY(EditAnywhere, Category=Sound)
 	FSlateSound DiscardChangesSound;
 	FShooterOptionsStyle& SetDiscardChangesSound(const FSlateSound& InDiscardChangesSound) { DiscardChangesSound = InDiscardChangesSound; return *this; }

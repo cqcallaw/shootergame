@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "ShooterPersistentUser.h"
+#include "Player/ShooterPersistentUser.h"
 #include "ShooterLocalPlayer.generated.h"
 
 UCLASS(config=Engine, transient)
@@ -17,7 +17,7 @@ public:
 	virtual FString GetNickname() const;
 
 	class UShooterPersistentUser* GetPersistentUser() const;
-	
+
 	/** Initializes the PersistentUser */
 	void LoadPersistentUser();
 

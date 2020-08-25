@@ -2,9 +2,9 @@
 
 #include "ShooterGame.h"
 #include "SShooterDemoList.h"
-#include "SHeaderRow.h"
+#include "Widgets/Views/SHeaderRow.h"
 #include "ShooterStyle.h"
-#include "CoreStyle.h"
+#include "Styling/CoreStyle.h"
 #include "ShooterGameLoadingScreen.h"
 #include "ShooterGameInstance.h"
 #include "NetworkReplayStreaming.h"
@@ -26,7 +26,7 @@ void SShooterDemoList::Construct(const FArguments& InArgs)
 	OwnerWidget			= InArgs._OwnerWidget;
 	bUpdatingDemoList	= false;
 	StatusText			= FText::GetEmpty();
-	
+
 	EnumerateStreamsVersion = FNetworkVersion::GetReplayVersion();
 
 	const int32 NameWidth		= 280;
@@ -56,7 +56,7 @@ void SShooterDemoList::Construct(const FArguments& InArgs)
 		+SVerticalBox::Slot()
 		.AutoHeight()
 		[
-			SNew(SBox)  
+			SNew(SBox)
 			.WidthOverride(700)
 			.HeightOverride(300)
 			[
@@ -130,7 +130,7 @@ void SShooterDemoList::OnEnumerateStreamsComplete(const FEnumerateStreamsResult&
 	StatusText = LOCTEXT("DemoSelectionInfo","Press ENTER to Play. Press DEL to delete.");
 
 	if ( bFinished )
-	{		
+	{
 		OnBuildDemoListFinished();
 	}
 }
@@ -244,7 +244,7 @@ void SShooterDemoList::DeleteDemo()
 
 			if ( ShooterViewport )
 			{
-				ShooterViewport->ShowDialog( 
+				ShooterViewport->ShowDialog(
 					PlayerOwner,
 					EShooterDialogType::Generic,
 					FText::Format(LOCTEXT("DeleteDemoFmt", "Delete {0}?"), FText::FromString(SelectedItem->StreamInfo.FriendlyName)),
@@ -340,7 +340,7 @@ void SShooterDemoList::MoveSelection(int32 MoveBy)
 	}
 }
 
-FReply SShooterDemoList::OnKeyDown(const FGeometry& MyGeometry, const FKeyEvent& InKeyboardEvent) 
+FReply SShooterDemoList::OnKeyDown(const FGeometry& MyGeometry, const FKeyEvent& InKeyboardEvent)
 {
 	if (bUpdatingDemoList) // lock input
 	{

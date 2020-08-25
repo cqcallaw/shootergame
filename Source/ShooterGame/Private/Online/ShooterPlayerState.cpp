@@ -1,7 +1,7 @@
 // Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
 
 #include "ShooterGame.h"
-#include "ShooterPlayerState.h"
+#include "Online/ShooterPlayerState.h"
 #include "Net/OnlineEngineInterface.h"
 
 AShooterPlayerState::AShooterPlayerState(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
@@ -17,7 +17,7 @@ AShooterPlayerState::AShooterPlayerState(const FObjectInitializer& ObjectInitial
 void AShooterPlayerState::Reset()
 {
 	Super::Reset();
-	
+
 	//PlayerStates persist across seamless travel.  Keep the same teams as previous match.
 	//SetTeamNum(0);
 	NumKills = 0;
@@ -37,7 +37,7 @@ void AShooterPlayerState::RegisterPlayerWithSession(bool bWasFromInvite)
 
 void AShooterPlayerState::UnregisterPlayerWithSession()
 {
-	if (!bFromPreviousLevel && UOnlineEngineInterface::Get()->DoesSessionExist(GetWorld(), NAME_GameSession))
+	if (!IsFromPreviousLevel() && UOnlineEngineInterface::Get()->DoesSessionExist(GetWorld(), NAME_GameSession))
 	{
 		Super::UnregisterPlayerWithSession();
 	}
@@ -78,14 +78,14 @@ void AShooterPlayerState::SetQuitter(bool bInQuitter)
 }
 
 void AShooterPlayerState::CopyProperties(APlayerState* PlayerState)
-{	
+{
 	Super::CopyProperties(PlayerState);
 
 	AShooterPlayerState* ShooterPlayer = Cast<AShooterPlayerState>(PlayerState);
 	if (ShooterPlayer)
 	{
 		ShooterPlayer->TeamNumber = TeamNumber;
-	}	
+	}
 }
 
 void AShooterPlayerState::UpdateTeamColors()
@@ -116,10 +116,11 @@ int32 AShooterPlayerState::GetDeaths() const
 	return NumDeaths;
 }
 
-float AShooterPlayerState::GetScore() const
+// Deprecated
+/*float AShooterPlayerState::GetScore() const
 {
 	return Score;
-}
+}*/
 
 int32 AShooterPlayerState::GetNumBulletsFired() const
 {
@@ -161,25 +162,25 @@ void AShooterPlayerState::ScorePoints(int32 Points)
 		MyGameState->TeamScores[TeamNumber] += Points;
 	}
 
-	Score += Points;
+	SetScore(GetScore() + Points);
 }
 
 void AShooterPlayerState::InformAboutKill_Implementation(class AShooterPlayerState* KillerPlayerState, const UDamageType* KillerDamageType, class AShooterPlayerState* KilledPlayerState)
 {
 	//id can be null for bots
-	if (KillerPlayerState->UniqueId.IsValid())
-	{	
-		//search for the actual killer before calling OnKill()	
+	if (KillerPlayerState->GetUniqueId().IsValid())
+	{
+		//search for the actual killer before calling OnKill()
 		for (FConstPlayerControllerIterator It = GetWorld()->GetPlayerControllerIterator(); It; ++It)
-		{		
+		{
 			AShooterPlayerController* TestPC = Cast<AShooterPlayerController>(*It);
 			if (TestPC && TestPC->IsLocalController())
 			{
 				// a local player might not have an ID if it was created with CreateDebugPlayer.
 				ULocalPlayer* LocalPlayer = Cast<ULocalPlayer>(TestPC->Player);
 				FUniqueNetIdRepl LocalID = LocalPlayer->GetCachedUniqueNetId();
-				if (LocalID.IsValid() &&  *LocalPlayer->GetCachedUniqueNetId() == *KillerPlayerState->UniqueId)
-				{			
+				if (LocalID.IsValid() &&  *LocalPlayer->GetCachedUniqueNetId() == *KillerPlayerState->GetUniqueId())
+				{
 					TestPC->OnKill();
 				}
 			}
@@ -188,16 +189,16 @@ void AShooterPlayerState::InformAboutKill_Implementation(class AShooterPlayerSta
 }
 
 void AShooterPlayerState::BroadcastDeath_Implementation(class AShooterPlayerState* KillerPlayerState, const UDamageType* KillerDamageType, class AShooterPlayerState* KilledPlayerState)
-{	
+{
 	for (FConstPlayerControllerIterator It = GetWorld()->GetPlayerControllerIterator(); It; ++It)
 	{
 		// all local players get death messages so they can update their huds.
 		AShooterPlayerController* TestPC = Cast<AShooterPlayerController>(*It);
 		if (TestPC && TestPC->IsLocalController())
 		{
-			TestPC->OnDeathMessage(KillerPlayerState, this, KillerDamageType);				
+			TestPC->OnDeathMessage(KillerPlayerState, this, KillerDamageType);
 		}
-	}	
+	}
 }
 
 void AShooterPlayerState::GetLifetimeReplicatedProps( TArray< FLifetimeProperty > & OutLifetimeProps ) const
