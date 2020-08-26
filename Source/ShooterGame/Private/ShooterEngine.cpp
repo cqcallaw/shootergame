@@ -4,8 +4,8 @@
 	ShooterEngine.cpp: ShooterEngine c++ code.
 =============================================================================*/
 
-#include "ShooterGame.h"
 #include "ShooterEngine.h"
+#include "ShooterGame.h"
 #include "ShooterGameInstance.h"
 
 UShooterEngine::UShooterEngine(const FObjectInitializer& ObjectInitializer)
@@ -26,7 +26,7 @@ void UShooterEngine::HandleNetworkFailure(UWorld *World, UNetDriver *NetDriver, 
 	// Determine if we need to change the King state based on network failures.
 
 	// Only handle failure at this level for game or pending net drivers.
-	FName NetDriverName = NetDriver ? NetDriver->NetDriverName : NAME_None; 
+	FName NetDriverName = NetDriver ? NetDriver->NetDriverName : NAME_None;
 	if (NetDriverName == NAME_GameNetDriver || NetDriverName == NAME_PendingNetDriver)
 	{
 		// If this net driver has already been unregistered with this world, then don't handle it.
@@ -51,7 +51,7 @@ void UShooterEngine::HandleNetworkFailure(UWorld *World, UNetDriver *NetDriver, 
 						}
 						break;
 					}
-					case ENetworkFailure::PendingConnectionFailure:						
+					case ENetworkFailure::PendingConnectionFailure:
 					{
 						UShooterGameInstance* const GI = Cast<UShooterGameInstance>(GameInstance);
 						if (GI && NetDriver->GetNetMode() == NM_Client)
@@ -65,7 +65,7 @@ void UShooterEngine::HandleNetworkFailure(UWorld *World, UNetDriver *NetDriver, 
 						}
 						break;
 					}
-					case ENetworkFailure::ConnectionLost:						
+					case ENetworkFailure::ConnectionLost:
 					case ENetworkFailure::ConnectionTimeout:
 					{
 						UShooterGameInstance* const GI = Cast<UShooterGameInstance>(GameInstance);

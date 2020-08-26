@@ -1,7 +1,7 @@
 // Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
 
-#include "ShooterGame.h"
 #include "Player/ShooterPersistentUser.h"
+#include "ShooterGame.h"
 #include "Player/ShooterLocalPlayer.h"
 
 UShooterPersistentUser::UShooterPersistentUser(const FObjectInitializer& ObjectInitializer)

@@ -4,8 +4,8 @@
 	ShooterGameInstance.cpp
 =============================================================================*/
 
-#include "ShooterGame.h"
 #include "ShooterGameInstance.h"
+#include "ShooterGame.h"
 #include "ShooterMainMenu.h"
 #include "ShooterWelcomeMenu.h"
 #include "ShooterMessageMenu.h"

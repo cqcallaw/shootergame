@@ -1,7 +1,7 @@
 // Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
 
-#include "ShooterGame.h"
 #include "SShooterLeaderboard.h"
+#include "ShooterGame.h"
 #include "ShooterStyle.h"
 #include "ShooterUIHelpers.h"
 #include "OnlineSubsystemUtils.h"
@@ -44,12 +44,12 @@ void SShooterLeaderboard::Construct(const FArguments& InArgs)
 	ChildSlot
 	.VAlign(VAlign_Fill)
 	.HAlign(HAlign_Fill)
-	[		
+	[
 		SNew(SVerticalBox)
 		+ SVerticalBox::Slot()
 		.AutoHeight()
 		[
-			SNew(SBox)  
+			SNew(SBox)
 			.WidthOverride(600)
 			.HeightOverride(600)
 			[
@@ -196,7 +196,7 @@ bool SShooterLeaderboard::IsPlayerSelectedAndValid() const
 }
 
 EVisibility SShooterLeaderboard::GetProfileUIVisibility() const
-{	
+{
 	return IsPlayerSelectedAndValid() ? EVisibility::Visible : EVisibility::Hidden;
 }
 
@@ -225,7 +225,7 @@ void SShooterLeaderboard::MoveSelection(int32 MoveBy)
 	}
 }
 
-FReply SShooterLeaderboard::OnKeyDown(const FGeometry& MyGeometry, const FKeyEvent& InKeyEvent) 
+FReply SShooterLeaderboard::OnKeyDown(const FGeometry& MyGeometry, const FKeyEvent& InKeyEvent)
 {
 	FReply Result = FReply::Unhandled();
 	const FKey Key = InKeyEvent.GetKey();
@@ -299,7 +299,7 @@ TSharedRef<ITableRow> SShooterLeaderboard::MakeListViewWidget(TSharedPtr<FLeader
 			}
 			return SNew(STextBlock)
 				.Text(ItemText)
-				.TextStyle(FShooterStyle::Get(), "ShooterGame.ScoreboardListTextStyle");		
+				.TextStyle(FShooterStyle::Get(), "ShooterGame.ScoreboardListTextStyle");
 		}
 		TSharedPtr<FLeaderboardRow> Item;
 	};

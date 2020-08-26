@@ -1,8 +1,8 @@
 // Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
 
+#include "Online/ShooterGame_TeamDeathMatch.h"
 #include "ShooterGame.h"
 #include "ShooterTeamStart.h"
-#include "Online/ShooterGame_TeamDeathMatch.h"
 #include "Online/ShooterPlayerState.h"
 #include "Bots/ShooterAIController.h"
 

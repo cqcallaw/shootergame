@@ -1,7 +1,7 @@
 // Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
 
-#include "ShooterGame.h"
 #include "Online/ShooterGameSession.h"
+#include "ShooterGame.h"
 #include "ShooterOnlineGameSettings.h"
 #include "OnlineSubsystemSessionSettings.h"
 #include "OnlineSubsystemUtils.h"

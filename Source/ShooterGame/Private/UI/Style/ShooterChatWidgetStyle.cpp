@@ -1,7 +1,7 @@
 // Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
 
-#include "ShooterGame.h"
 #include "ShooterChatWidgetStyle.h"
+#include "ShooterGame.h"
 
 FShooterChatStyle::FShooterChatStyle()
 {
@@ -30,5 +30,5 @@ void FShooterChatStyle::GetResources(TArray<const FSlateBrush*>& OutBrushes) con
 UShooterChatWidgetStyle::UShooterChatWidgetStyle( const FObjectInitializer& ObjectInitializer )
 	: Super(ObjectInitializer)
 {
-	
+
 }

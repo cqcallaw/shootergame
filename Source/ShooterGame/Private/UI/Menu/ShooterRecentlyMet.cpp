@@ -1,7 +1,7 @@
 // Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
 
-#include "ShooterGame.h"
 #include "ShooterRecentlyMet.h"
+#include "ShooterGame.h"
 #include "ShooterTypes.h"
 #include "ShooterStyle.h"
 #include "ShooterOptionsWidgetStyle.h"

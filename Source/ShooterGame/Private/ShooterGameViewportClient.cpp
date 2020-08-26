@@ -1,7 +1,7 @@
 // Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
 
-#include "ShooterGame.h"
 #include "ShooterGameViewportClient.h"
+#include "ShooterGame.h"
 #include "SShooterConfirmationDialog.h"
 #include "Widgets/Layout/SSafeZone.h"
 #include "Widgets/Images/SThrobber.h"

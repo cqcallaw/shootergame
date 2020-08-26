@@ -1,8 +1,8 @@
 // Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
 
 
-#include "ShooterGame.h"
 #include "Player/ShooterSpectatorPawn.h"
+#include "ShooterGame.h"
 
 AShooterSpectatorPawn::AShooterSpectatorPawn(const FObjectInitializer& ObjectInitializer)
 : Super(ObjectInitializer)
@@ -13,7 +13,7 @@ AShooterSpectatorPawn::AShooterSpectatorPawn(const FObjectInitializer& ObjectIni
 void AShooterSpectatorPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	check(PlayerInputComponent);
-	
+
 	PlayerInputComponent->BindAxis("MoveForward", this, &ADefaultPawn::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &ADefaultPawn::MoveRight);
 	PlayerInputComponent->BindAxis("MoveUp", this, &ADefaultPawn::MoveUp_World);

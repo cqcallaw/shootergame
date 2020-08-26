@@ -1,8 +1,8 @@
 // Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
 
+#include "SShooterSplitScreenLobbyWidget.h"
 #include "ShooterGame.h"
 #include "ShooterStyle.h"
-#include "SShooterSplitScreenLobbyWidget.h"
 #include "ShooterMenuItemWidgetStyle.h"
 #include "ShooterMenuWidgetStyle.h"
 #include "SShooterConfirmationDialog.h"
@@ -30,7 +30,7 @@ void SShooterSplitScreenLobby::Construct( const FArguments& InArgs )
 #else
 	PressToPlayText = LOCTEXT("PressToPlay", "Press A to Play");
 	PressToFindText = LOCTEXT("PressToFind", "Press A to Find Match");
-	PressToStartMatchText = LOCTEXT("PressToStart", "Press A To Start Match");	
+	PressToStartMatchText = LOCTEXT("PressToStart", "Press A To Start Match");
 #endif
 
 #if PLATFORM_SWITCH
@@ -38,7 +38,7 @@ void SShooterSplitScreenLobby::Construct( const FArguments& InArgs )
 	PressToFindText = LOCTEXT("PressToFind", "Press <img src=\"ShooterGame.Switch.Right\"/> to Find Match");
 	PressToStartMatchText = LOCTEXT("PressToStart", "<img src=\"ShooterGame.Switch.Right\"/> Start Match / <img src=\"ShooterGame.Switch.Up\"/> Connect Controllers");
 	PlayAsGuestText = LOCTEXT("PlayAsGuest", "<img src=\"ShooterGame.Switch.Left\"/> Play As Guest");
-#endif	
+#endif
 
 	PlayerOwner = InArgs._PlayerOwner;
 
@@ -50,9 +50,9 @@ void SShooterSplitScreenLobby::Construct( const FArguments& InArgs )
 	const FButtonStyle* ButtonStyle = &FShooterStyle::Get().GetWidgetStyle<FButtonStyle>("DefaultShooterButtonStyle");
 	FLinearColor MenuTitleTextColor =  FLinearColor(FColor(155,164,182));
 	FLinearColor PressXToStartColor = FLinearColor::Green;
-	
+
 	MasterUserBack = InArgs._OnCancelClicked;
-	MasterUserPlay = InArgs._OnPlayClicked;	
+	MasterUserPlay = InArgs._OnPlayClicked;
 
 	const float PaddingBetweenSlots = 10.0f;
 	const float SlotWidth = 565.0f;
@@ -62,7 +62,7 @@ void SShooterSplitScreenLobby::Construct( const FArguments& InArgs )
 	const FText OKButtonString = NSLOCTEXT("DialogButtons", "OKAY", "OK");
 
 	ChildSlot
-	[	
+	[
 		//main container.  Just start us out centered on the whole screen.
 		SNew(SOverlay)
 		+SOverlay::Slot()
@@ -78,20 +78,20 @@ void SShooterSplitScreenLobby::Construct( const FArguments& InArgs )
 			.HAlign(HAlign_Center)
 			[
 				SNew( SHorizontalBox)
-				+SHorizontalBox::Slot()				
-				.Padding(PaddingBetweenSlots) //put some space in between the slots				
+				+SHorizontalBox::Slot()
+				.Padding(PaddingBetweenSlots) //put some space in between the slots
 				[
 					SAssignNew(UserSlots[0], SBox)
 					.HeightOverride(SlotHeight)
 					.WidthOverride(SlotWidth)
 					[
 						SNew(SBorder)
-						.Padding(0.0f)						
+						.Padding(0.0f)
 						.BorderImage(SlotBrush)
 						.BorderBackgroundColor(FLinearColor(1.0f, 1.0f, 1.0f, 1.0f))
 						[
 							SNew(SVerticalBox)
-							+SVerticalBox::Slot()												
+							+SVerticalBox::Slot()
 							.Padding(0.0f)
 							.VAlign(VAlign_Bottom)
 							.HAlign(HAlign_Center)
@@ -100,26 +100,26 @@ void SShooterSplitScreenLobby::Construct( const FArguments& InArgs )
 								SAssignNew(UserTextWidgets[0], SRichTextBlock)
 								.TextStyle(FShooterStyle::Get(), "ShooterGame.MenuHeaderTextStyle")
 //								.ColorAndOpacity(MenuTitleTextColor)
-								.Text(PressToPlayText)														
+								.Text(PressToPlayText)
 								.DecoratorStyleSet(&FShooterStyle::Get())
 								+ SRichTextBlock::ImageDecorator()
 							]
-							+SVerticalBox::Slot()							
+							+SVerticalBox::Slot()
 							.Padding(5.0f)
 							.VAlign(VAlign_Bottom)
-							.HAlign(HAlign_Center)					
-							[							
+							.HAlign(HAlign_Center)
+							[
 								SNew(SRichTextBlock)
-								.TextStyle(FShooterStyle::Get(), "ShooterGame.SplitScreenLobby.StartMatchTextStyle")							
+								.TextStyle(FShooterStyle::Get(), "ShooterGame.SplitScreenLobby.StartMatchTextStyle")
 								.Text(this, &SShooterSplitScreenLobby::GetPlayFindText)
 								.DecoratorStyleSet(&FShooterStyle::Get())
 								+ SRichTextBlock::ImageDecorator()
 							]
-						]					
+						]
 					]
 				]
-				+SHorizontalBox::Slot()					
-				.Padding(PaddingBetweenSlots)				
+				+SHorizontalBox::Slot()
+				.Padding(PaddingBetweenSlots)
 				[
 					SAssignNew(UserSlots[1], SBox)
 					.HeightOverride(SlotHeight)
@@ -127,12 +127,12 @@ void SShooterSplitScreenLobby::Construct( const FArguments& InArgs )
 					[
 #if PLATFORM_SWITCH
 						SNew(SBorder)
-						.Padding(0.0f)						
+						.Padding(0.0f)
 						.BorderImage(SlotBrush)
 						.BorderBackgroundColor(FLinearColor(1.0f, 1.0f, 1.0f, 1.0f))
 						[
 							SNew(SVerticalBox)
-							+SVerticalBox::Slot()												
+							+SVerticalBox::Slot()
 							.Padding(0.0f)
 							.VAlign(VAlign_Bottom)
 							.HAlign(HAlign_Center)
@@ -141,22 +141,22 @@ void SShooterSplitScreenLobby::Construct( const FArguments& InArgs )
 								SAssignNew(UserTextWidgets[1], SRichTextBlock)
 								.TextStyle(FShooterStyle::Get(), "ShooterGame.MenuHeaderTextStyle")
 								//.ColorAndOpacity(MenuTitleTextColor)
-								.Text(PressToPlayText)														
+								.Text(PressToPlayText)
 								.DecoratorStyleSet(&FShooterStyle::Get())
 								+ SRichTextBlock::ImageDecorator()
 							]
-							+SVerticalBox::Slot()							
+							+SVerticalBox::Slot()
 							.Padding(5.0f)
 							.VAlign(VAlign_Bottom)
-							.HAlign(HAlign_Center)					
-							[							
+							.HAlign(HAlign_Center)
+							[
 								SNew(SRichTextBlock)
-								.TextStyle(FShooterStyle::Get(), "ShooterGame.SplitScreenLobby.StartMatchTextStyle")							
+								.TextStyle(FShooterStyle::Get(), "ShooterGame.SplitScreenLobby.StartMatchTextStyle")
 								.Text(this, &SShooterSplitScreenLobby::GetPlayAsGuestText)
 								.DecoratorStyleSet(&FShooterStyle::Get())
 								+ SRichTextBlock::ImageDecorator()
 							]
-						]	
+						]
 #else
 						SNew(SBorder)
 						.Padding(0.0f)
@@ -183,8 +183,8 @@ void SShooterSplitScreenLobby::Construct( const FArguments& InArgs )
 			.Padding(PaddingBetweenSlots)
 			[
 				SNew( SHorizontalBox)
-				+SHorizontalBox::Slot()							
-				.Padding(PaddingBetweenSlots)				
+				+SHorizontalBox::Slot()
+				.Padding(PaddingBetweenSlots)
 				[
 					SAssignNew(UserSlots[2], SBox)
 					.HeightOverride(SlotHeight)
@@ -207,8 +207,8 @@ void SShooterSplitScreenLobby::Construct( const FArguments& InArgs )
 					]
 				]
 
-				+SHorizontalBox::Slot()				
-				.Padding(PaddingBetweenSlots)				
+				+SHorizontalBox::Slot()
+				.Padding(PaddingBetweenSlots)
 				[
 					SAssignNew(UserSlots[3], SBox)
 					.HeightOverride(SlotHeight)
@@ -229,16 +229,16 @@ void SShooterSplitScreenLobby::Construct( const FArguments& InArgs )
 							+ SRichTextBlock::ImageDecorator()
 						]
 					]
-				]	
-			]			
+				]
+			]
 		]
 	];
-	
+
 	Clear();
 }
 
 void SShooterSplitScreenLobby::Clear()
-{	
+{
 	if (GetGameInstance() == nullptr)
 	{
 		return;
@@ -277,13 +277,13 @@ void SShooterSplitScreenLobby::UpdateSlots()
 			UserTextWidgets[i]->SetText( FText::FromString(LocalPlayer->GetNickname()) );
 		}
 		else
-		{ 
+		{
 			UserTextWidgets[i]->SetText( PressToPlayText );
 		}
 
 		UserSlots[i]->SetVisibility( EVisibility::Visible );
 	}
-	
+
 	// Hide non supported slots
 	for ( int i = GetNumSupportedSlots(); i < MAX_POSSIBLE_SLOTS; ++i )
 	{
@@ -298,7 +298,7 @@ void SShooterSplitScreenLobby::ConditionallyReadyPlayer( const int ControllerId,
 	{
 		return;
 	}
-	
+
 	if (GameInstance->GetNumLocalPlayers() >= GetNumSupportedSlots() )
 	{
 		return;		// Can't fit any more players at this point
@@ -530,7 +530,7 @@ FReply SShooterSplitScreenLobby::OnKeyDown(const FGeometry& MyGeometry, const FK
 
 					if ( ShooterViewport != NULL )
 					{
-						ShooterViewport->ShowDialog( 
+						ShooterViewport->ShowDialog(
 							PlayerOwner.Get(),
 							EShooterDialogType::Generic,
 							NSLOCTEXT("ProfileMessages", "GuestAccountNeedsSponsor", "A guest account cannot play without its sponsor!"),
@@ -544,7 +544,7 @@ FReply SShooterSplitScreenLobby::OnKeyDown(const FGeometry& MyGeometry, const FK
 					return FReply::Handled();
 				}
 			}
-	
+
 			return FReply::Handled();
 		}
 

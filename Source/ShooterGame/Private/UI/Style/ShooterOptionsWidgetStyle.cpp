@@ -1,7 +1,7 @@
 // Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
 
-#include "ShooterGame.h"
 #include "ShooterOptionsWidgetStyle.h"
+#include "ShooterGame.h"
 
 FShooterOptionsStyle::FShooterOptionsStyle()
 {
@@ -27,5 +27,5 @@ void FShooterOptionsStyle::GetResources(TArray<const FSlateBrush*>& OutBrushes) 
 UShooterOptionsWidgetStyle::UShooterOptionsWidgetStyle( const FObjectInitializer& ObjectInitializer )
 	: Super(ObjectInitializer)
 {
-	
+
 }
