@@ -33,10 +33,12 @@ The Unreal Engine Shooter Game demo with quality-of-life improvements. Improveme
 
 # Command Line Options
 
-_-vulkan_: Render the game using the Vulkan graphics API (supported on Linux and Windows)
+`-vulkan`: Render the game using the Vulkan graphics API (supported on Linux and Windows)
 
-_-dx11:_ Render the game using the DX11 graphics API (supported on Windows only)
+`-dx11`: Render the game using the DX11 graphics API (supported on Windows only)
 
-_-benchmark:_ Launch the Shooter game in benchmarking mode. In this mode, the game will launch directly into a Free-for-All match with no bots
+`-dx12`: Render the game using the DX12 graphics API (supported on Windows only)
 
-_-timeout:_ Exit benchmark after the specified number of seconds. Default: 60
+`-benchmark`: Launch the Shooter game in benchmarking mode. In this mode, the game will launch directly into a Free-for-All match with no bots
+
+`-timeout`: Exit benchmark after the specified number of seconds. Default: 60
