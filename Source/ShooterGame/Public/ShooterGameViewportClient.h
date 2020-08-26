@@ -65,7 +65,7 @@ public:
 	TSharedPtr<SShooterConfirmationDialog> GetDialogWidget() { return DialogWidget; }
 
 	//FTicker Funcs
-	virtual void Tick(float DeltaSeconds) override;
+	virtual void Tick(float DeltaSeconds) override;	
 
 	virtual	void BeginDestroy() override;
 	virtual void DetachViewportClient() override;

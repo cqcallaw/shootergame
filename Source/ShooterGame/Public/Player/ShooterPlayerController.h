@@ -28,7 +28,7 @@ public:
 
 	/** Ends the online game using the session name in the PlayerState */
 	UFUNCTION(reliable, client)
-	void ClientEndOnlineGame();
+	void ClientEndOnlineGame();	
 
 	/** notify player about finished match */
 	virtual void ClientGameEnded_Implementation(class AActor* EndGameFocus, bool bIsWinner);
@@ -57,7 +57,7 @@ public:
 
 	/** RPC for clients to talk to server */
 	UFUNCTION(unreliable, server, WithValidation)
-	void ServerSay(const FString& Msg);
+	void ServerSay(const FString& Msg);	
 
 	/** Local function run an emote */
 // 	UFUNCTION(exec)
@@ -119,7 +119,7 @@ public:
 	bool IsGameInputAllowed() const;
 
 	/** is game menu currently active? */
-	bool IsGameMenuVisible() const;
+	bool IsGameMenuVisible() const;	
 
 	/** Ends and/or destroys game session */
 	void CleanupSessionOnReturnToMenu();
@@ -134,7 +134,7 @@ public:
 
 	UFUNCTION()
 	void OnLeaderboardReadComplete(bool bWasSuccessful);
-
+	
 	// Begin APlayerController interface
 
 	/** handle weapon visibility */
@@ -157,7 +157,7 @@ public:
 
 	// begin AShooterPlayerController-specific
 
-	/**
+	/** 
 	 * Reads achievements to precache them before first use
 	 */
 	void QueryAchievements();
@@ -167,7 +167,7 @@ public:
 	 */
 	void QueryStats();
 
-	/**
+	/** 
 	 * Writes a single achievement (unless another write is in progress).
 	 *
 	 * @param Id achievement id (string)
@@ -256,10 +256,10 @@ public:
 	//End AActor interface
 
 	//Begin AController interface
-
+	
 	/** transition to dead state, retries spawning later */
 	virtual void FailedToSpawnPawn() override;
-
+	
 	/** update camera when pawn dies */
 	virtual void PawnPendingDestroy(APawn* P) override;
 
@@ -274,12 +274,12 @@ public:
 	virtual void SetupInputComponent() override;
 
 	/**
-	 * Called from game info upon end of the game, used to transition to proper state.
+	 * Called from game info upon end of the game, used to transition to proper state. 
 	 *
 	 * @param EndGameFocus Actor to set as the view target on end game
 	 * @param bIsWinner true if this controller is on winning team
 	 */
-	virtual void GameHasEnded(class AActor* EndGameFocus = NULL, bool bIsWinner = false) override;
+	virtual void GameHasEnded(class AActor* EndGameFocus = NULL, bool bIsWinner = false) override;	
 
 	/** Return the client to the main menu gracefully.  ONLY sets GI state. */
 	void ClientReturnToMainMenu_Implementation(const FString& ReturnReason) override;

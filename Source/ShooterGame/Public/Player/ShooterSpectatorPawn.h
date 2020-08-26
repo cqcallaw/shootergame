@@ -13,7 +13,7 @@ class AShooterSpectatorPawn : public ASpectatorPawn
 	/** Overridden to implement Key Bindings the match the player controls */
 	virtual void SetupPlayerInputComponent(class UInputComponent* InputComponent) override;
 	// End Pawn overrides
-
+	
 	// Frame rate linked look
 	void LookUpAtRate(float Val);
 };

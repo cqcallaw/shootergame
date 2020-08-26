@@ -42,5 +42,5 @@ protected:
 	virtual bool IsSpawnpointAllowed(APlayerStart* SpawnPoint, AController* Player) const;
 
 	/** initialization for bot after spawning */
-	virtual void InitBot(AShooterAIController* AIC, int32 BotNum) override;
+	virtual void InitBot(AShooterAIController* AIC, int32 BotNum) override;	
 };

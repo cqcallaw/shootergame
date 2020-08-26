@@ -34,7 +34,7 @@ public:
 	SLATE_ARGUMENT(FOnClicked, OnConfirmClicked)
 	SLATE_ARGUMENT(FOnClicked, OnCancelClicked)
 
-	SLATE_END_ARGS()
+	SLATE_END_ARGS()	
 
 	void Construct(const FArguments& InArgs);
 

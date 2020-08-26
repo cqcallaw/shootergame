@@ -31,7 +31,7 @@ class UShooterGameUserSettings : public UGameUserSettings
 	{
 		bIsLanMatch = InbIsLanMatch;
 	}
-
+	
 	bool IsDedicatedServer() const
 	{
 		return bIsDedicatedServer;

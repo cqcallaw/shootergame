@@ -7,7 +7,7 @@
 #include "ShooterHUDPCTrackerBase.h"
 
 
-/**
+/** 
  * A chat widget. Contains a box with history and a text entry box.
  */
 class SChatWidget : public SCompoundWidget, public ShooterHUDPCTrackerBase
@@ -20,10 +20,10 @@ public:
 
 	/** Should the chat widget be kept visible at all times */
 	SLATE_ARGUMENT(bool, bAlwaysVisible)
-
+	
 	/** Should the chat widget be dismissed after 'say'.  */
 	SLATE_ARGUMENT(bool, bDismissAfterSay)
-
+		
 	SLATE_END_ARGS()
 
 	/** Needed for every widget */
@@ -39,7 +39,7 @@ public:
 	 */
 	void SetEntryVisibility( TAttribute<EVisibility> InVisibility );
 
-	/**
+	/** 
 	 * Add a new chat line.
 	 *
 	 * @param	ChatString		String to add.
@@ -69,7 +69,7 @@ protected:
 	/** The UI sets up the appropriate mouse settings upon focus. */
 	FReply OnFocusReceived( const FGeometry& MyGeometry, const FFocusEvent& InFocusEvent );
 
-	/**
+	/** 
 	 * Delegate called when the text is commited.
 	 *
 	 * @param	InText			The committed text.
@@ -83,9 +83,9 @@ protected:
 	/** Return the font color. */
 	FSlateColor GetChatLineColor() const;
 
-	/**
+	/** 
 	 * Return the adjusted color based on whether the chatbox is visible
-	 *
+	 * 
 	 * @param InColor	The color value to use
 	 *
 	 * @returns The color - with the alpha set to zero if the chatbox is not visible.
@@ -96,7 +96,7 @@ protected:
 
 	/** Visibility of the entry widget previous frame. */
 	EVisibility LastVisibility;
-
+	
 	/* If try we should set the focus when we change the visibility */
 	uint32 bVisibiltyNeedsFocus:1;
 

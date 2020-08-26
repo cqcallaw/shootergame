@@ -23,7 +23,7 @@ protected:
 
 	/** Perform some final tasks before hosting/joining a session. Remove menus, set king state etc */
 	void BeginSession();
-
+	
 	/** Display a loading screen */
 	void ShowLoadingScreen();
 };

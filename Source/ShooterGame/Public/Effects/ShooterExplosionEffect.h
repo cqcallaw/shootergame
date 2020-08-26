@@ -31,7 +31,7 @@ public:
 	/** explosion sound */
 	UPROPERTY(EditDefaultsOnly, Category=Effect)
 	USoundCue* ExplosionSound;
-
+	
 	/** explosion decals */
 	UPROPERTY(EditDefaultsOnly, Category=Effect)
 	struct FDecalData Decal;

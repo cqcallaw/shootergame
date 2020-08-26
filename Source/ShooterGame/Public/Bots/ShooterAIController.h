@@ -49,7 +49,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = Behavior)
 	bool FindClosestEnemyWithLOS(AShooterCharacter* ExcludeEnemy);
-
+		
 	bool HasWeaponLOSToEnemy(AActor* InEnemyActor, const bool bAnyEnemy) const;
 
 	// Begin AAIController interface

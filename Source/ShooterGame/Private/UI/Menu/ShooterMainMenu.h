@@ -14,7 +14,7 @@
 
 class FShooterMainMenu : public TSharedFromThis<FShooterMainMenu>, public FTickableGameObject
 {
-public:
+public:	
 
 	virtual ~FShooterMainMenu();
 
@@ -25,13 +25,13 @@ public:
 	void AddMenuToGameViewport();
 
 	/** Remove from the gameviewport. */
-	void RemoveMenuFromGameViewport();
+	void RemoveMenuFromGameViewport();	
 
 	/** TickableObject Functions */
-	virtual void Tick(float DeltaTime) override;
+	virtual void Tick(float DeltaTime) override;	
 	virtual ETickableTickType GetTickableTickType() const override { return ETickableTickType::Always; }
 	virtual TStatId GetStatId() const override;
-	virtual bool IsTickableWhenPaused() const override { return true; }
+	virtual bool IsTickableWhenPaused() const override { return true; }	
 	virtual UWorld* GetTickableGameObjectWorld() const override;
 
 	/** Returns the player that owns the main menu. */
@@ -53,14 +53,14 @@ protected:
 		ESancturary,
 		EHighRise,
 		EMax,
-	};
+	};	
 
 	enum class EMatchType
 	{
 		Custom,
 		Quick
 	};
-
+	
 	/** Owning game instance */
 	TWeakObjectPtr<UShooterGameInstance> GameInstance;
 
@@ -108,7 +108,7 @@ protected:
 
 	/** LAN Options */
 	TSharedPtr<class FShooterMenuItem> HostLANItem;
-	TSharedPtr<class FShooterMenuItem> JoinLANItem;
+	TSharedPtr<class FShooterMenuItem> JoinLANItem;	
 
 	/** Dedicated Server Option */
 	TSharedPtr<class FShooterMenuItem> DedicatedItem;
@@ -175,7 +175,7 @@ protected:
 	void OnMatchmakingComplete(FName SessionName, bool bWasSuccessful);
 
 	/** bot count option changed callback */
-	void BotCountOptionChanged(TSharedPtr<FShooterMenuItem> MenuItem, int32 MultiOptionIndex);
+	void BotCountOptionChanged(TSharedPtr<FShooterMenuItem> MenuItem, int32 MultiOptionIndex);			
 
 	/** lan match option changed callback */
 	void LanMatchChanged(TSharedPtr<FShooterMenuItem> MenuItem, int32 MultiOptionIndex);
@@ -274,7 +274,7 @@ protected:
 	void OnUserCanPlayOnlineQuickMatch(const FUniqueNetId& UserId, EUserPrivileges::Type Privilege, uint32 PrivilegeResults);
 
 	// Generic confirmation handling (just hide the dialog)
-	FReply OnConfirmGeneric();
+	FReply OnConfirmGeneric();	
 
 	/** Delegate function executed when the quick match async cancel operation is complete */
 	void OnCancelMatchmakingComplete(FName SessionName, bool bWasSuccessful);
@@ -309,7 +309,7 @@ protected:
 	bool bIncQuickMAlpha;
 
 	/** lan game? */
-	bool bIsLanMatch;
+	bool bIsLanMatch;	
 
 	/** Recording demos? */
 	bool bIsRecordingDemo;
@@ -336,7 +336,7 @@ protected:
 	TSharedPtr<class SShooterConfirmationDialog> QuickMatchSearchingWidget;
 
 	/* used for managing the QuickMatchSearchingWidget */
-	TSharedPtr<class SWeakWidget> QuickMatchSearchingWidgetContainer;
+	TSharedPtr<class SWeakWidget> QuickMatchSearchingWidgetContainer;	
 
 	/* used for managing the QuickMatchStoppingWidget */
 	TSharedPtr<class SShooterConfirmationDialog> QuickMatchStoppingWidget;

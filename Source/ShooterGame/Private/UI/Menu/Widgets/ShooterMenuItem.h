@@ -18,7 +18,7 @@ namespace EShooterMenuItemType
 /** TArray< TSharedPtr<class FShooterMenuItem> > */
 typedef TArray< TSharedPtr<class FShooterMenuItem> > MenuPtr;
 
-class FShooterMenuInfo
+class FShooterMenuInfo 
 {
 public:
 	/** menu items array */
@@ -56,7 +56,7 @@ public:
 
 	/** Send friend invite delegate */
 	DECLARE_DELEGATE(FOnOnControllerFacebuttonDownPressed);
-
+	
 	/** multi-choice option changed, parameters are menu item itself and new multi-choice index  */
 	DECLARE_DELEGATE_TwoParams(FOnOptionChanged, TSharedPtr<FShooterMenuItem>, int32);
 
@@ -79,7 +79,7 @@ public:
 	FOnOnControllerFacebuttonDownPressed OnControllerFacebuttonDownPressed;
 
 	/** menu item type */
-	EShooterMenuItemType::Type MenuItemType;
+	EShooterMenuItemType::Type MenuItemType;	
 
 	/** if this menu item will be created when menu is opened */
 	bool bVisible;
