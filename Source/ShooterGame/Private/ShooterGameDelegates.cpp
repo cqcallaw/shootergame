@@ -1,5 +1,6 @@
 // Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
 
+#include "ShooterGameDelegates.h"
 #include "ShooterGame.h"
 #include "Online/ShooterPlayerState.h"
 #include "GameDelegates.h"
@@ -14,8 +15,16 @@ struct FShooterGameGlobalDelegateInit
 {
 	FShooterGameGlobalDelegateInit()
 	{
-		FPakPlatformFile::GetPakChunkSignatureCheckFailedHandler().AddStatic(FShooterGameGlobalDelegateInit::HandlePakChunkSignatureCheckFailed);
-		FPakPlatformFile::GetPakMasterSignatureTableCheckFailureHandler().AddStatic(FShooterGameGlobalDelegateInit::HandlePakMasterSignatureTableCheckFailure);
+		// deprecated
+		/*FPakPlatformFile::GetPakChunkSignatureCheckFailedHandler().AddStatic(FShooterGameGlobalDelegateInit::HandlePakChunkSignatureCheckFailed);
+		FPakPlatformFile::GetPakMasterSignatureTableCheckFailureHandler().AddStatic(FShooterGameGlobalDelegateInit::HandlePakMasterSignatureTableCheckFailure);*/
+
+		// ref: https://answers.unrealengine.com/questions/207675/fcriticalsection-lock-causes-crash.html
+		{
+			FScopeLock Lock(&FPakPlatformFile::GetPakSigningFailureHandlerData().Lock);
+			FPakPlatformFile::GetPakSigningFailureHandlerData().ChunkSignatureCheckFailedDelegate.AddStatic(FShooterGameGlobalDelegateInit::HandlePakChunkSignatureCheckFailed);
+			FPakPlatformFile::GetPakSigningFailureHandlerData().MasterSignatureTableCheckFailedDelegate.AddStatic(FShooterGameGlobalDelegateInit::HandlePakMasterSignatureTableCheckFailure);
+		}
 	}
 
 	static void HandlePakChunkSignatureCheckFailed(const FPakChunkSignatureCheckFailedData& Data)
@@ -50,7 +59,7 @@ FAutoConsoleCommand CmdPlayGoNext(
 #endif
 
 #endif
-#include "ShooterGameState.h"
+#include "Online/ShooterGameState.h"
 
 
 // respond to requests from a companion app
@@ -67,7 +76,7 @@ static void WebServerDelegate(int32 UserIndex, const FString& Action, const FStr
 		{
 			UWorld* World = GameEngine->GetGameWorld();
 			if (World)
-			{			
+			{
 				ULocalPlayer *Player = GEngine->GetFirstGamePlayer(World);
 				if (Player)
 				{
@@ -105,7 +114,7 @@ static void AssignLayerChunkDelegate(const FAssignLayerChunkMap* ChunkManifest, 
 
 	static FString PS4PlatformString(TEXT("PS4"));
 	if (Platform.Compare(TEXT("PS4"), ESearchCase::IgnoreCase) == 0)
-	{	
+	{
 		// test dual layer BD50 packaging.
 		switch (ChunkIndex)
 		{
@@ -126,7 +135,7 @@ static void ExtendedSaveGameInfoDelegate(const TCHAR* SaveName, const EGameDeleg
 	static const int32 MAX_SAVEGAME_SIZE = 100 * 1024;
 	switch(Key)
 	{
-		case EGameDelegates_SaveGame::MaxSize:			
+		case EGameDelegates_SaveGame::MaxSize:
 			Value = FString::Printf(TEXT("%i"), MAX_SAVEGAME_SIZE);
 			break;
 		case EGameDelegates_SaveGame::Title:

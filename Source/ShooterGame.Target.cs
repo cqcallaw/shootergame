@@ -7,6 +7,7 @@ public class ShooterGameTarget : TargetRules
 {
     public ShooterGameTarget(TargetInfo Target) : base(Target)
     {
+        DefaultBuildSettings = BuildSettingsVersion.V2;
         Type = TargetType.Game;
         bUsesSteam = true;
 

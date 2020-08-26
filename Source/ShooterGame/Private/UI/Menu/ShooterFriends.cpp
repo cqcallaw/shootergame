@@ -1,13 +1,13 @@
 // Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
 
-#include "ShooterGame.h"
 #include "ShooterFriends.h"
+#include "ShooterGame.h"
 #include "ShooterTypes.h"
 #include "ShooterStyle.h"
 #include "ShooterOptionsWidgetStyle.h"
 #include "Player/ShooterPersistentUser.h"
 #include "ShooterGameUserSettings.h"
-#include "ShooterLocalPlayer.h"
+#include "Player/ShooterLocalPlayer.h"
 #include "OnlineSubsystemUtils.h"
 
 #define LOCTEXT_NAMESPACE "ShooterGame.HUD.Menu"
@@ -150,7 +150,7 @@ void FShooterFriends::ViewSelectedFriendProfile()
 		{
 			TSharedPtr<const FUniqueNetId> Requestor = Identity->GetUniquePlayerId(LocalUserNum);
 			TSharedPtr<const FUniqueNetId> Requestee = Friends[CurrFriendIndex]->GetUserId();
-			
+
 			IOnlineExternalUIPtr ExternalUI = OnlineSub->GetExternalUIInterface();
 			if (ExternalUI.IsValid() && Requestor.IsValid() && Requestee.IsValid())
 			{

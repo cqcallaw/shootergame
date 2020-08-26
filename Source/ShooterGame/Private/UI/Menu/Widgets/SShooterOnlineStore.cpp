@@ -1,8 +1,8 @@
 // Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
 
-#include "ShooterGame.h"
 #include "SShooterOnlineStore.h"
-#include "SHeaderRow.h"
+#include "ShooterGame.h"
+#include "Widgets/Views/SHeaderRow.h"
 #include "ShooterStyle.h"
 #include "ShooterGameLoadingScreen.h"
 #include "ShooterGameInstance.h"
@@ -20,7 +20,7 @@ void SShooterOnlineStore::Construct(const FArguments& InArgs)
 	State = EStoreState::Browsing;
 	StatusText = FText::GetEmpty();
 	BoxWidth = 125;
-	
+
 	ChildSlot
 	.VAlign(VAlign_Fill)
 	.HAlign(HAlign_Fill)
@@ -29,7 +29,7 @@ void SShooterOnlineStore::Construct(const FArguments& InArgs)
 		+SVerticalBox::Slot()
 		.AutoHeight()
 		[
-			SNew(SBox)  
+			SNew(SBox)
 			.WidthOverride(600)
 			.HeightOverride(300)
 			[
@@ -64,7 +64,7 @@ void SShooterOnlineStore::Construct(const FArguments& InArgs)
 				+ SRichTextBlock::ImageDecorator()
 			]
 		]
-		
+
 	];
 }
 
@@ -360,7 +360,7 @@ void SShooterOnlineStore::MoveSelection(int32 MoveBy)
 	}
 }
 
-FReply SShooterOnlineStore::OnKeyDown(const FGeometry& MyGeometry, const FKeyEvent& InKeyEvent) 
+FReply SShooterOnlineStore::OnKeyDown(const FGeometry& MyGeometry, const FKeyEvent& InKeyEvent)
 {
 	if (State != EStoreState::Browsing) // lock input
 	{
@@ -369,7 +369,7 @@ FReply SShooterOnlineStore::OnKeyDown(const FGeometry& MyGeometry, const FKeyEve
 
 	FReply Result = FReply::Unhandled();
 	const FKey Key = InKeyEvent.GetKey();
-	
+
 	if (Key == EKeys::Up || Key == EKeys::Gamepad_DPad_Up || Key == EKeys::Gamepad_LeftStick_Up)
 	{
 		MoveSelection(-1);

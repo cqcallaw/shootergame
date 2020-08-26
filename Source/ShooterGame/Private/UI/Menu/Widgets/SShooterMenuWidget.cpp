@@ -1,8 +1,8 @@
 // Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
 
+#include "SShooterMenuWidget.h"
 #include "ShooterGame.h"
 #include "Engine/Console.h"
-#include "SShooterMenuWidget.h"
 #include "ShooterMenuItem.h"
 #include "SShooterMenuItem.h"
 #include "ShooterStyle.h"
@@ -176,7 +176,7 @@ void SShooterMenuWidget::Construct(const FArguments& InArgs)
 								]
 							]
 						]
-						
+
 						+ SHorizontalBox::Slot()
 						.AutoWidth()
 						[
@@ -212,7 +212,7 @@ EVisibility SShooterMenuWidget::GetSlateVisibility() const
 	return bConsoleVisible ? EVisibility::HitTestInvisible : EVisibility::Visible;
 }
 
-FText SShooterMenuWidget::GetMenuTitle() const 
+FText SShooterMenuWidget::GetMenuTitle() const
 {
 	return CurrentMenuTitle;
 }
@@ -405,7 +405,7 @@ void SShooterMenuWidget::BuildLeftPanel(bool bInGoingBack)
 				NextMenu = CurrentMenu[PreviousIndex]->SubMenu;
 				bSubMenuChanging = true;
 			}
-		} 
+		}
 		else if (PendingLeftMenu.Num() > 0)
 		{
 			MenuHistory.Push(FShooterMenuInfo(CurrentMenu, SelectedIndex, CurrentMenuTitle));
@@ -427,7 +427,7 @@ void SShooterMenuWidget::BuildLeftPanel(bool bInGoingBack)
 					.OnClicked(this, &SShooterMenuWidget::ButtonClicked, i)
 					.Text(CurrentMenu[i]->GetText())
 					.bIsMultichoice(false);
-			} 
+			}
 			else if (CurrentMenu[i]->MenuItemType == EShooterMenuItemType::MultiChoice)
 			{
 				TmpWidget = SAssignNew(CurrentMenu[i]->Widget, SShooterMenuItem)
@@ -457,8 +457,8 @@ void SShooterMenuWidget::BuildLeftPanel(bool bInGoingBack)
 			}
 		}
 	}
-	
-	
+
+
 	TSharedPtr<FShooterMenuItem> FirstMenuItem = CurrentMenu.IsValidIndex(SelectedIndex) ? CurrentMenu[SelectedIndex] : NULL;
 	if (FirstMenuItem.IsValid() && FirstMenuItem->MenuItemType != EShooterMenuItemType::CustomWidget)
 	{
@@ -480,7 +480,7 @@ FText SShooterMenuWidget::GetOptionText(TSharedPtr<FShooterMenuItem> MenuItem) c
 void SShooterMenuWidget::BuildRightPanel()
 {
 	RightBox->ClearChildren();
-	
+
 	if (NextMenu.Num() == 0) return;
 
 	for(int32 i = 0; i < NextMenu.Num(); ++i)
@@ -527,7 +527,7 @@ void SShooterMenuWidget::UpdateArrows(TSharedPtr<FShooterMenuItem> MenuItem)
 	if (CurIndex > MinIndex)
 	{
 		MenuItem->Widget->LeftArrowVisible = EVisibility::Visible;
-	} 
+	}
 	else
 	{
 		MenuItem->Widget->LeftArrowVisible = EVisibility::Collapsed;
@@ -583,7 +583,7 @@ void SShooterMenuWidget::ConfirmMenuItem()
 	if (CurrentMenu[SelectedIndex]->OnConfirmMenuItem.IsBound())
 	{
 		CurrentMenu[SelectedIndex]->OnConfirmMenuItem.Execute();
-	} 
+	}
 	else if (CurrentMenu[SelectedIndex]->SubMenu.Num() > 0)
 	{
 		EnterSubMenu();
@@ -595,7 +595,7 @@ void SShooterMenuWidget::ControllerFacebuttonLeftPressed()
 	if (CurrentMenu[SelectedIndex]->OnControllerFacebuttonLeftPressed.IsBound())
 	{
 		CurrentMenu[SelectedIndex]->OnControllerFacebuttonLeftPressed.Execute();
-	} 
+	}
 }
 
 void SShooterMenuWidget::ControllerUpInputPressed()
@@ -679,8 +679,8 @@ void SShooterMenuWidget::Tick( const FGeometry& AllottedGeometry, const double I
 					&& NextMenu.Top()->SubMenu.Num() > 0)
 				{
 					NextMenu = NextMenu.Top()->SubMenu;
-				} 
-				else 
+				}
+				else
 				{
 					NextMenu.Reset();
 				}
@@ -825,7 +825,7 @@ FReply SShooterMenuWidget::OnMouseButtonDown(const FGeometry& MyGeometry, const 
 		MenuWidgetAnimation.JumpToEnd();
 	}
 
-	//Set the keyboard focus 
+	//Set the keyboard focus
 	return FReply::Handled()
 		.SetUserFocus(SharedThis(this), EFocusCause::SetDirectly);
 }

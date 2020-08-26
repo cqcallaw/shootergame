@@ -1,7 +1,7 @@
 // Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
 
-#include "ShooterGame.h"
 #include "Weapons/ShooterWeapon.h"
+#include "ShooterGame.h"
 #include "Player/ShooterCharacter.h"
 #include "Particles/ParticleSystemComponent.h"
 #include "Bots/ShooterAIController.h"
@@ -117,8 +117,8 @@ void AShooterWeapon::OnEquipFinished()
 	bPendingEquip = false;
 
 	// Determine the state so that the can reload checks will work
-	DetermineWeaponState(); 
-	
+	DetermineWeaponState();
+
 	if (MyPawn)
 	{
 		// try to reload empty clip
@@ -130,7 +130,7 @@ void AShooterWeapon::OnEquipFinished()
 		}
 	}
 
-	
+
 }
 
 void AShooterWeapon::OnUnEquip()
@@ -260,7 +260,7 @@ void AShooterWeapon::StartReload(bool bFromReplication)
 		bPendingReload = true;
 		DetermineWeaponState();
 
-		float AnimDuration = PlayWeaponAnimation(ReloadAnim);		
+		float AnimDuration = PlayWeaponAnimation(ReloadAnim);
 		if (AnimDuration <= 0.0f)
 		{
 			AnimDuration = WeaponConfig.NoAnimReloadDuration;
@@ -271,7 +271,7 @@ void AShooterWeapon::StartReload(bool bFromReplication)
 		{
 			GetWorldTimerManager().SetTimer(TimerHandle_ReloadWeapon, this, &AShooterWeapon::ReloadWeapon, FMath::Max(0.1f, AnimDuration - 0.1f), false);
 		}
-		
+
 		if (MyPawn && MyPawn->IsLocallyControlled())
 		{
 			PlayWeaponSound(ReloadSound);
@@ -340,7 +340,7 @@ void AShooterWeapon::ClientStartReload_Implementation()
 bool AShooterWeapon::CanFire() const
 {
 	bool bCanFire = MyPawn && MyPawn->CanFire();
-	bool bStateOKToFire = ( ( CurrentState ==  EWeaponState::Idle ) || ( CurrentState == EWeaponState::Firing) );	
+	bool bStateOKToFire = ( ( CurrentState ==  EWeaponState::Idle ) || ( CurrentState == EWeaponState::Firing) );
 	return (( bCanFire == true ) && ( bStateOKToFire == true ) && ( bPendingReload == false ));
 }
 
@@ -349,7 +349,7 @@ bool AShooterWeapon::CanReload() const
 	bool bCanReload = (!MyPawn || MyPawn->CanReload());
 	bool bGotAmmo = ( CurrentAmmoInClip < WeaponConfig.AmmoPerClip) && (CurrentAmmo - CurrentAmmoInClip > 0 || HasInfiniteClip());
 	bool bStateOKToReload = ( ( CurrentState ==  EWeaponState::Idle ) || ( CurrentState == EWeaponState::Firing) );
-	return ( ( bCanReload == true ) && ( bGotAmmo == true ) && ( bStateOKToReload == true) );	
+	return ( ( bCanReload == true ) && ( bGotAmmo == true ) && ( bStateOKToReload == true) );
 }
 
 
@@ -367,7 +367,7 @@ void AShooterWeapon::GiveAmmo(int AddAmount)
 	{
 		BotAI->CheckAmmo(this);
 	}
-	
+
 	// start reload if clip was empty
 	if (GetCurrentAmmoInClip() <= 0 &&
 		CanReload() &&
@@ -389,7 +389,7 @@ void AShooterWeapon::UseAmmo()
 		CurrentAmmo--;
 	}
 
-	AShooterAIController* BotAI = MyPawn ? Cast<AShooterAIController>(MyPawn->GetController()) : NULL;	
+	AShooterAIController* BotAI = MyPawn ? Cast<AShooterAIController>(MyPawn->GetController()) : NULL;
 	AShooterPlayerController* PlayerController = MyPawn ? Cast<AShooterPlayerController>(MyPawn->GetController()) : NULL;
 	if (BotAI)
 	{
@@ -406,7 +406,7 @@ void AShooterWeapon::UseAmmo()
 			case EAmmoType::EBullet:
 			default:
 				PlayerState->AddBulletsFired(1);
-				break;			
+				break;
 		}
 	}
 }
@@ -440,7 +440,7 @@ void AShooterWeapon::HandleFiring()
 			FireWeapon();
 
 			UseAmmo();
-			
+
 			// update firing FX on remote clients if function was called on server
 			BurstCounter++;
 		}
@@ -461,7 +461,7 @@ void AShooterWeapon::HandleFiring()
 				MyHUD->NotifyOutOfAmmo();
 			}
 		}
-		
+
 		// stop weapon fire FX, but stay in Firing state
 		if (BurstCounter > 0)
 		{
@@ -573,7 +573,7 @@ void AShooterWeapon::DetermineWeaponState()
 			{
 				NewState = EWeaponState::Reloading;
 			}
-		}		
+		}
 		else if ( (bPendingReload == false ) && ( bWantsToFire == true ) && ( CanFire() == true ))
 		{
 			NewState = EWeaponState::Firing;
@@ -612,7 +612,7 @@ void AShooterWeapon::OnBurstFinished()
 	//{
 		StopSimulatingWeaponFire();
 	//}
-	
+
 	GetWorldTimerManager().ClearTimer(TimerHandle_HandleFiring);
 	bRefiring = false;
 
@@ -676,7 +676,7 @@ FVector AShooterWeapon::GetCameraAim() const
 	}
 	else if (GetInstigator())
 	{
-		FinalAim = GetInstigator()->GetBaseAimRotation().Vector();		
+		FinalAim = GetInstigator()->GetBaseAimRotation().Vector();
 	}
 
 	return FinalAim;
@@ -703,7 +703,7 @@ FVector AShooterWeapon::GetAdjustedAim() const
 			FinalAim = AIController->GetControlRotation().Vector();
 		}
 		else
-		{			
+		{
 			FinalAim = GetInstigator()->GetBaseAimRotation().Vector();
 		}
 	}
@@ -767,7 +767,7 @@ void AShooterWeapon::SetOwningPawn(AShooterCharacter* NewOwner)
 		MyPawn = NewOwner;
 		// net owner for RPC calls
 		SetOwner(NewOwner);
-	}	
+	}
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -824,7 +824,7 @@ void AShooterWeapon::SimulateWeaponFire()
 			// Split screen requires we create 2 effects. One that we see and one that the other player sees.
 			if( (MyPawn != NULL ) && ( MyPawn->IsLocallyControlled() == true ) )
 			{
-				AController* PlayerCon = MyPawn->GetController();				
+				AController* PlayerCon = MyPawn->GetController();
 				if( PlayerCon != NULL )
 				{
 					Mesh1P->GetSocketLocation(MuzzleAttachPoint);
@@ -835,8 +835,8 @@ void AShooterWeapon::SimulateWeaponFire()
 					Mesh3P->GetSocketLocation(MuzzleAttachPoint);
 					MuzzlePSCSecondary = UGameplayStatics::SpawnEmitterAttached(MuzzleFX, Mesh3P, MuzzleAttachPoint);
 					MuzzlePSCSecondary->bOwnerNoSee = true;
-					MuzzlePSCSecondary->bOnlyOwnerSee = false;				
-				}				
+					MuzzlePSCSecondary->bOnlyOwnerSee = false;
+				}
 			}
 			else
 			{

@@ -1,7 +1,7 @@
 // Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
 
-#include "ShooterGame.h"
 #include "ShooterOptions.h"
+#include "ShooterGame.h"
 #include "ShooterTypes.h"
 #include "ShooterStyle.h"
 #include "ShooterOptionsWidgetStyle.h"
@@ -17,7 +17,7 @@ void FShooterOptions::Construct(ULocalPlayer* InPlayerOwner)
 
 	PlayerOwner = InPlayerOwner;
 	MinSensitivity = 1;
-	
+
 	TArray<FText> ResolutionList;
 	TArray<FText> OnOffList;
 	TArray<FText> SensitivityList;
@@ -87,12 +87,12 @@ void FShooterOptions::Construct(ULocalPlayer* InPlayerOwner)
 	AimSensitivityOption = MenuHelper::AddMenuOptionSP(OptionsItem,LOCTEXT("AimSensitivity", "AIM SENSITIVITY"),SensitivityList, this, &FShooterOptions::AimSensitivityOptionChanged);
 	InvertYAxisOption = MenuHelper::AddMenuOptionSP(OptionsItem,LOCTEXT("InvertYAxis", "INVERT Y AXIS"),OnOffList, this, &FShooterOptions::InvertYAxisOptionChanged);
 	VibrationOption = MenuHelper::AddMenuOptionSP(OptionsItem, LOCTEXT("Vibration", "VIBRATION"), OnOffList, this, &FShooterOptions::ToggleVibration);
-	
+
 	MenuHelper::AddMenuItemSP(OptionsItem,LOCTEXT("ApplyChanges", "APPLY CHANGES"), this, &FShooterOptions::OnApplySettings);
 
 	//Do not allow to set aim sensitivity to 0
 	AimSensitivityOption->MinMultiChoiceIndex = MinSensitivity;
-    
+
     //Default vibration to On.
 	VibrationOption->SelectedMultiChoice = 1;
 
@@ -279,7 +279,7 @@ void FShooterOptions::UpdateOptions()
 		SensitivityOpt = PersistentUser->GetAimSensitivity();
 		GammaOpt = PersistentUser->GetGamma();
 		bVibrationOpt = PersistentUser->GetVibration();
-	} 
+	}
 
 	InvertYAxisOption->SelectedMultiChoice =  GetCurrentMouseYAxisInvertedIndex();
 	AimSensitivityOption->SelectedMultiChoice = GetCurrentMouseSensitivityIndex();

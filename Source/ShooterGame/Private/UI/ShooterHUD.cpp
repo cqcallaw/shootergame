@@ -1,7 +1,7 @@
 // Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
 
-#include "ShooterGame.h"
 #include "UI/ShooterHUD.h"
+#include "ShooterGame.h"
 #include "SShooterScoreboardWidget.h"
 #include "SChatWidget.h"
 #include "Engine/ViewportSplitScreen.h"
@@ -48,14 +48,14 @@ AShooterHUD::AShooterHUD(const FObjectInitializer& ObjectInitializer) : Super(Ob
 	HUDAssets02Texture = HUDAssets02TextureOb.Object;
 	LowHealthOverlayTexture = LowHealthOverlayTextureOb.Object;
 
-	HitNotifyIcon[EShooterHudPosition::Left] = UCanvas::MakeIcon(HitNotifyTexture,  158, 831, 585, 392);	
-	HitNotifyIcon[EShooterHudPosition::FrontLeft] = UCanvas::MakeIcon(HitNotifyTexture, 369, 434, 460, 378);	
-	HitNotifyIcon[EShooterHudPosition::Front] = UCanvas::MakeIcon(HitNotifyTexture,  848, 284, 361, 395);	
-	HitNotifyIcon[EShooterHudPosition::FrontRight] = UCanvas::MakeIcon(HitNotifyTexture,  1212, 397, 427, 394);	
-	HitNotifyIcon[EShooterHudPosition::Right] = UCanvas::MakeIcon(HitNotifyTexture, 1350, 844, 547, 321);	
-	HitNotifyIcon[EShooterHudPosition::BackRight] = UCanvas::MakeIcon(HitNotifyTexture, 1232, 1241, 458, 341);	
-	HitNotifyIcon[EShooterHudPosition::Back] = UCanvas::MakeIcon(HitNotifyTexture,  862, 1384, 353, 408);	
-	HitNotifyIcon[EShooterHudPosition::BackLeft] = UCanvas::MakeIcon(HitNotifyTexture, 454, 1251, 371, 410);	
+	HitNotifyIcon[EShooterHudPosition::Left] = UCanvas::MakeIcon(HitNotifyTexture,  158, 831, 585, 392);
+	HitNotifyIcon[EShooterHudPosition::FrontLeft] = UCanvas::MakeIcon(HitNotifyTexture, 369, 434, 460, 378);
+	HitNotifyIcon[EShooterHudPosition::Front] = UCanvas::MakeIcon(HitNotifyTexture,  848, 284, 361, 395);
+	HitNotifyIcon[EShooterHudPosition::FrontRight] = UCanvas::MakeIcon(HitNotifyTexture,  1212, 397, 427, 394);
+	HitNotifyIcon[EShooterHudPosition::Right] = UCanvas::MakeIcon(HitNotifyTexture, 1350, 844, 547, 321);
+	HitNotifyIcon[EShooterHudPosition::BackRight] = UCanvas::MakeIcon(HitNotifyTexture, 1232, 1241, 458, 341);
+	HitNotifyIcon[EShooterHudPosition::Back] = UCanvas::MakeIcon(HitNotifyTexture,  862, 1384, 353, 408);
+	HitNotifyIcon[EShooterHudPosition::BackLeft] = UCanvas::MakeIcon(HitNotifyTexture, 454, 1251, 371, 410);
 
 	KillsBg = UCanvas::MakeIcon(HUDMainTexture, 15, 16, 235, 62);
 	TimePlaceBg  = UCanvas::MakeIcon(HUDMainTexture, 262, 16, 255, 62);
@@ -78,17 +78,17 @@ AShooterHUD::AShooterHUD(const FObjectInitializer& ObjectInitializer) : Super(Ob
 	Crosshair[EShooterCrosshairDirection::Bottom] = UCanvas::MakeIcon(HUDMainTexture, 74, 415, 9, 25); // bottom
 	Crosshair[EShooterCrosshairDirection::Center] = UCanvas::MakeIcon(HUDMainTexture, 75, 403, 7, 7); // center
 
-	Offsets[EShooterHudPosition::Left] = FVector2D(173,0);	
-	Offsets[EShooterHudPosition::FrontLeft] = FVector2D(120,125);	
-	Offsets[EShooterHudPosition::Front] = FVector2D(0,173);	
+	Offsets[EShooterHudPosition::Left] = FVector2D(173,0);
+	Offsets[EShooterHudPosition::FrontLeft] = FVector2D(120,125);
+	Offsets[EShooterHudPosition::Front] = FVector2D(0,173);
 	Offsets[EShooterHudPosition::FrontRight] = FVector2D(-120,125);
-	Offsets[EShooterHudPosition::Right] = FVector2D(-173,0);	
+	Offsets[EShooterHudPosition::Right] = FVector2D(-173,0);
 	Offsets[EShooterHudPosition::BackRight] = FVector2D(-120,-125);
 	Offsets[EShooterHudPosition::Back] = FVector2D(0,-173);
 	Offsets[EShooterHudPosition::BackLeft] = FVector2D(120,-125);
 
 
-	HitNotifyCrosshair = UCanvas::MakeIcon(HUDMainTexture, 54, 453, 50, 50); 
+	HitNotifyCrosshair = UCanvas::MakeIcon(HUDMainTexture, 54, 453, 50, 50);
 
 	Offset = 20.0f;
 	HUDLight = FColor(175,202,213,255);
@@ -144,7 +144,7 @@ void AShooterHUD::DrawWeaponHUD()
 		{
 			const float PriWeapOffsetY = 65;
 			const float PriWeaponBoxWidth = 150;
-		
+
 			Canvas->SetDrawColor(FColor::White);
 			const float PriWeapBgPosY =  Canvas->ClipY - Canvas->OrgY - (PriWeapOffsetY + PrimaryWeapBg.VL + Offset) * ScaleUI;
 
@@ -160,16 +160,16 @@ void AShooterHUD::DrawWeaponHUD()
 
 			const float LeftCornerWidth = 60;
 
-			FCanvasTileItem TileItem(FVector2D( PriClipPosX - Offset * ScaleUI, PriWeapBgPosY ), PrimaryWeapBg.Texture->Resource, 
+			FCanvasTileItem TileItem(FVector2D( PriClipPosX - Offset * ScaleUI, PriWeapBgPosY ), PrimaryWeapBg.Texture->Resource,
 				FVector2D( LeftCornerWidth * ScaleUI, PrimaryWeapBg.VL * ScaleUI ),	 FLinearColor::White);
-			MakeUV(PrimaryWeapBg, TileItem.UV0, TileItem.UV1, PrimaryWeapBg.U, PrimaryWeapBg.V, LeftCornerWidth, PrimaryWeapBg.VL);  
+			MakeUV(PrimaryWeapBg, TileItem.UV0, TileItem.UV1, PrimaryWeapBg.U, PrimaryWeapBg.V, LeftCornerWidth, PrimaryWeapBg.VL);
 			TileItem.BlendMode = SE_BLEND_Translucent;
 			Canvas->DrawItem( TileItem );
 
 			const float RestWidth =  Canvas->ClipX - PriClipPosX - LeftCornerWidth * ScaleUI;
 			TileItem.Position = FVector2D(PriClipPosX - (Offset - LeftCornerWidth) * ScaleUI, PriWeapBgPosY);
 			TileItem.Size = FVector2D(RestWidth, PrimaryWeapBg.VL * ScaleUI);
-			MakeUV(PrimaryWeapBg, TileItem.UV0, TileItem.UV1, PrimaryWeapBg.U + PrimaryWeapBg.UL - RestWidth / ScaleUI, PrimaryWeapBg.V, RestWidth / ScaleUI, PrimaryWeapBg.VL);  
+			MakeUV(PrimaryWeapBg, TileItem.UV0, TileItem.UV1, PrimaryWeapBg.U + PrimaryWeapBg.UL - RestWidth / ScaleUI, PrimaryWeapBg.V, RestWidth / ScaleUI, PrimaryWeapBg.VL);
 			Canvas->DrawItem( TileItem );
 
 			//Drawing primary weapon icon, ammo in the clip and total spare ammo numbers
@@ -184,7 +184,7 @@ void AShooterHUD::DrawWeaponHUD()
 
 			const float TopTextScale = 0.73f; // of 51pt font
 			const float TopTextPosX = Canvas->ClipX - Canvas->OrgX - (PriWeaponBoxWidth + Offset * 2 + (BoxWidth + SizeX * TopTextScale) / 2.0f)  * ScaleUI;
-			const float TopTextPosY = Canvas->ClipY - Canvas->OrgY - (PriWeapOffsetY + PrimaryWeapBg.VL + Offset - TextOffset / 2.0f) * ScaleUI; 
+			const float TopTextPosY = Canvas->ClipY - Canvas->OrgY - (PriWeapOffsetY + PrimaryWeapBg.VL + Offset - TextOffset / 2.0f) * ScaleUI;
 			TextItem.Text = FText::FromString( Text );
 			TextItem.Scale = FVector2D( TopTextScale * ScaleUI, TopTextScale * ScaleUI );
 			TextItem.FontRenderInfo = ShadowedFont;
@@ -194,7 +194,7 @@ void AShooterHUD::DrawWeaponHUD()
 			Canvas->StrLen(BigFont, Text, SizeX, SizeY);
 
 			const float BottomTextScale = 0.49f; // of 51pt font
-			const float BottomTextPosX = Canvas->ClipX - Canvas->OrgX - (PriWeaponBoxWidth + Offset * 2 + (BoxWidth + SizeX * BottomTextScale) / 2.0f) * ScaleUI; 
+			const float BottomTextPosX = Canvas->ClipX - Canvas->OrgX - (PriWeaponBoxWidth + Offset * 2 + (BoxWidth + SizeX * BottomTextScale) / 2.0f) * ScaleUI;
 			const float BottomTextPosY = TopTextPosY + (TopTextHeight - 0.8f * TextOffset) * ScaleUI;
 			TextItem.Text = FText::FromString( Text );
 			TextItem.Scale = FVector2D( BottomTextScale*ScaleUI, BottomTextScale * ScaleUI );
@@ -259,16 +259,16 @@ void AShooterHUD::DrawWeaponHUD()
 
 			//draw background in two parts to match number of clip icons
 			const float LeftCornerWidth = 38;
-			FCanvasTileItem TileItem(FVector2D(  SecClipPosX - Offset * ScaleUI, SecWeapBgPosY ), SecondaryWeapBg.Texture->Resource, 
+			FCanvasTileItem TileItem(FVector2D(  SecClipPosX - Offset * ScaleUI, SecWeapBgPosY ), SecondaryWeapBg.Texture->Resource,
 			FVector2D( LeftCornerWidth * ScaleUI, SecondaryWeapBg.VL * ScaleUI ), FLinearColor::White);
-			MakeUV(SecondaryWeapBg, TileItem.UV0, TileItem.UV1, SecondaryWeapBg.U, SecondaryWeapBg.V, LeftCornerWidth, SecondaryWeapBg.VL);  
+			MakeUV(SecondaryWeapBg, TileItem.UV0, TileItem.UV1, SecondaryWeapBg.U, SecondaryWeapBg.V, LeftCornerWidth, SecondaryWeapBg.VL);
 			TileItem.BlendMode = SE_BLEND_Translucent;
 			Canvas->DrawItem(TileItem);
 
 			const float RestWidth =  Canvas->ClipX - SecClipPosX - LeftCornerWidth * ScaleUI;
 			TileItem.Position = FVector2D(SecClipPosX - (Offset - LeftCornerWidth) * ScaleUI, SecWeapBgPosY);
 			TileItem.Size = FVector2D(RestWidth, SecondaryWeapBg.VL * ScaleUI);
-			MakeUV(SecondaryWeapBg, TileItem.UV0, TileItem.UV1, SecondaryWeapBg.U + SecondaryWeapBg.UL - RestWidth / ScaleUI, SecondaryWeapBg.V, RestWidth / ScaleUI, SecondaryWeapBg.VL);  
+			MakeUV(SecondaryWeapBg, TileItem.UV0, TileItem.UV1, SecondaryWeapBg.U + SecondaryWeapBg.UL - RestWidth / ScaleUI, SecondaryWeapBg.V, RestWidth / ScaleUI, SecondaryWeapBg.VL);
 			Canvas->DrawItem(TileItem);
 
 			/** Drawing secondary clip **/
@@ -305,7 +305,7 @@ void AShooterHUD::DrawWeaponHUD()
 			TopTextHeight = SizeY * TopTextScale;
 
 			const float TopTextPosX = Canvas->ClipX - Canvas->OrgX - (SecWeaponBoxWidth + Offset * 2 + (SecClipBoxWidth + SizeX * TopTextScale) / 2.0f)  * ScaleUI;
-			const float TopTextPosY = SecWeapBgPosY + (SecondaryWeapBg.VL - TopTextHeight) / 2.0f * ScaleUI; 
+			const float TopTextPosY = SecWeapBgPosY + (SecondaryWeapBg.VL - TopTextHeight) / 2.0f * ScaleUI;
 
 			TextItem.Text = FText::FromString( Text );
 			TextItem.Scale = FVector2D( TopTextScale * ScaleUI, TopTextScale * ScaleUI );
@@ -324,9 +324,9 @@ void AShooterHUD::DrawHealth()
 	Canvas->DrawIcon(HealthBarBg, HealthPosX, HealthPosY, ScaleUI);
 	const float HealthAmount =  FMath::Min(1.0f,MyPawn->Health / MyPawn->GetMaxHealth());
 
-	FCanvasTileItem TileItem(FVector2D(HealthPosX,HealthPosY), HealthBar.Texture->Resource, 
+	FCanvasTileItem TileItem(FVector2D(HealthPosX,HealthPosY), HealthBar.Texture->Resource,
 							 FVector2D(HealthBar.UL * HealthAmount  * ScaleUI, HealthBar.VL * ScaleUI), FLinearColor::White);
-	MakeUV(HealthBar, TileItem.UV0, TileItem.UV1, HealthBar.U, HealthBar.V, HealthBar.UL * HealthAmount, HealthBar.VL);  
+	MakeUV(HealthBar, TileItem.UV0, TileItem.UV1, HealthBar.U, HealthBar.V, HealthBar.UL * HealthAmount, HealthBar.VL);
 	TileItem.BlendMode = SE_BLEND_Translucent;
 	Canvas->DrawItem(TileItem);
 
@@ -359,7 +359,7 @@ void AShooterHUD::DrawMatchTimerAndPosition()
 			TextItem.Scale = FVector2D( ScaleUI, ScaleUI );
 			Text = LOCTEXT("WarmupString","MATCH STARTS IN: ").ToString() + FString::FromInt(MyGameState->RemainingTime);
 			TextItem.SetColor( HUDLight );
-			TextItem.Text = FText::FromString( Text );			
+			TextItem.Text = FText::FromString( Text );
 			AddMatchInfoString(TextItem);
 		}
 		else if (MyGameState->GetMatchState() == MatchState::InProgress)
@@ -462,7 +462,7 @@ void AShooterHUD::DrawKills()
 	{
 		Text = FString::FromInt(MyPlayerState->GetKills());
 	}
-	else 
+	else
 	{
 		Text = FString("0");
 	}
@@ -504,8 +504,8 @@ void AShooterHUD::DrawHUD()
 		{
 			const ESplitScreenType::Type SSType = LP->ViewportClient->GetCurrentSplitscreenConfiguration();
 
-			if ( (SSType == ESplitScreenType::TwoPlayer_Horizontal) || 
-				 (SSType == ESplitScreenType::ThreePlayer_FavorBottom && SSPlayerIndex == 2) || 
+			if ( (SSType == ESplitScreenType::TwoPlayer_Horizontal) ||
+				 (SSType == ESplitScreenType::ThreePlayer_FavorBottom && SSPlayerIndex == 2) ||
 				 (SSType == ESplitScreenType::ThreePlayer_FavorTop && SSPlayerIndex == 0))
 			{
 				// full-width splitscreen viewports can handle same size HUD elements as full-screen viewports
@@ -520,7 +520,7 @@ void AShooterHUD::DrawHUD()
 	float TextScale = 1.0f;
 	// enforce min
 	ScaleUI = FMath::Max(ScaleUI, MinHudScale);
-	
+
 	AShooterCharacter* MyPawn = Cast<AShooterCharacter>(GetOwningPawn());
 	if (MyPawn && MyPawn->IsAlive() && MyPawn->Health < MyPawn->GetMaxHealth() * MyPawn->GetLowHealthPercentage())
 	{
@@ -607,20 +607,20 @@ void AShooterHUD::DrawHUD()
 
 			const float Alpha = FMath::Min(1.0f, 1 - (CurrentTime - NoAmmoNotifyTime) / NoAmmoFadeOutTime);
 			Text = LOCTEXT("NoAmmo", "NO AMMO").ToString();
-			
+
 			FCanvasTextItem TextItem( FVector2D::ZeroVector, FText::GetEmpty(), BigFont, HUDDark );
 			TextItem.EnableShadow( FLinearColor::Black );
 			TextItem.Text = FText::FromString( Text );
 			TextItem.Scale = FVector2D( TextScale * ScaleUI, TextScale * ScaleUI );
 			TextItem.FontRenderInfo = ShadowedFont;
 			TextItem.SetColor(FLinearColor(0.75f, 0.125f, 0.125f, Alpha ));
-			AddMatchInfoString(TextItem);			
+			AddMatchInfoString(TextItem);
 		}
 	}
 
 	// Render the info messages such as wating to respawn - these will be drawn below any 'killed player' message.
 	ShowInfoItems(MessageOffset, 1.0f);
-	
+
 }
 
 void AShooterHUD::DrawDebugInfoString(const FString& Text, float PosX, float PosY, bool bAlignLeft, bool bAlignTop, const FColor& TextColor)
@@ -658,7 +658,7 @@ void AShooterHUD::DrawCrosshair()
 	if (PCOwner)
 	{
 		AShooterCharacter* Pawn =  Cast<AShooterCharacter>(PCOwner->GetPawn());
-		if (Pawn && Pawn->GetWeapon() && !Pawn->IsRunning() 
+		if (Pawn && Pawn->GetWeapon() && !Pawn->IsRunning()
 			&& (Pawn->IsTargeting() || (!Pawn->IsTargeting() && !Pawn->GetWeapon()->bHideCrosshairWhileNotAiming)))
 		{
 			const float SpreadMulti = 300;
@@ -673,7 +673,7 @@ void AShooterHUD::DrawCrosshair()
 				const float EquipDuration = MyWeapon->GetEquipDuration();
 				AnimOffset = 300 * (1.0f - FMath::Min(1.0f,(CurrentTime - EquipStartedTime)/EquipDuration));
 			}
-			float CrossSpread = 2 + AnimOffset; 
+			float CrossSpread = 2 + AnimOffset;
 			if (InstantWeapon != NULL)
 			{
 				CrossSpread += SpreadMulti*FMath::Tan(FMath::DegreesToRadians(InstantWeapon->GetCurrentSpread()));
@@ -688,11 +688,11 @@ void AShooterHUD::DrawCrosshair()
 				if (MyWeapon && MyWeapon->UseCustomAimingCrosshair && Pawn->IsTargeting())
 				{
 					CurrentCrosshair[i] = &MyWeapon->AimingCrosshair[i];
-				} 
+				}
 				else if (MyWeapon && MyWeapon->UseCustomCrosshair)
 				{
 					CurrentCrosshair[i] = &MyWeapon->Crosshair[i];
-				} 
+				}
 				else
 				{
 					CurrentCrosshair[i] = &Crosshair[i];
@@ -708,18 +708,18 @@ void AShooterHUD::DrawCrosshair()
 			}
 			else
 			{
-				Canvas->DrawIcon(*CurrentCrosshair[EShooterCrosshairDirection::Center], 
-					CenterX - (*CurrentCrosshair[EShooterCrosshairDirection::Center]).UL*ScaleUI / 2.0f, 
+				Canvas->DrawIcon(*CurrentCrosshair[EShooterCrosshairDirection::Center],
+					CenterX - (*CurrentCrosshair[EShooterCrosshairDirection::Center]).UL*ScaleUI / 2.0f,
 					CenterY - (*CurrentCrosshair[EShooterCrosshairDirection::Center]).VL*ScaleUI / 2.0f, ScaleUI);
 
 				Canvas->DrawIcon(*CurrentCrosshair[EShooterCrosshairDirection::Left],
-					CenterX - 1 - (*CurrentCrosshair[EShooterCrosshairDirection::Left]).UL * ScaleUI - CrossSpread * ScaleUI, 
+					CenterX - 1 - (*CurrentCrosshair[EShooterCrosshairDirection::Left]).UL * ScaleUI - CrossSpread * ScaleUI,
 					CenterY - (*CurrentCrosshair[EShooterCrosshairDirection::Left]).VL*ScaleUI / 2.0f, ScaleUI);
-				Canvas->DrawIcon(*CurrentCrosshair[EShooterCrosshairDirection::Right], 
-					CenterX + CrossSpread * ScaleUI, 
+				Canvas->DrawIcon(*CurrentCrosshair[EShooterCrosshairDirection::Right],
+					CenterX + CrossSpread * ScaleUI,
 					CenterY - (*CurrentCrosshair[EShooterCrosshairDirection::Right]).VL * ScaleUI / 2.0f, ScaleUI);
 
-				Canvas->DrawIcon(*CurrentCrosshair[EShooterCrosshairDirection::Top], 
+				Canvas->DrawIcon(*CurrentCrosshair[EShooterCrosshairDirection::Top],
 					CenterX - (*CurrentCrosshair[EShooterCrosshairDirection::Top]).UL * ScaleUI / 2.0f,
 					CenterY - 1 - (*CurrentCrosshair[EShooterCrosshairDirection::Top]).VL * ScaleUI - CrossSpread * ScaleUI, ScaleUI);
 				Canvas->DrawIcon(*CurrentCrosshair[EShooterCrosshairDirection::Bottom],
@@ -732,8 +732,8 @@ void AShooterHUD::DrawCrosshair()
 				const float Alpha = FMath::Min(1.0f, 1 - (CurrentTime - LastEnemyHitTime) / LastEnemyHitDisplayTime);
 				Canvas->SetDrawColor(255,255,255,255*Alpha);
 
-				Canvas->DrawIcon(HitNotifyCrosshair, 
-					CenterX - HitNotifyCrosshair.UL*ScaleUI / 2.0f, 
+				Canvas->DrawIcon(HitNotifyCrosshair,
+					CenterX - HitNotifyCrosshair.UL*ScaleUI / 2.0f,
 					CenterY - HitNotifyCrosshair.VL*ScaleUI / 2.0f, ScaleUI);
 			}
 		}
@@ -746,7 +746,7 @@ void AShooterHUD::DrawDeathMessages()
 	{
 		return;
 	}
-	
+
 	float OffsetX = 20;
 	float OffsetY = 20;
 
@@ -794,13 +794,13 @@ void AShooterHUD::DrawDeathMessages()
 		TextItem.Text = FText::FromString( Message.KillerDesc );
 		Canvas->DrawItem(TextItem, CurrentX, CurrentY);
 		CurrentX += KillerSize.X * TextScale * ScaleUI;
-		
+
 		if (Message.DamageType.IsValid())
 		{
 			Canvas->SetDrawColor(FColor::White);
 			float ItemSizeY = KilledTextSize.Y * TextScale * ScaleUI;
 			Canvas->DrawIcon(Message.DamageType->KillIcon,
-				CurrentX + (OffsetX / 4.0f) * ScaleUI, 
+				CurrentX + (OffsetX / 4.0f) * ScaleUI,
 				CurrentY + (ItemSizeY - Message.DamageType->KillIcon.VL * ScaleUI) / 2.0f, ScaleUI);
 			CurrentX += (Message.DamageType->KillIcon.UL + OffsetX / 2.0f) * ScaleUI;
 		}
@@ -814,8 +814,8 @@ void AShooterHUD::DrawDeathMessages()
 
 			CurrentX += KilledTextSize.X * TextScale * ScaleUI;
 		}
-			
-		TextItem.SetColor(Message.bVictimIsOwner == true ? HUDLight : (Message.VictimTeamNum == 0 ? RedTeamColor : BlueTeamColor));		
+
+		TextItem.SetColor(Message.bVictimIsOwner == true ? HUDLight : (Message.VictimTeamNum == 0 ? RedTeamColor : BlueTeamColor));
 
 		Canvas->StrLen(NormalFont, Message.VictimDesc, VictimNameSize.X, VictimNameSize.Y);
 		TextItem.Text = FText::FromString( Message.VictimDesc );
@@ -868,7 +868,7 @@ void AShooterHUD::NotifyWeaponHit(float DamageTaken, struct FDamageEvent const& 
 	AShooterCharacter* MyPawn = (PlayerOwner) ? Cast<AShooterCharacter>(PlayerOwner->GetPawn()) : NULL;
 	if (MyPawn)
 	{
-		if (CurrentTime - LastHitTime > HitNotifyDisplayTime) 
+		if (CurrentTime - LastHitTime > HitNotifyDisplayTime)
 		{
 			for (uint8 i = 0; i < 8; i++)
 			{
@@ -876,22 +876,22 @@ void AShooterHUD::NotifyWeaponHit(float DamageTaken, struct FDamageEvent const& 
 			}
 		}
 
-		FVector ImpulseDir;    
-		FHitResult Hit; 
+		FVector ImpulseDir;
+		FHitResult Hit;
 		DamageEvent.GetBestHitInfo(this, PawnInstigator, Hit, ImpulseDir);
 
 		//check hit vector against pre-defined direction vectors - left, front, right, back
 		const FVector HitVector = FRotationMatrix(PlayerOwner->GetControlRotation()).InverseTransformVector(-ImpulseDir);
 
-		FVector Dirs2[8] = { 
-			FVector(0,-1,0) /*left*/, 
-			FVector(1,-1,0) /*front left*/, 
-			FVector(1,0,0) /*front*/, 
-			FVector(1,1,0) /*front right*/, 
-			FVector(0,1,0) /*right*/, 
-			FVector(-1,1,0) /*back right*/, 
+		FVector Dirs2[8] = {
+			FVector(0,-1,0) /*left*/,
+			FVector(1,-1,0) /*front left*/,
+			FVector(1,0,0) /*front*/,
+			FVector(1,1,0) /*front right*/,
+			FVector(0,1,0) /*right*/,
+			FVector(-1,1,0) /*back right*/,
 			FVector(-1,0,0), /*back*/
-			FVector(-1,-1,0) /*back left*/ 
+			FVector(-1,-1,0) /*back left*/
 		};
 		int32 DirIndex = -1;
 		float HighestModifier = 0;
@@ -916,7 +916,7 @@ void AShooterHUD::NotifyWeaponHit(float DamageTaken, struct FDamageEvent const& 
 		}
 
 	}
-	
+
 	LastHitTime = CurrentTime;
 }
 
@@ -934,7 +934,7 @@ void AShooterHUD::DrawHitIndicator()
 			const float TimeModifier = FMath::Max(0.0f, 1 - (CurrentTime - HitNotifyData[i].HitTime) / HitNotifyDisplayTime);
 			const float Alpha = TimeModifier * HitNotifyData[i].HitPercentage;
 			Canvas->SetDrawColor(255, 255, 255, FMath::Clamp(FMath::TruncToInt(Alpha * 255 * 1.5f), 0, 255));
-			Canvas->DrawIcon(HitNotifyIcon[i], 
+			Canvas->DrawIcon(HitNotifyIcon[i],
 				StartX + (HitNotifyIcon[i].U - HitNotifyTexture->GetSizeX() / 2 + Offsets[i].X) * ScaleUI,
 				StartY + (HitNotifyIcon[i].V - HitNotifyTexture->GetSizeY() / 2 + Offsets[i].Y) * ScaleUI,
 				ScaleUI);
@@ -994,7 +994,7 @@ bool AShooterHUD::ShowScoreboard(bool bEnable, bool bFocus)
 			return false;
 		}
 	}
-	
+
 	if (bEnable)
 	{
 		AShooterPlayerController* ShooterPC = Cast<AShooterPlayerController>(PlayerOwner);
@@ -1027,7 +1027,7 @@ bool AShooterHUD::ShowScoreboard(bool bEnable, bool bFocus)
 			// Give input focus to the scoreboard
 			FSlateApplication::Get().SetKeyboardFocus(ScoreboardWidget);
 		}
-	} 
+	}
 	else
 	{
 		if (ScoreboardWidgetContainer.IsValid())
@@ -1037,7 +1037,7 @@ bool AShooterHUD::ShowScoreboard(bool bEnable, bool bFocus)
 				GEngine->GameViewport->RemoveViewportWidgetContent(ScoreboardWidgetContainer.ToSharedRef());
 			}
 		}
-		
+
 		if( bFocus )
 		{
 			// Make sure viewport has focus
@@ -1113,7 +1113,7 @@ bool AShooterHUD::TryCreateChatWidget()
 			FLocalPlayerContext WorldContext(ShooterPC);
 			GEngine->GameViewport->AddViewportWidgetContent(
 				SAssignNew(ChatWidget,SChatWidget, WorldContext)/*.bKeepVisible(true)*/
-				);			
+				);
 		}
 	}
 	return bCreated;
@@ -1137,7 +1137,7 @@ float AShooterHUD::ShowInfoItems(float YOffset, float TextScale)
 	for (int32 iItem = 0; iItem < InfoItems.Num() ; iItem++)
 	{
 		float X = 0.0f;
-		float SizeX, SizeY; 
+		float SizeX, SizeY;
 		Canvas->StrLen(InfoItems[iItem].Font, InfoItems[iItem].Text.ToString(), SizeX, SizeY);
 		X = CanvasCentre - ( SizeX * InfoItems[iItem].Scale.X)/2.0f;
 		Canvas->DrawItem(InfoItems[iItem], X, Y);
@@ -1147,7 +1147,7 @@ float AShooterHUD::ShowInfoItems(float YOffset, float TextScale)
 }
 
 float AShooterHUD::DrawRecentlyKilledPlayer()
-{		
+{
 	const float DrawPos = (Canvas->ClipY / 4.0)* ScaleUI;
 	float LastYPos = DrawPos;
 	if (MatchState == EShooterMatchState::Playing)

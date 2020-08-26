@@ -4,8 +4,8 @@
 	ShooterGameInstance.cpp
 =============================================================================*/
 
-#include "ShooterGame.h"
 #include "ShooterGameInstance.h"
+#include "ShooterGame.h"
 #include "ShooterMainMenu.h"
 #include "ShooterWelcomeMenu.h"
 #include "ShooterMessageMenu.h"
@@ -1631,10 +1631,10 @@ FReply UShooterGameInstance::OnPairingUseNewProfile()
 	return FReply::Handled();
 }
 
-void UShooterGameInstance::HandleControllerPairingChanged( int GameUserIndex, const FUniqueNetId& PreviousUser, const FUniqueNetId& NewUser )
+void UShooterGameInstance::HandleControllerPairingChanged( int GameUserIndex, const FControllerPairingChangedUserInfo PreviousUserInfo, const FControllerPairingChangedUserInfo NewUserInfo )
 {
 	UE_LOG(LogOnlineGame, Log, TEXT("UShooterGameInstance::HandleControllerPairingChanged GameUserIndex %d PreviousUser '%s' NewUser '%s'"),
-		GameUserIndex, *PreviousUser.ToString(), *NewUser.ToString());
+		GameUserIndex, *(PreviousUserInfo.User.ToString()), *(NewUserInfo.User.ToString()));
 
 	if ( CurrentState == ShooterGameInstanceState::WelcomeScreen )
 	{

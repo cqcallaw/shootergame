@@ -1,7 +1,7 @@
 // Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
 
-#include "ShooterGame.h"
 #include "ShooterScoreboardWidgetStyle.h"
+#include "ShooterGame.h"
 
 FShooterScoreboardStyle::FShooterScoreboardStyle()
 {
@@ -28,5 +28,5 @@ void FShooterScoreboardStyle::GetResources(TArray<const FSlateBrush*>& OutBrushe
 UShooterScoreboardWidgetStyle::UShooterScoreboardWidgetStyle( const FObjectInitializer& ObjectInitializer )
 	: Super(ObjectInitializer)
 {
-	
+
 }

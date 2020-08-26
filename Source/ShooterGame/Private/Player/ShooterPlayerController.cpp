@@ -1,7 +1,7 @@
 // Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
 
-#include "ShooterGame.h"
 #include "Player/ShooterPlayerController.h"
+#include "ShooterGame.h"
 #include "Player/ShooterPlayerCameraManager.h"
 #include "Player/ShooterCheatManager.h"
 #include "Player/ShooterLocalPlayer.h"
@@ -11,11 +11,11 @@
 #include "UI/Style/ShooterStyle.h"
 #include "UI/ShooterHUD.h"
 #include "Online.h"
-#include "OnlineAchievementsInterface.h"
-#include "OnlineEventsInterface.h"
-#include "OnlineStatsInterface.h"
-#include "OnlineIdentityInterface.h"
-#include "OnlineSessionInterface.h"
+#include "Interfaces/OnlineAchievementsInterface.h"
+#include "Interfaces/OnlineEventsInterface.h"
+#include "Interfaces/OnlineStatsInterface.h"
+#include "Interfaces/OnlineIdentityInterface.h"
+#include "Interfaces/OnlineSessionInterface.h"
 #include "ShooterGameInstance.h"
 #include "ShooterLeaderboards.h"
 #include "ShooterGameViewportClient.h"
@@ -123,7 +123,7 @@ void AShooterPlayerController::TickActor(float DeltaTime, enum ELevelTick TickTy
 			{
 				ShooterFriends->UpdateFriends(LocalPlayer->GetControllerId());
 			}
-			
+
 			// Make sure the time between calls is long enough that we won't trigger (0x80552C81) and not exceed the web api rate limit
 			// That value is currently 75 requests / 15 minutes.
 			ShooterFriendUpdateTimer = 15;
@@ -302,7 +302,7 @@ void AShooterPlayerController::QueryStats()
 						{
 							UE_LOG(LogOnline, Warning, TEXT("Could not start leaderboard fetch process. This will affect stat writes for this session."));
 						}
-						
+
 					}
 				}
 			}
@@ -365,7 +365,7 @@ bool AShooterPlayerController::FindDeathCameraSpot(FVector& CameraLocation, FRot
 		CameraDir.Normalize();
 
 		const FVector TestLocation = PawnLocation - CameraDir.Vector() * CameraOffset;
-		
+
 		const bool bBlocked = GetWorld()->LineTraceSingleByChannel(HitResult, PawnLocation, TestLocation, ECC_Camera, TraceParams);
 
 		if (!bBlocked)
@@ -412,16 +412,16 @@ void AShooterPlayerController::OnKill()
 		if (LocalPlayer)
 		{
 			int32 UserIndex = LocalPlayer->GetControllerId();
-			TSharedPtr<const FUniqueNetId> UniqueID = Identity->GetUniquePlayerId(UserIndex);			
+			TSharedPtr<const FUniqueNetId> UniqueID = Identity->GetUniquePlayerId(UserIndex);
 			if (UniqueID.IsValid())
-			{			
+			{
 				AShooterCharacter* ShooterChar = Cast<AShooterCharacter>(GetCharacter());
 				// If player is dead, use location stored during pawn cleanup.
 				FVector Location = ShooterChar ? ShooterChar->GetActorLocation() : LastDeathLocation;
 				AShooterWeapon* Weapon = ShooterChar ? ShooterChar->GetWeapon() : 0;
 				int32 WeaponType = Weapon ? (int32)Weapon->GetAmmoType() : 0;
 
-				FOnlineEventParms Params;		
+				FOnlineEventParms Params;
 
 				Params.Add( TEXT( "SectionId" ), FVariantData( (int32)0 ) ); // unused
 				Params.Add( TEXT( "GameplayModeId" ), FVariantData( (int32)1 ) ); // @todo determine game mode (ffa v tdm)
@@ -430,42 +430,42 @@ void AShooterPlayerController::OnKill()
 				Params.Add( TEXT( "PlayerRoleId" ), FVariantData( (int32)0 ) ); // unused
 				Params.Add( TEXT( "PlayerWeaponId" ), FVariantData( (int32)WeaponType ) );
 				Params.Add( TEXT( "EnemyRoleId" ), FVariantData( (int32)0 ) ); // unused
-				Params.Add( TEXT( "EnemyWeaponId" ), FVariantData( (int32)0 ) ); // untracked			
+				Params.Add( TEXT( "EnemyWeaponId" ), FVariantData( (int32)0 ) ); // untracked
 				Params.Add( TEXT( "KillTypeId" ), FVariantData( (int32)0 ) ); // unused
 				Params.Add( TEXT( "LocationX" ), FVariantData( Location.X ) );
 				Params.Add( TEXT( "LocationY" ), FVariantData( Location.Y ) );
 				Params.Add( TEXT( "LocationZ" ), FVariantData( Location.Z ) );
-			
-				Events->TriggerEvent(*UniqueID, TEXT("KillOponent"), Params);				
+
+				Events->TriggerEvent(*UniqueID, TEXT("KillOponent"), Params);
 			}
 		}
 	}
 }
 
-void AShooterPlayerController::OnDeathMessage(class AShooterPlayerState* KillerPlayerState, class AShooterPlayerState* KilledPlayerState, const UDamageType* KillerDamageType) 
+void AShooterPlayerController::OnDeathMessage(class AShooterPlayerState* KillerPlayerState, class AShooterPlayerState* KilledPlayerState, const UDamageType* KillerDamageType)
 {
 	AShooterHUD* ShooterHUD = GetShooterHUD();
 	if (ShooterHUD)
 	{
-		ShooterHUD->ShowDeathMessage(KillerPlayerState, KilledPlayerState, KillerDamageType);		
+		ShooterHUD->ShowDeathMessage(KillerPlayerState, KilledPlayerState, KillerDamageType);
 	}
 
 	ULocalPlayer* LocalPlayer = Cast<ULocalPlayer>(Player);
-	if (LocalPlayer && LocalPlayer->GetCachedUniqueNetId().IsValid() && KilledPlayerState->UniqueId.IsValid())
+	if (LocalPlayer && LocalPlayer->GetCachedUniqueNetId().IsValid() && KilledPlayerState->GetUniqueId().IsValid())
 	{
 		// if this controller is the player who died, update the hero stat.
-		if (*LocalPlayer->GetCachedUniqueNetId() == *KilledPlayerState->UniqueId)
+		if (*LocalPlayer->GetCachedUniqueNetId() == *KilledPlayerState->GetUniqueId())
 		{
 			const UWorld* World = GetWorld();
 			const IOnlineEventsPtr Events = Online::GetEventsInterface(World);
 			const IOnlineIdentityPtr Identity = Online::GetIdentityInterface(World);
 
 			if (Events.IsValid() && Identity.IsValid())
-			{							
+			{
 				const int32 UserIndex = LocalPlayer->GetControllerId();
 				TSharedPtr<const FUniqueNetId> UniqueID = Identity->GetUniquePlayerId(UserIndex);
 				if (UniqueID.IsValid())
-				{				
+				{
 					AShooterCharacter* ShooterChar = Cast<AShooterCharacter>(GetCharacter());
 					AShooterWeapon* Weapon = ShooterChar ? ShooterChar->GetWeapon() : NULL;
 
@@ -481,16 +481,16 @@ void AShooterPlayerController::OnDeathMessage(class AShooterPlayerState* KillerP
 					Params.Add( TEXT( "PlayerWeaponId" ), FVariantData( (int32)WeaponType ) );
 					Params.Add( TEXT( "EnemyRoleId" ), FVariantData( (int32)0 ) ); // unused
 					Params.Add( TEXT( "EnemyWeaponId" ), FVariantData( (int32)0 ) ); // untracked
-				
+
 					Params.Add( TEXT( "LocationX" ), FVariantData( Location.X ) );
 					Params.Add( TEXT( "LocationY" ), FVariantData( Location.Y ) );
 					Params.Add( TEXT( "LocationZ" ), FVariantData( Location.Z ) );
-										
+
 					Events->TriggerEvent(*UniqueID, TEXT("PlayerDeath"), Params);
 				}
 			}
 		}
-	}	
+	}
 }
 
 void AShooterPlayerController::UpdateAchievementProgress( const FString& Id, float Percent )
@@ -609,11 +609,11 @@ void AShooterPlayerController::OnHideScoreboard()
 
 bool AShooterPlayerController::IsGameMenuVisible() const
 {
-	bool Result = false; 
+	bool Result = false;
 	if (ShooterIngameMenu.IsValid())
 	{
 		Result = ShooterIngameMenu->GetIsGameMenuUp();
-	} 
+	}
 
 	return Result;
 }
@@ -684,7 +684,7 @@ void AShooterPlayerController::ClientGameStarted_Implementation()
 			Params.Add( TEXT( "GameplayModeId" ), FVariantData( (int32)1 ) ); // @todo determine game mode (ffa v tdm)
 			Params.Add( TEXT( "DifficultyLevelId" ), FVariantData( (int32)0 ) ); // unused
 			Params.Add( TEXT( "MapName" ), FVariantData( MapName ) );
-			
+
 			Events->TriggerEvent(*UniqueId, TEXT("PlayerSessionStart"), Params);
 
 			// Online matches require the MultiplayerRoundStart event as well
@@ -699,7 +699,7 @@ void AShooterPlayerController::ClientGameStarted_Implementation()
 				MultiplayerParams.Add( TEXT( "GameplayModeId" ), FVariantData( (int32)1 ) ); // @todo determine game mode (ffa v tdm)
 				MultiplayerParams.Add( TEXT( "MatchTypeId" ), FVariantData( (int32)1 ) ); // @todo abstract the specific meaning of this value across platforms
 				MultiplayerParams.Add( TEXT( "DifficultyLevelId" ), FVariantData( (int32)0 ) ); // unused
-				
+
 				Events->TriggerEvent(*UniqueId, TEXT("MultiplayerRoundStart"), MultiplayerParams);
 			}
 
@@ -764,7 +764,7 @@ void AShooterPlayerController::HandleReturnToMainMenu()
 }
 
 void AShooterPlayerController::ClientReturnToMainMenu_Implementation(const FString& InReturnReason)
-{		
+{
 	const UWorld* World = GetWorld();
 	UShooterGameInstance* SGI = World != NULL ? Cast<UShooterGameInstance>(World->GetGameInstance()) : NULL;
 
@@ -804,7 +804,7 @@ void AShooterPlayerController::CleanupSessionOnReturnToMenu()
 void AShooterPlayerController::ClientGameEnded_Implementation(class AActor* EndGameFocus, bool bIsWinner)
 {
 	Super::ClientGameEnded_Implementation(EndGameFocus, bIsWinner);
-	
+
 	// Disable controls now the game has ended
 	SetIgnoreMoveInput(true);
 
@@ -835,7 +835,7 @@ void AShooterPlayerController::ClientSendRoundEndEvent_Implementation(bool bIsWi
 	ULocalPlayer* LocalPlayer = Cast<ULocalPlayer>(Player);
 
 	if(bHasSentStartEvents && LocalPlayer != nullptr && World != nullptr && Events.IsValid())
-	{	
+	{
 		FUniqueNetIdRepl UniqueId = LocalPlayer->GetPreferredUniqueNetId();
 
 		if (UniqueId.IsValid())
@@ -843,7 +843,7 @@ void AShooterPlayerController::ClientSendRoundEndEvent_Implementation(bool bIsWi
 			FString MapName = *FPackageName::GetShortName(World->PersistentLevel->GetOutermost()->GetName());
 			AShooterPlayerState* ShooterPlayerState = Cast<AShooterPlayerState>(PlayerState);
 			int32 PlayerScore = ShooterPlayerState ? ShooterPlayerState->GetScore() : 0;
-			
+
 			// Fire session end event for all cases
 			FOnlineEventParms Params;
 			Params.Add( TEXT( "GameplayModeId" ), FVariantData( (int32)1 ) ); // @todo determine game mode (ffa v tdm)
@@ -853,7 +853,7 @@ void AShooterPlayerController::ClientSendRoundEndEvent_Implementation(bool bIsWi
 			Params.Add( TEXT( "PlayerWon" ), FVariantData( (bool)bIsWinner ) );
 			Params.Add( TEXT( "MapName" ), FVariantData( MapName ) );
 			Params.Add( TEXT( "MapNameString" ), FVariantData( MapName ) ); // @todo workaround for a bug in backend service, remove when fixed
-			
+
 			Events->TriggerEvent(*UniqueId, TEXT("PlayerSessionEnd"), Params);
 
 			// Online matches require the MultiplayerRoundEnd event as well
@@ -871,7 +871,7 @@ void AShooterPlayerController::ClientSendRoundEndEvent_Implementation(bool bIsWi
 					MultiplayerParams.Add( TEXT( "DifficultyLevelId" ), FVariantData( (int32)0 ) ); // unused
 					MultiplayerParams.Add( TEXT( "TimeInSeconds" ), FVariantData( (float)ExpendedTimeInSeconds ) );
 					MultiplayerParams.Add( TEXT( "ExitStatusId" ), FVariantData( (int32)0 ) ); // unused
-					
+
 					Events->TriggerEvent(*UniqueId, TEXT("MultiplayerRoundEnd"), MultiplayerParams);
 				}
 			}
@@ -1064,18 +1064,18 @@ bool AShooterPlayerController::SetPause(bool bPause, FCanUnpause CanUnpauseDeleg
 	FUniqueNetIdRepl UserId = LocalPlayer ? LocalPlayer->GetCachedUniqueNetId() : FUniqueNetIdRepl();
 
 	// Don't send pause events while online since the game doesn't actually pause
-	if(GetNetMode() == NM_Standalone && Events.IsValid() && PlayerState->UniqueId.IsValid())
+	if(GetNetMode() == NM_Standalone && Events.IsValid() && PlayerState->GetUniqueId().IsValid())
 	{
 		FOnlineEventParms Params;
 		Params.Add( TEXT( "GameplayModeId" ), FVariantData( (int32)1 ) ); // @todo determine game mode (ffa v tdm)
 		Params.Add( TEXT( "DifficultyLevelId" ), FVariantData( (int32)0 ) ); // unused
 		if(Result && bPause)
 		{
-			Events->TriggerEvent(*PlayerState->UniqueId, TEXT("PlayerSessionPause"), Params);
+			Events->TriggerEvent(*PlayerState->GetUniqueId(), TEXT("PlayerSessionPause"), Params);
 		}
 		else
 		{
-			Events->TriggerEvent(*PlayerState->UniqueId, TEXT("PlayerSessionResume"), Params);
+			Events->TriggerEvent(*PlayerState->GetUniqueId(), TEXT("PlayerSessionResume"), Params);
 		}
 	}
 
@@ -1098,7 +1098,7 @@ FVector AShooterPlayerController::GetFocalLocation() const
 
 void AShooterPlayerController::ShowInGameMenu()
 {
-	AShooterHUD* ShooterHUD = GetShooterHUD();	
+	AShooterHUD* ShooterHUD = GetShooterHUD();
 	if(ShooterIngameMenu.IsValid() && !ShooterIngameMenu->GetIsGameMenuUp() && ShooterHUD && (ShooterHUD->IsMatchOver() == false))
 	{
 		ShooterIngameMenu->ToggleGameMenu();
@@ -1111,11 +1111,11 @@ void AShooterPlayerController::UpdateAchievementsOnGameEnd()
 	{
 		AShooterPlayerState* ShooterPlayerState = Cast<AShooterPlayerState>(PlayerState);
 		if (ShooterPlayerState)
-		{			
+		{
 			const UShooterPersistentUser*  PersistentUser = GetPersistentUser();
 
 			if (PersistentUser)
-			{						
+			{
 				const int32 Wins = PersistentUser->GetWins();
 				const int32 Losses = PersistentUser->GetLosses();
 				const int32 Matches = Wins + Losses;
@@ -1125,10 +1125,10 @@ void AShooterPlayerController::UpdateAchievementsOnGameEnd()
 
 				const int32 TotalBulletsFired = PersistentUser->GetBulletsFired();
 				const int32 TotalRocketsFired = PersistentUser->GetRocketsFired();
-			
+
 				float TotalGameAchievement = 0;
 				float CurrentGameAchievement = 0;
-			
+
 				///////////////////////////////////////
 				// Kill achievements
 				if (TotalKills >= 1)
@@ -1164,7 +1164,7 @@ void AShooterPlayerController::UpdateAchievementsOnGameEnd()
 					CurrentGameAchievement += 100;
 					TotalGameAchievement += 100;
 				}
-			
+
 				{
 					float fLotsRoundsPct = ((float)Matches / (float)LotsMatchesCount) * 100.0f;
 					fLotsRoundsPct = FMath::RoundToFloat(fLotsRoundsPct);
@@ -1185,7 +1185,7 @@ void AShooterPlayerController::UpdateAchievementsOnGameEnd()
 				}
 				TotalGameAchievement += 100;
 
-				{			
+				{
 					float fLotsWinPct = ((float)Wins / (float)LotsWinsCount) * 100.0f;
 					fLotsWinPct = FMath::RoundToInt(fLotsWinPct);
 					UpdateAchievementProgress(ACH_LOTS_WIN, fLotsWinPct);
@@ -1194,7 +1194,7 @@ void AShooterPlayerController::UpdateAchievementsOnGameEnd()
 					TotalGameAchievement += 100;
 				}
 
-				{			
+				{
 					float fManyWinPct = ((float)Wins / (float)ManyWinsCount) * 100.0f;
 					fManyWinPct = FMath::RoundToInt(fManyWinPct);
 					UpdateAchievementProgress(ACH_MANY_WIN, fManyWinPct);
@@ -1244,7 +1244,7 @@ void AShooterPlayerController::UpdateAchievementsOnGameEnd()
 				// Map Play Achievements
 				UWorld* World = GetWorld();
 				if (World)
-				{			
+				{
 					FString MapName = *FPackageName::GetShortName(World->PersistentLevel->GetOutermost()->GetName());
 					if (MapName.Find(TEXT("Highrise")) != -1)
 					{
@@ -1255,24 +1255,24 @@ void AShooterPlayerController::UpdateAchievementsOnGameEnd()
 						UpdateAchievementProgress(ACH_PLAY_SANCTUARY, 100.0f);
 					}
 				}
-				///////////////////////////////////////			
+				///////////////////////////////////////
 
 				const IOnlineEventsPtr Events = Online::GetEventsInterface(World);
 				const IOnlineIdentityPtr Identity = Online::GetIdentityInterface(World);
 
 				if (Events.IsValid() && Identity.IsValid())
-				{							
+				{
 					const int32 UserIndex = LocalPlayer->GetControllerId();
 					TSharedPtr<const FUniqueNetId> UniqueID = Identity->GetUniquePlayerId(UserIndex);
 					if (UniqueID.IsValid())
-					{				
+					{
 						FOnlineEventParms Params;
 
 						float fGamePct = (CurrentGameAchievement / TotalGameAchievement) * 100.0f;
 						fGamePct = FMath::RoundToFloat(fGamePct);
 						Params.Add( TEXT( "CompletionPercent" ), FVariantData( (float)fGamePct ) );
 						if (UniqueID.IsValid())
-						{				
+						{
 							Events->TriggerEvent(*UniqueID, TEXT("GameProgress"), Params);
 						}
 					}
@@ -1386,7 +1386,7 @@ void AShooterPlayerController::PreClientTravel(const FString& PendingURL, ETrave
 		{
 			ShooterViewport->ShowLoadingScreen();
 		}
-		
+
 		AShooterHUD* ShooterHUD = Cast<AShooterHUD>(GetHUD());
 		if (ShooterHUD != nullptr)
 		{

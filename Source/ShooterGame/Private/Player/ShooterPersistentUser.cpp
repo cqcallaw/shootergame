@@ -1,8 +1,8 @@
 // Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
 
-#include "ShooterGame.h"
 #include "Player/ShooterPersistentUser.h"
-#include "ShooterLocalPlayer.h"
+#include "ShooterGame.h"
+#include "Player/ShooterLocalPlayer.h"
 
 UShooterPersistentUser::UShooterPersistentUser(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -107,7 +107,7 @@ void UShooterPersistentUser::SavePersistentUser()
 UShooterPersistentUser* UShooterPersistentUser::LoadPersistentUser(FString SlotName, const int32 UserIndex)
 {
 	UShooterPersistentUser* Result = nullptr;
-	
+
 	// first set of player signins can happen before the UWorld exists, which means no OSS, which means no user names, which means no slotnames.
 	// Persistent users aren't valid in this state.
 	if (SlotName.Len() > 0)
@@ -123,7 +123,7 @@ UShooterPersistentUser* UShooterPersistentUser::LoadPersistentUser(FString SlotN
 			Result = Cast<UShooterPersistentUser>( UGameplayStatics::CreateSaveGameObject(UShooterPersistentUser::StaticClass()) );
 		}
 		check(Result != nullptr);
-	
+
 		Result->SlotName = SlotName;
 		Result->UserIndex = UserIndex;
 	}
@@ -145,7 +145,7 @@ void UShooterPersistentUser::AddMatchResult(int32 MatchKills, int32 MatchDeaths,
 	Deaths += MatchDeaths;
 	BulletsFired += MatchBulletsFired;
 	RocketsFired += MatchRocketsFired;
-	
+
 	if (bIsMatchWinner)
 	{
 		Wins++;

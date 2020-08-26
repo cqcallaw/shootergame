@@ -1,83 +1,83 @@
 // Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
 
 /**
-*	
+*
 *	===================== ShooterReplicationGraph Replication =====================
 *
 *	Overview
-*	
+*
 *		This changes the way actor relevancy works. AActor::IsNetRelevantFor is NOT used in this system!
-*		
+*
 *		Instead, The UShooterReplicationGraph contains UReplicationGraphNodes. These nodes are responsible for generating lists of actors to replicate for each connection.
 *		Most of these lists are persistent across frames. This enables most of the gathering work ("which actors should be considered for replication) to be shared/reused.
 *		Nodes may be global (used by all connections), connection specific (each connection gets its own node), or shared (e.g, teams: all connections on the same team share).
-*		Actors can be in multiple nodes! For example a pawn may be in the spatialization node but also in the always-relevant-for-team node. It will be returned twice for 
+*		Actors can be in multiple nodes! For example a pawn may be in the spatialization node but also in the always-relevant-for-team node. It will be returned twice for
 *		teammates. This is ok though should be minimized when possible.
-*		
+*
 *		UShooterReplicationGraph is intended to not be directly used by the game code. That is, you should not have to include ShooterReplicationGraph.h anywhere else.
 *		Rather, UShooterReplicationGraph depends on the game code and registers for events that the game code broadcasts (e.g., events for players joining/leaving teams).
 *		This choice was made because it gives UShooterReplicationGraph a complete holistic view of actor replication. Rather than exposing generic public functions that any
 *		place in game code can invoke, all notifications are explicitly registered in UShooterReplicationGraph::InitGlobalActorClassSettings.
-*		
+*
 *	ShooterGame Nodes
-*	
+*
 *		These are the top level nodes currently used:
-*		
-*		UReplicationGraphNode_GridSpatialization2D: 
-*		This is the spatialization node. All "distance based relevant" actors will be routed here. This node divides the map into a 2D grid. Each cell in the grid contains 
+*
+*		UReplicationGraphNode_GridSpatialization2D:
+*		This is the spatialization node. All "distance based relevant" actors will be routed here. This node divides the map into a 2D grid. Each cell in the grid contains
 *		children nodes that hold lists of actors based on how they update/go dormant. Actors are put in multiple cells. Connections pull from the single cell they are in.
-*		
+*
 *		UReplicationGraphNode_ActorList
 *		This is an actor list node that contains the always relevant actors. These actors are always relevant to every connection.
-*		
+*
 *		UShooterReplicationGraphNode_AlwaysRelevant_ForConnection
 *		This is the node for connection specific always relevant actors. This node does not maintain a persistent list but builds it each frame. This is possible because (currently)
 *		these actors are all easily accessed from the PlayerController. A persistent list would require notifications to be broadcast when these actors change, which would be possible
 *		but currently not necessary.
-*		
+*
 *		UShooterReplicationGraphNode_PlayerStateFrequencyLimiter
 *		A custom node for handling player state replication. This replicates a small rolling set of player states (currently 2/frame). This is so player states replicate
 *		to simulated connections at a low, steady frequency, and to take advantage of serialization sharing. Auto proxy player states are replicated at higher frequency (to the
 *		owning connection only) via UShooterReplicationGraphNode_AlwaysRelevant_ForConnection.
-*		
+*
 *		UReplicationGraphNode_TearOff_ForConnection
 *		Connection specific node for handling tear off actors. This is created and managed in the base implementation of Replication Graph.
-*		
+*
 *	Dependent Actors (AShooterWeapon)
-*		
+*
 *		Replication Graph introduces a concept of dependent actor replication. This is an actor (AShooterWeapon) that only replicates when another actor replicates (Pawn). I.e, the weapon
 *		actor itself never goes into the Replication Graph. It is never gathered on its own and never prioritized. It just has a chance to replicate when the Pawn replicates. This keeps
 *		the graph leaner since no extra work has to be done for the weapon actors.
-*		
-*		See UShooterReplicationGraph::OnCharacterWeaponChange: this is how actors are added/removed from the dependent actor list. 
-*	
+*
+*		See UShooterReplicationGraph::OnCharacterWeaponChange: this is how actors are added/removed from the dependent actor list.
+*
 *	How To Use
-*	
+*
 *		Making something always relevant: Please avoid if you can :) If you must, just setting AActor::bAlwaysRelevant = true in the class defaults will do it.
-*		
-*		Making something always relevant to connection: You will need to modify UShooterReplicationGraphNode_AlwaysRelevant_ForConnection::GatherActorListsForConnection. You will also want 
+*
+*		Making something always relevant to connection: You will need to modify UShooterReplicationGraphNode_AlwaysRelevant_ForConnection::GatherActorListsForConnection. You will also want
 *		to make sure the actor does not get put in one of the other nodes. The safest way to do this is by setting its EClassRepNodeMapping to NotRouted in UShooterReplicationGraph::InitGlobalActorClassSettings.
 *
 *	How To Debug
-*	
+*
 *		Its a good idea to just disable rep graph to see if your problem is specific to this system or just general replication/game play problem.
-*		
+*
 *		If it is replication graph related, there are several useful commands that can be used: see ReplicationGraph_Debugging.cpp. The most useful are below. Use the 'cheat' command to run these on the server from a client.
-*	
-*		"Net.RepGraph.PrintGraph" - this will print the graph to the log: each node and actor. 
+*
+*		"Net.RepGraph.PrintGraph" - this will print the graph to the log: each node and actor.
 *		"Net.RepGraph.PrintGraph class" - same as above but will group by class.
 *		"Net.RepGraph.PrintGraph nclass" - same as above but will group by native classes (hides blueprint noise)
-*		
+*
 *		Net.RepGraph.PrintAll <Frames> <ConnectionIdx> <"Class"/"Nclass"> -  will print the entire graph, the gathered actors, and how they were prioritized for a given connection for X amount of frames.
-*		
+*
 *		Net.RepGraph.PrintAllActorInfo <ActorMatchString> - will print the class, global, and connection replication info associated with an actor/class. If MatchString is empty will print everything. Call directly from client.
-*		
+*
 *		ShooterRepGraph.PrintRouting - will print the EClassRepNodeMapping for each class. That is, how a given actor class is routed (or not) in the Replication Graph.
-*	
+*
 */
 
-#include "ShooterGame.h"
 #include "ShooterReplicationGraph.h"
+#include "ShooterGame.h"
 
 #include "Net/UnrealNetwork.h"
 #include "Engine/LevelStreaming.h"
@@ -187,7 +187,7 @@ void UShooterReplicationGraph::InitGlobalActorClassSettings()
 	// ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	// Programatically build the rules.
 	// ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-	
+
 	auto AddInfo = [&]( UClass* Class, EClassRepNodeMapping Mapping) { ClassRepNodePolicies.Set(Class, Mapping); };
 
 	AddInfo( AShooterWeapon::StaticClass(),							EClassRepNodeMapping::NotRouted);				// Handled via DependantActor replication (Pawn)
@@ -221,7 +221,7 @@ void UShooterReplicationGraph::InitGlobalActorClassSettings()
 		// --------------------------------------------------------------------
 		// This is a replicated class. Save this off for the second pass below
 		// --------------------------------------------------------------------
-		
+
 		AllReplicatedClasses.Add(Class);
 
 		// Skip if already in the map (added explicitly)
@@ -229,7 +229,7 @@ void UShooterReplicationGraph::InitGlobalActorClassSettings()
 		{
 			continue;
 		}
-		
+
 		auto ShouldSpatialize = [](const AActor* CDO)
 		{
 			return CDO->GetIsReplicated() && (!(CDO->bAlwaysRelevant || CDO->bOnlyRelevantToOwner || CDO->bNetUseOwnerRelevancy));
@@ -244,7 +244,7 @@ void UShooterReplicationGraph::InitGlobalActorClassSettings()
 		UClass* SuperClass = Class->GetSuperClass();
 		if (AActor* SuperCDO = Cast<AActor>(SuperClass->GetDefaultObject()))
 		{
-			if (	SuperCDO->GetIsReplicated() == ActorCDO->GetIsReplicated() 
+			if (	SuperCDO->GetIsReplicated() == ActorCDO->GetIsReplicated()
 				&&	SuperCDO->bAlwaysRelevant == ActorCDO->bAlwaysRelevant
 				&&	SuperCDO->bOnlyRelevantToOwner == ActorCDO->bOnlyRelevantToOwner
 				&&	SuperCDO->bNetUseOwnerRelevancy == ActorCDO->bNetUseOwnerRelevancy
@@ -259,7 +259,7 @@ void UShooterReplicationGraph::InitGlobalActorClassSettings()
 				NonSpatializedChildClasses.Add(Class);
 			}
 		}
-			
+
 		if (ShouldSpatialize(ActorCDO))
 		{
 			AddInfo(Class, EClassRepNodeMapping::Spatialize_Dynamic);
@@ -273,7 +273,7 @@ void UShooterReplicationGraph::InitGlobalActorClassSettings()
 	// -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	// Setup FClassReplicationInfo. This is essentially the per class replication settings. Some we set explicitly, the rest we are setting via looking at the legacy settings on AActor.
 	// -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-	
+
 	TArray<UClass*> ExplicitlySetClasses;
 	auto SetClassInfo = [&](UClass* Class, const FClassReplicationInfo& Info) { GlobalActorReplicationInfoMap.SetClassInfo(Class, Info); ExplicitlySetClasses.Add(Class); };
 
@@ -288,7 +288,7 @@ void UShooterReplicationGraph::InitGlobalActorClassSettings()
 	PlayerStateRepInfo.DistancePriorityScale = 0.f;
 	PlayerStateRepInfo.ActorChannelFrameTimeout = 0;
 	SetClassInfo( APlayerState::StaticClass(), PlayerStateRepInfo );
-	
+
 	UReplicationGraphNode_ActorListFrequencyBuckets::DefaultSettings.ListSize = 12;
 
 	// Set FClassReplicationInfo based on legacy settings from all replicated classes
@@ -312,7 +312,7 @@ void UShooterReplicationGraph::InitGlobalActorClassSettings()
 	UE_LOG(LogShooterReplicationGraph, Log, TEXT("Class Routing Map: "));
 	UEnum* Enum = StaticEnum<EClassRepNodeMapping>();
 	for (auto ClassMapIt = ClassRepNodePolicies.CreateIterator(); ClassMapIt; ++ClassMapIt)
-	{		
+	{
 		UClass* Class = CastChecked<UClass>(ClassMapIt.Key().ResolveObjectPtr());
 		const EClassRepNodeMapping Mapping = ClassMapIt.Value();
 
@@ -347,7 +347,7 @@ void UShooterReplicationGraph::InitGlobalActorClassSettings()
 	//	This way at least keeps the rep graph out of game code directly and allows rep graph to exist in its own module
 	//	So for now, erring on the side of a cleaning dependencies between classes.
 	// -------------------------------------------------------
-	
+
 	AShooterCharacter::NotifyEquipWeapon.AddUObject(this, &UShooterReplicationGraph::OnCharacterEquipWeapon);
 	AShooterCharacter::NotifyUnEquipWeapon.AddUObject(this, &UShooterReplicationGraph::OnCharacterUnEquipWeapon);
 
@@ -376,7 +376,7 @@ void UShooterReplicationGraph::InitGlobalGraphNodes()
 	{
 		GridNode->AddSpatialRebuildBlacklistClass(AActor::StaticClass()); // Disable All spatial rebuilding
 	}
-	
+
 	AddGlobalGraphNode(GridNode);
 
 	// -----------------------------------------------
@@ -421,7 +421,7 @@ void UShooterReplicationGraph::RouteAddNetworkActorToNodes(const FNewReplicatedA
 		{
 			break;
 		}
-		
+
 		case EClassRepNodeMapping::RelevantAllConnections:
 		{
 			if (ActorInfo.StreamingLevelName == NAME_None)
@@ -442,13 +442,13 @@ void UShooterReplicationGraph::RouteAddNetworkActorToNodes(const FNewReplicatedA
 			GridNode->AddActor_Static(ActorInfo, GlobalInfo);
 			break;
 		}
-		
+
 		case EClassRepNodeMapping::Spatialize_Dynamic:
 		{
 			GridNode->AddActor_Dynamic(ActorInfo, GlobalInfo);
 			break;
 		}
-		
+
 		case EClassRepNodeMapping::Spatialize_Dormancy:
 		{
 			GridNode->AddActor_Dormancy(ActorInfo, GlobalInfo);
@@ -466,7 +466,7 @@ void UShooterReplicationGraph::RouteRemoveNetworkActorToNodes(const FNewReplicat
 		{
 			break;
 		}
-		
+
 		case EClassRepNodeMapping::RelevantAllConnections:
 		{
 			if (ActorInfo.StreamingLevelName == NAME_None)
@@ -479,7 +479,7 @@ void UShooterReplicationGraph::RouteRemoveNetworkActorToNodes(const FNewReplicat
 				if (RepList.Remove(ActorInfo.Actor) == false)
 				{
 					UE_LOG(LogShooterReplicationGraph, Warning, TEXT("Actor %s was not found in AlwaysRelevantStreamingLevelActors list. LevelName: %s"), *GetActorRepListTypeDebugString(ActorInfo.Actor), *ActorInfo.StreamingLevelName.ToString());
-				}				
+				}
 			}
 			break;
 		}
@@ -489,13 +489,13 @@ void UShooterReplicationGraph::RouteRemoveNetworkActorToNodes(const FNewReplicat
 			GridNode->RemoveActor_Static(ActorInfo);
 			break;
 		}
-		
+
 		case EClassRepNodeMapping::Spatialize_Dynamic:
 		{
 			GridNode->RemoveActor_Dynamic(ActorInfo);
 			break;
 		}
-		
+
 		case EClassRepNodeMapping::Spatialize_Dormancy:
 		{
 			GridNode->RemoveActor_Dormancy(ActorInfo);
@@ -668,7 +668,7 @@ void UShooterReplicationGraphNode_AlwaysRelevant_ForConnection::GatherActorLists
 
 	// Always relevant streaming level actors.
 	FPerConnectionActorInfoMap& ConnectionActorInfoMap = Params.ConnectionManager.ActorInfoMap;
-	
+
 	TMap<FName, FActorRepListRefView>& AlwaysRelevantStreamingLevelActors = ShooterGraph->AlwaysRelevantStreamingLevelActors;
 
 	for (int32 Idx=AlwaysRelevantStreamingLevelsNeedingReplication.Num()-1; Idx >= 0; --Idx)
@@ -787,12 +787,12 @@ void UShooterReplicationGraphNode_PlayerStateFrequencyLimiter::PrepareForReplica
 		if (CurrentList->Num() >= TargetActorsPerFrame)
 		{
 			ReplicationActorLists.AddDefaulted();
-			CurrentList = &ReplicationActorLists.Last(); 
+			CurrentList = &ReplicationActorLists.Last();
 			CurrentList->PrepareForWrite();
 		}
-		
+
 		CurrentList->Add(PS);
-	}	
+	}
 }
 
 void UShooterReplicationGraphNode_PlayerStateFrequencyLimiter::GatherActorListsForConnection(const FConnectionGatherActorListParameters& Params)
@@ -803,13 +803,13 @@ void UShooterReplicationGraphNode_PlayerStateFrequencyLimiter::GatherActorListsF
 	if (ForceNetUpdateReplicationActorList.Num() > 0)
 	{
 		Params.OutGatheredReplicationLists.AddReplicationActorList(ForceNetUpdateReplicationActorList);
-	}	
+	}
 }
 
 void UShooterReplicationGraphNode_PlayerStateFrequencyLimiter::LogNode(FReplicationGraphDebugInfo& DebugInfo, const FString& NodeName) const
 {
 	DebugInfo.Log(NodeName);
-	DebugInfo.PushIndent();	
+	DebugInfo.PushIndent();
 
 	int32 i=0;
 	for (const FActorRepListRefView& List : ReplicationActorLists)
@@ -837,7 +837,7 @@ void UShooterReplicationGraph::PrintRepNodePolicies()
 	for (auto It = ClassRepNodePolicies.CreateIterator(); It; ++It)
 	{
 		FObjectKey ObjKey = It.Key();
-		
+
 		EClassRepNodeMapping Mapping = It.Value();
 
 		GLog->Logf(TEXT("%-40s --> %s"), *GetNameSafe(ObjKey.ResolveObjectPtr()), *Enum->GetNameStringByValue(static_cast<uint32>(Mapping)));
@@ -856,7 +856,7 @@ FAutoConsoleCommandWithWorldAndArgs ShooterPrintRepNodePoliciesCmd(TEXT("Shooter
 
 // ------------------------------------------------------------------------------
 
-FAutoConsoleCommandWithWorldAndArgs ChangeFrequencyBucketsCmd(TEXT("ShooterRepGraph.FrequencyBuckets"), TEXT("Resets frequency bucket count."), FConsoleCommandWithWorldAndArgsDelegate::CreateLambda([](const TArray< FString >& Args, UWorld* World) 
+FAutoConsoleCommandWithWorldAndArgs ChangeFrequencyBucketsCmd(TEXT("ShooterRepGraph.FrequencyBuckets"), TEXT("Resets frequency bucket count."), FConsoleCommandWithWorldAndArgsDelegate::CreateLambda([](const TArray< FString >& Args, UWorld* World)
 {
 	int32 Buckets = 1;
 	if (Args.Num() > 0)

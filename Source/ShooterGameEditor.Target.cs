@@ -7,6 +7,7 @@ public class ShooterGameEditorTarget : TargetRules
 {
 	public ShooterGameEditorTarget(TargetInfo Target) : base(Target)
 	{
+		DefaultBuildSettings = BuildSettingsVersion.V2;
 		Type = TargetType.Editor;
 
 		ExtraModuleNames.Add("ShooterGame");
