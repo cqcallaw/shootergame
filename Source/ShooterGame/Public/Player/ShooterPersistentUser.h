@@ -54,7 +54,7 @@ public:
 	}
 
 	/** Is controller vibration turned on? */
-	FORCEINLINE bool GetVibration() const 
+	FORCEINLINE bool GetVibration() const
 	{
 		return bVibrationOpt;
 	}

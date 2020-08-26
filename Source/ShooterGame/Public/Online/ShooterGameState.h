@@ -5,7 +5,7 @@
 #include "ShooterGameState.generated.h"
 
 /** ranked PlayerState map, created from the GameState */
-typedef TMap<int32, TWeakObjectPtr<AShooterPlayerState> > RankedPlayerMap; 
+typedef TMap<int32, TWeakObjectPtr<AShooterPlayerState> > RankedPlayerMap;
 
 UCLASS()
 class AShooterGameState : public AGameState
@@ -31,7 +31,7 @@ public:
 	bool bTimerPaused;
 
 	/** gets ranked PlayerState map for specific team */
-	void GetRankedMap(int32 TeamIndex, RankedPlayerMap& OutRankedMap) const;	
+	void GetRankedMap(int32 TeamIndex, RankedPlayerMap& OutRankedMap) const;
 
 	void RequestFinishAndExitToMainMenu();
 };

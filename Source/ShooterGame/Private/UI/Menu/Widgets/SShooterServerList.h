@@ -40,7 +40,7 @@ public:
 
 	/** focus received handler - keep the ActionBindingsList focused */
 	virtual FReply OnFocusReceived(const FGeometry& MyGeometry, const FFocusEvent& InFocusEvent) override;
-	
+
 	/** focus lost handler - keep the ActionBindingsList focused */
 	virtual void OnFocusLost( const FFocusEvent& InFocusEvent ) override;
 
@@ -56,7 +56,7 @@ public:
 	/** selection changed handler */
 	void EntrySelectionChanged(TSharedPtr<FServerEntry> InItem, ESelectInfo::Type SelectInfo);
 
-	/** 
+	/**
 	 * Get the current game session
 	 *
 	 * @return The current game session
@@ -111,7 +111,7 @@ protected:
 	TArray< TSharedPtr<FServerEntry> > ServerList;
 
 	/** action bindings list slate widget */
-	TSharedPtr< SListView< TSharedPtr<FServerEntry> > > ServerListWidget; 
+	TSharedPtr< SListView< TSharedPtr<FServerEntry> > > ServerListWidget;
 
 	/** currently selected list item */
 	TSharedPtr<FServerEntry> SelectedItem;

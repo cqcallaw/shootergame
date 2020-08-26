@@ -41,7 +41,7 @@ struct FTeamPlayer
 {
 	/** The team the player belongs to */
 	uint8 TeamNum;
-		
+
 	/** The number within that team */
 	int32 PlayerId;
 

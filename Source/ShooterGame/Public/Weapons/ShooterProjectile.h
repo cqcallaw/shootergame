@@ -9,7 +9,7 @@
 class UProjectileMovementComponent;
 class USphereComponent;
 
-// 
+//
 UCLASS(Abstract, Blueprintable)
 class AShooterProjectile : public AActor
 {

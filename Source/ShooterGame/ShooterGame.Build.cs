@@ -9,7 +9,7 @@ public class ShooterGame : ModuleRules
 		PrivatePCHHeaderFile = "Public/ShooterGame.h";
 
 		PrivateIncludePaths.AddRange(
-			new string[] { 
+			new string[] {
 				"ShooterGame/Private",
 				"ShooterGame/Private/UI",
 				"ShooterGame/Private/UI/Menu",

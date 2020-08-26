@@ -49,7 +49,7 @@ public:
 
 	/** focus received handler - keep the ActionBindingsList focused */
 	virtual FReply OnFocusReceived(const FGeometry& MyGeometry, const FFocusEvent& InFocusEvent) override;
-	
+
 	/** focus lost handler - keep the ActionBindingsList focused */
 	virtual void OnFocusLost( const FFocusEvent& InFocusEvent ) override;
 
@@ -109,7 +109,7 @@ protected:
 	FOnLeaderboardReadCompleteDelegate LeaderboardReadCompleteDelegate;
 
 	/** action bindings list slate widget */
-	TSharedPtr< SListView< TSharedPtr<FLeaderboardRow> > > RowListWidget; 
+	TSharedPtr< SListView< TSharedPtr<FLeaderboardRow> > > RowListWidget;
 
 	/** currently selected list item */
 	TSharedPtr<FLeaderboardRow> SelectedItem;
@@ -122,7 +122,7 @@ protected:
 
 	/** Handle to the registered LeaderboardReadComplete delegate */
 	FDelegateHandle LeaderboardReadCompleteDelegateHandle;
-	
+
 	/** Handle to the registered LoginComplete delegate */
 	FDelegateHandle OnLoginCompleteDelegateHandle;
 };
