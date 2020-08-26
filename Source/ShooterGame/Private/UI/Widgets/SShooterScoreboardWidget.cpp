@@ -1,4 +1,4 @@
-// Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
+// Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "ShooterGame.h"
 #include "SShooterScoreboardWidget.h"
@@ -10,10 +10,8 @@
 #define LOCTEXT_NAMESPACE "ShooterScoreboard"
 
 // @todo: prevent interaction on PC for now (see OnFocusReceived for reasons)
-#if PLATFORM_XBOXONE
-#define INTERACTIVE_SCOREBOARD	1
-#else
-#define INTERACTIVE_SCOREBOARD	0
+#if !defined(INTERACTIVE_SCOREBOARD)
+	#define INTERACTIVE_SCOREBOARD	0
 #endif
 
 #define	NORM_PADDING	(FMargin(5))
@@ -31,7 +29,7 @@ void SShooterScoreboardWidget::Construct(const FArguments& InArgs)
 	MatchState = InArgs._MatchState.Get();
 
 	UpdatePlayerStateMaps();
-	
+
 	Columns.Add(FColumnData(LOCTEXT("KillsColumn", "Kills"),
 		ScoreboardStyle->KillStatColor,
 		FOnGetPlayerStateAttribute::CreateSP(this, &SShooterScoreboardWidget::GetAttributeValue_Kills)));
@@ -47,7 +45,7 @@ void SShooterScoreboardWidget::Construct(const FArguments& InArgs)
 	TSharedPtr<SHorizontalBox> HeaderCols;
 
 	const TSharedRef<SVerticalBox> ScoreboardGrid = SNew(SVerticalBox)
-	// HEADER ROW			
+	// HEADER ROW
 	+SVerticalBox::Slot() .AutoHeight()
 	[
 		//Padding in the header row (invisible) for speaker icon
@@ -64,7 +62,7 @@ void SShooterScoreboardWidget::Construct(const FArguments& InArgs)
 		[
 			SNew(SBorder)
 			.Padding(NORM_PADDING)
-			.VAlign(VAlign_Center)	
+			.VAlign(VAlign_Center)
 			.HAlign(HAlign_Center)
 			.BorderImage(&ScoreboardStyle->ItemBorderBrush)
 			.BorderBackgroundColor(ScoreboardTint)
@@ -117,7 +115,7 @@ void SShooterScoreboardWidget::Construct(const FArguments& InArgs)
 		.BorderBackgroundColor(ScoreboardTint)
 		[
 			ScoreboardGrid
-		]			
+		]
 	);
 }
 
@@ -192,7 +190,7 @@ FText SShooterScoreboardWidget::GetMatchOutcomeText() const
 	if (MatchState == EShooterMatchState::Won)
 	{
 		OutcomeText = LOCTEXT("Winner", "YOU ARE THE WINNER!");
-	} 
+	}
 	else if (MatchState == EShooterMatchState::Lost)
 	{
 		OutcomeText = LOCTEXT("Loser", "Match has finished");
@@ -296,7 +294,7 @@ void SShooterScoreboardWidget::UpdatePlayerStateMaps()
 
 			PlayerStateMaps.Reset();
 			PlayerStateMaps.AddZeroed(NumTeams);
-		
+
 			for (int32 i = 0; i < NumTeams; i++)
 			{
 				GameState->GetRankedMap(i, PlayerStateMaps[i]);
@@ -341,7 +339,7 @@ FReply SShooterScoreboardWidget::OnFocusReceived( const FGeometry& MyGeometry, c
 	return FReply::Handled().ReleaseMouseCapture().SetUserFocus(SharedThis(this), EFocusCause::SetDirectly, true);
 }
 
-FReply SShooterScoreboardWidget::OnKeyDown(const FGeometry& MyGeometry, const FKeyEvent& InKeyEvent) 
+FReply SShooterScoreboardWidget::OnKeyDown(const FGeometry& MyGeometry, const FKeyEvent& InKeyEvent)
 {
 	FReply Result = FReply::Unhandled();
 	const FKey Key = InKeyEvent.GetKey();
@@ -381,7 +379,7 @@ void SShooterScoreboardWidget::PlaySound(const FSlateSound& SoundToPlay) const
 	{
 		if( ULocalPlayer* LocalPlayer = Cast<ULocalPlayer>(PCOwner->Player) )
 		{
-			FSlateApplication::Get().PlaySound(SoundToPlay, LocalPlayer->GetControllerId());	
+			FSlateApplication::Get().PlaySound(SoundToPlay, LocalPlayer->GetControllerId());
 		}
 	}
 }
@@ -552,13 +550,13 @@ bool SShooterScoreboardWidget::IsPlayerSelectedAndValid() const
 		// Nothing is selected, default to the player
 		if( PCOwner.IsValid() && PCOwner->PlayerState )
 		{
-			const TSharedPtr<const FUniqueNetId> OwnerNetId = PCOwner->PlayerState->UniqueId.GetUniqueNetId();
+			const TSharedPtr<const FUniqueNetId> OwnerNetId = PCOwner->PlayerState->GetUniqueId().GetUniqueNetId();
 			return OwnerNetId.IsValid();
 		}
 	}
-	else if( const AShooterPlayerState* PlayerState = GetSortedPlayerState(SelectedPlayer) ) 
+	else if( const AShooterPlayerState* PlayerState = GetSortedPlayerState(SelectedPlayer) )
 	{
-		const TSharedPtr<const FUniqueNetId>& PlayerId = PlayerState->UniqueId.GetUniqueNetId();
+		const TSharedPtr<const FUniqueNetId>& PlayerId = PlayerState->GetUniqueId().GetUniqueNetId();
 		return PlayerId.IsValid();
 	}
 #endif
@@ -575,10 +573,10 @@ bool SShooterScoreboardWidget::ProfileUIOpened() const
 	if( IsPlayerSelectedAndValid() )
 	{
 		check( PCOwner.IsValid() && PCOwner->PlayerState );
-		const TSharedPtr<const FUniqueNetId>& OwnerNetId = PCOwner->PlayerState->UniqueId.GetUniqueNetId();
+		const TSharedPtr<const FUniqueNetId>& OwnerNetId = PCOwner->PlayerState->GetUniqueId().GetUniqueNetId();
 		check( OwnerNetId.IsValid() );
 
-		const TSharedPtr<const FUniqueNetId>& PlayerId = ( !SelectedPlayer.IsValid() ? OwnerNetId : GetSortedPlayerState(SelectedPlayer)->UniqueId.GetUniqueNetId() );
+		const TSharedPtr<const FUniqueNetId>& PlayerId = ( !SelectedPlayer.IsValid() ? OwnerNetId : GetSortedPlayerState(SelectedPlayer)->GetUniqueId().GetUniqueNetId() );
 		check( PlayerId.IsValid() );
 		return ShooterUIHelpers::Get().ProfileOpenedUI(PCOwner->GetWorld(), *OwnerNetId.Get(), *PlayerId.Get(), NULL);
 	}
@@ -595,9 +593,10 @@ EVisibility SShooterScoreboardWidget::SpeakerIconVisibility(const FTeamPlayer Te
 	AShooterPlayerState* PlayerState = GetSortedPlayerState(TeamPlayer);
 	if (PlayerState)
 	{
+		const FUniqueNetIdRepl& PlayerUniqueId = PlayerState->GetUniqueId();
 		for (int32 i = 0; i < PlayersTalkingThisFrame.Num(); ++i)
 		{
-			if (PlayerState->UniqueId == PlayersTalkingThisFrame[i].Key && PlayersTalkingThisFrame[i].Value)
+			if (PlayerUniqueId == PlayersTalkingThisFrame[i].Key && PlayersTalkingThisFrame[i].Value)
 			{
 				return EVisibility::Visible;
 			}
@@ -631,8 +630,8 @@ FText SShooterScoreboardWidget::GetPlayerName(const FTeamPlayer TeamPlayer) cons
 bool SShooterScoreboardWidget::ShouldPlayerBeDisplayed(const FTeamPlayer TeamPlayer) const
 {
 	const AShooterPlayerState* PlayerState = GetSortedPlayerState(TeamPlayer);
-	
-	return PlayerState != nullptr && !PlayerState->bOnlySpectator;
+
+	return PlayerState != nullptr && !PlayerState->IsOnlyASpectator();
 }
 
 FSlateColor SShooterScoreboardWidget::GetPlayerColor(const FTeamPlayer TeamPlayer) const
@@ -674,7 +673,7 @@ FText SShooterScoreboardWidget::GetStat(FOnGetPlayerStateAttribute Getter, const
 		{
 			StatTotal = Getter.Execute(PlayerState);
 		}
-	} 
+	}
 	else
 	{
 		for (RankedPlayerMap::TConstIterator PlayerIt(PlayerStateMaps[TeamPlayer.TeamNum]); PlayerIt; ++PlayerIt)
@@ -854,7 +853,7 @@ AShooterPlayerState* SShooterScoreboardWidget::GetSortedPlayerState(const FTeamP
 	{
 		return PlayerStateMaps[TeamPlayer.TeamNum].FindRef(TeamPlayer.PlayerId).Get();
 	}
-	
+
 	return NULL;
 }
 
@@ -870,7 +869,7 @@ int32 SShooterScoreboardWidget::GetAttributeValue_Deaths(AShooterPlayerState* Pl
 
 int32 SShooterScoreboardWidget::GetAttributeValue_Score(AShooterPlayerState* PlayerState) const
 {
-	return FMath::TruncToInt(PlayerState->Score);
+	return FMath::TruncToInt(PlayerState->GetScore());
 }
 
 #undef LOCTEXT_NAMESPACE

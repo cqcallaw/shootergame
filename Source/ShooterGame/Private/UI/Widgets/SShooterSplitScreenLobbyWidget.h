@@ -1,4 +1,4 @@
-// Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
+// Copyright Epic Games, Inc. All Rights Reserved.
 
 #pragma once
 
@@ -14,11 +14,11 @@ public:
 	{}
 
 	SLATE_ARGUMENT(TWeakObjectPtr<ULocalPlayer>, PlayerOwner)
-		
+
 	SLATE_ARGUMENT(FOnClicked, OnPlayClicked)
 	SLATE_ARGUMENT(FOnClicked, OnCancelClicked)
 
-	SLATE_END_ARGS()	
+	SLATE_END_ARGS()
 
 	/** says that we can support keyboard focus */
 	virtual bool SupportsKeyboardFocus() const override { return true; }
@@ -67,7 +67,7 @@ private:
 
 	FOnClicked MasterUserBack;
 	FOnClicked MasterUserPlay;
-	
+
 	TSharedPtr<SRichTextBlock> UserTextWidgets[MAX_POSSIBLE_SLOTS];
 	TSharedPtr<SWidget> UserSlots[MAX_POSSIBLE_SLOTS];
 

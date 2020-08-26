@@ -1,4 +1,4 @@
-// Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
+// Copyright Epic Games, Inc. All Rights Reserved.
 
 #pragma once
 #include "BehaviorTree/BTDecorator.h"
@@ -14,10 +14,10 @@ class UBTDecorator_HasLoSTo : public UBTDecorator
 	virtual bool CalculateRawConditionValue(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) const override;
 
 protected:
-	
+
 	UPROPERTY(EditAnywhere, Category = Condition)
  	struct FBlackboardKeySelector EnemyKey;
 
 private:
-	bool LOSTrace(AActor* InActor, AActor* InEnemyActor, const FVector& EndLocation) const;	
+	bool LOSTrace(AActor* InActor, AActor* InEnemyActor, const FVector& EndLocation) const;
 };

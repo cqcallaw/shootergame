@@ -1,4 +1,4 @@
-// Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
+// Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "ShooterGame.h"
 #include "ShooterMenuSoundsWidgetStyle.h"
@@ -27,5 +27,5 @@ void FShooterMenuSoundsStyle::GetResources(TArray<const FSlateBrush*>& OutBrushe
 UShooterMenuSoundsWidgetStyle::UShooterMenuSoundsWidgetStyle( const FObjectInitializer& ObjectInitializer )
 	: Super(ObjectInitializer)
 {
-	
+
 }

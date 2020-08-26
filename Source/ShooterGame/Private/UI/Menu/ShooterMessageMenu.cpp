@@ -1,4 +1,4 @@
-// Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
+// Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "ShooterGame.h"
 #include "ShooterStyle.h"
@@ -25,12 +25,12 @@ void FShooterMessageMenu::Construct(TWeakObjectPtr<UShooterGameInstance> InGameI
 			ShooterViewport->HideDialog();
 
 			// Show the new one
-			ShooterViewport->ShowDialog( 
+			ShooterViewport->ShowDialog(
 				PlayerOwner,
 				EShooterDialogType::Generic,
-				Message, 
-				OKButtonText, 
-				CancelButtonText, 
+				Message,
+				OKButtonText,
+				CancelButtonText,
 				FOnClicked::CreateRaw(this, &FShooterMessageMenu::OnClickedOK),
 				FOnClicked::CreateRaw(this, &FShooterMessageMenu::OnClickedCancel)
 			);

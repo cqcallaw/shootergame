@@ -1,4 +1,4 @@
-// Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
+// Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "ShooterGame.h"
 #include "ShooterGameViewportClient.h"
@@ -246,7 +246,7 @@ void UShooterGameViewportClient::DrawTransition(UCanvas* Canvas)
 			break;
 		case ETransitionType::WaitingToConnect:
 			DrawTransitionMessage(Canvas, NSLOCTEXT("GameViewportClient", "Waitingtoconnect", "Waiting to connect...").ToString());
-			break;	
+			break;
 		}
 	}
 }

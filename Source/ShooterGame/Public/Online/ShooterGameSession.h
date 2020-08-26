@@ -1,4 +1,4 @@
-// Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
+// Copyright Epic Games, Inc. All Rights Reserved.
 
 #pragma once
 
@@ -90,7 +90,7 @@ protected:
 	 * @param SessionName the name of the session this callback is for
 	 * @param bWasSuccessful true if the async action completed without error, false if there was an error
 	 */
-	virtual void OnDestroySessionComplete(FName SessionName, bool bWasSuccessful);	
+	virtual void OnDestroySessionComplete(FName SessionName, bool bWasSuccessful);
 
 	/**
 	 * Reset the variables the are keeping track of session join attempts
@@ -123,7 +123,7 @@ protected:
 	 */
 	virtual void RegisterServer() override;
 
-	/* 
+	/*
 	 * Event triggered when a presence session is created
 	 *
 	 * @param SessionName name of session that was created
@@ -132,7 +132,7 @@ protected:
 	DECLARE_EVENT_TwoParams(AShooterGameSession, FOnCreatePresenceSessionComplete, FName /*SessionName*/, bool /*bWasSuccessful*/);
 	FOnCreatePresenceSessionComplete CreatePresenceSessionCompleteEvent;
 
-	/* 
+	/*
 	 * Event triggered when a session is joined
 	 *
 	 * @param SessionName name of session that was joined
@@ -158,7 +158,7 @@ public:
 	 * Host a new online session
 	 *
 	 * @param UserId user that initiated the request
-	 * @param SessionName name of session 
+	 * @param SessionName name of session
 	 * @param bIsLAN is this going to hosted over LAN
 	 * @param bIsPresence is the session to create a presence session
 	 * @param MaxNumPlayers Maximum number of players to allow in the session
@@ -171,7 +171,7 @@ public:
 	 * Host a new online session with specified settings
 	 *
 	 * @param UserId user that initiated the request
-	 * @param SessionName name of session 
+	 * @param SessionName name of session
 	 * @param SessionSettings settings to create session with
 	 *
 	 * @return bool true if successful, false otherwise
@@ -192,7 +192,7 @@ public:
 	 * Joins one of the session in search results
 	 *
 	 * @param UserId user that initiated the request
-	 * @param SessionName name of session 
+	 * @param SessionName name of session
 	 * @param SessionIndexInSearchResults Index of the session in search results
 	 *
 	 * @return bool true if successful, false otherwise
@@ -202,7 +202,7 @@ public:
 	/**
 	 * Joins a session via a search result
 	 *
-	 * @param SessionName name of session 
+	 * @param SessionName name of session
 	 * @param SearchResult Session to join
 	 *
 	 * @return bool true if successful, false otherwise

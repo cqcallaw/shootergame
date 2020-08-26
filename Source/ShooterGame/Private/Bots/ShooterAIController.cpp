@@ -1,4 +1,4 @@
-// Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
+// Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "ShooterGame.h"
 #include "Bots/ShooterAIController.h"
@@ -14,8 +14,8 @@
 AShooterAIController::AShooterAIController(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
  	BlackboardComp = ObjectInitializer.CreateDefaultSubobject<UBlackboardComponent>(this, TEXT("BlackBoardComp"));
- 	
-	BrainComponent = BehaviorComp = ObjectInitializer.CreateDefaultSubobject<UBehaviorTreeComponent>(this, TEXT("BehaviorComp"));	
+
+	BrainComponent = BehaviorComp = ObjectInitializer.CreateDefaultSubobject<UBehaviorTreeComponent>(this, TEXT("BehaviorComp"));
 
 	bWantsPlayerState = true;
 }
@@ -131,17 +131,17 @@ bool AShooterAIController::FindClosestEnemyWithLOS(AShooterCharacter* ExcludeEne
 
 bool AShooterAIController::HasWeaponLOSToEnemy(AActor* InEnemyActor, const bool bAnyEnemy) const
 {
-	
+
 	AShooterBot* MyBot = Cast<AShooterBot>(GetPawn());
 
 	bool bHasLOS = false;
 	// Perform trace to retrieve hit info
 	FCollisionQueryParams TraceParams(SCENE_QUERY_STAT(AIWeaponLosTrace), true, GetPawn());
 
-	TraceParams.bReturnPhysicalMaterial = true;	
-	FVector StartLocation = MyBot->GetActorLocation();	
+	TraceParams.bReturnPhysicalMaterial = true;
+	FVector StartLocation = MyBot->GetActorLocation();
 	StartLocation.Z += GetPawn()->BaseEyeHeight; //look from eyes
-	
+
 	FHitResult Hit(ForceInit);
 	const FVector EndLocation = InEnemyActor->GetActorLocation();
 	GetWorld()->LineTraceSingleByChannel(Hit, StartLocation, EndLocation, COLLISION_WEAPON, TraceParams);
@@ -175,7 +175,7 @@ bool AShooterAIController::HasWeaponLOSToEnemy(AActor* InEnemyActor, const bool 
 		}
 	}
 
-	
+
 
 	return bHasLOS;
 }
@@ -249,7 +249,7 @@ void AShooterAIController::UpdateControlRotation(float DeltaTime, bool bUpdatePa
 	{
 		FVector Direction = FocalPoint - GetPawn()->GetActorLocation();
 		FRotator NewControlRotation = Direction.Rotation();
-		
+
 		NewControlRotation.Yaw = FRotator::ClampAxis(NewControlRotation.Yaw);
 
 		SetControlRotation(NewControlRotation);
@@ -259,7 +259,7 @@ void AShooterAIController::UpdateControlRotation(float DeltaTime, bool bUpdatePa
 		{
 			P->FaceRotation(NewControlRotation, DeltaTime);
 		}
-		
+
 	}
 }
 
@@ -284,6 +284,6 @@ void AShooterAIController::GameHasEnded(AActor* EndGameFocus, bool bIsWinner)
 	{
 		return;
 	}
-	MyBot->StopWeaponFire();	
+	MyBot->StopWeaponFire();
 }
 

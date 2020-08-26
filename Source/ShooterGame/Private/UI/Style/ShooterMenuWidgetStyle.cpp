@@ -1,4 +1,4 @@
-// Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
+// Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "ShooterGame.h"
 #include "ShooterMenuWidgetStyle.h"
@@ -30,5 +30,5 @@ void FShooterMenuStyle::GetResources(TArray<const FSlateBrush*>& OutBrushes) con
 UShooterMenuWidgetStyle::UShooterMenuWidgetStyle( const FObjectInitializer& ObjectInitializer )
 	: Super(ObjectInitializer)
 {
-	
+
 }

@@ -1,4 +1,4 @@
-// Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
+// Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "ShooterGame.h"
 #include "Weapons/ShooterWeapon_Projectile.h"
@@ -21,7 +21,7 @@ void AShooterWeapon_Projectile::FireWeapon()
 	const FVector StartTrace = GetCameraDamageStartLocation(ShootDir);
 	const FVector EndTrace = StartTrace + ShootDir * ProjectileAdjustRange;
 	FHitResult Impact = WeaponTrace(StartTrace, EndTrace);
-	
+
 	// and adjust directions to hit that actor
 	if (Impact.bBlockingHit)
 	{

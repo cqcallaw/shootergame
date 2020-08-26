@@ -1,4 +1,4 @@
-// Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
+// Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "ShooterGame.h"
 #include "ShooterStyle.h"
@@ -8,7 +8,7 @@
 #include "OnlineSubsystemUtils.h"
 
 void SShooterConfirmationDialog::Construct( const FArguments& InArgs )
-{	
+{
 	PlayerOwner = InArgs._PlayerOwner;
 	DialogType = InArgs._DialogType;
 
@@ -21,7 +21,7 @@ void SShooterConfirmationDialog::Construct( const FArguments& InArgs )
 	ChildSlot
 	.VAlign(VAlign_Center)
 	.HAlign(HAlign_Center)
-	[					
+	[
 		SNew( SVerticalBox )
 		+SVerticalBox::Slot()
 		.AutoHeight()
@@ -50,7 +50,7 @@ void SShooterConfirmationDialog::Construct( const FArguments& InArgs )
 		.Padding(20.0f)
 		[
 			SNew( SHorizontalBox)
-			+SHorizontalBox::Slot()			
+			+SHorizontalBox::Slot()
 			.AutoWidth()
 			.Padding(20.0f)
 			.VAlign(VAlign_Center)
@@ -59,7 +59,7 @@ void SShooterConfirmationDialog::Construct( const FArguments& InArgs )
 				SNew( SButton )
 				.ContentPadding(100)
 				.OnClicked(this, &SShooterConfirmationDialog::OnConfirmHandler)
-				.Text(InArgs._ConfirmText)			
+				.Text(InArgs._ConfirmText)
 				.TextStyle(FShooterStyle::Get(), "ShooterGame.MenuHeaderTextStyle")
 				.ButtonStyle(ButtonStyle)
 				.IsFocusable(false)
@@ -79,8 +79,8 @@ void SShooterConfirmationDialog::Construct( const FArguments& InArgs )
 					.ButtonStyle(ButtonStyle)
 					.Visibility(InArgs._CancelText.IsEmpty() == false ? EVisibility::Visible : EVisibility::Collapsed)
 					.IsFocusable(false)
-				]	
-		]			
+				]
+		]
 	];
 }
 

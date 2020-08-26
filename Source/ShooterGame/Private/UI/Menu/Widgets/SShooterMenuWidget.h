@@ -1,4 +1,4 @@
-// Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
+// Copyright Epic Games, Inc. All Rights Reserved.
 
 #pragma once
 
@@ -21,14 +21,14 @@ public:
 
 	/** is this main menu or in game menu? */
 	SLATE_ARGUMENT(bool, IsGameMenu)
-	
+
 	/** always goes here */
 	SLATE_END_ARGS()
 
 	/** delegate declaration */
 	DECLARE_DELEGATE(FOnMenuHidden);
 
-	/** external delegate to call when in-game menu should be hidden using controller buttons - 
+	/** external delegate to call when in-game menu should be hidden using controller buttons -
 	it's workaround as when joystick is captured, even when sending FReply::Unhandled, binding does not recieve input :( */
 	DECLARE_DELEGATE(FOnToggleMenu);
 
@@ -137,7 +137,7 @@ public:
 	FKey ControllerHideMenuKey;
 
 	/** if console is currently opened */
-	bool bConsoleVisible;	
+	bool bConsoleVisible;
 
 private:
 
@@ -162,7 +162,7 @@ private:
 	FText GetOptionText(TSharedPtr<FShooterMenuItem> MenuItem) const;
 
 	/** gets current menu title string */
-	FText GetMenuTitle() const; 
+	FText GetMenuTitle() const;
 
 	/** gets the offset of the swap profile UI from the edge of the screen */
 	FMargin GetProfileSwapOffset() const;
@@ -174,7 +174,7 @@ private:
 	EVisibility GetProfileSwapVisibility() const;
 
 	/** called when we want to swap the logged in user */
-	bool ProfileUISwap(const int ControllerIndex) const; 
+	bool ProfileUISwap(const int ControllerIndex) const;
 
 	/** delegate for if the profile is swapped */
 	void HandleProfileUISwapClosed(TSharedPtr<const FUniqueNetId> UniqueId, const int ControllerIndex, const FOnlineError& Error = FOnlineError());
@@ -185,7 +185,7 @@ private:
 	/** our curve sequence and the related handles */
 	FCurveSequence MenuWidgetAnimation;
 
-	/** used for menu background scaling animation at the beginning */ 
+	/** used for menu background scaling animation at the beginning */
 	FCurveHandle BottomScaleYCurve;
 
 	/** used for main menu logo fade in animation at the beginning  */
@@ -233,7 +233,7 @@ private:
 	/** selected index of current menu */
 	int32 SelectedIndex;
 
-	
+
 	/** right panel animating flag */
 	bool bSubMenuChanging;
 
@@ -250,8 +250,8 @@ private:
 	bool bGameMenu;
 
 	/** if moving around menu is currently locked */
-	bool bControlsLocked;		
-	
+	bool bControlsLocked;
+
 	/** menu that will override current one after transition animation */
 	MenuPtr PendingLeftMenu;
 
@@ -285,7 +285,7 @@ namespace MenuHelper
 	}
 
 	/** add standard item to menu with UObject delegate */
-	template< class UserClass >	
+	template< class UserClass >
 	FORCEINLINE TSharedRef<FShooterMenuItem> AddMenuItem(TSharedPtr<FShooterMenuItem>& MenuItem, const FText& Text, UserClass* inObj, typename FShooterMenuItem::FOnConfirmMenuItem::TUObjectMethodDelegate< UserClass >::FMethodPtr inMethod)
 	{
 		EnsureValid(MenuItem);
@@ -296,7 +296,7 @@ namespace MenuHelper
 	}
 
 	/** add standard item to menu with TSharedPtr delegate */
-	template< class UserClass >	
+	template< class UserClass >
 	FORCEINLINE TSharedRef<FShooterMenuItem> AddMenuItemSP(TSharedPtr<FShooterMenuItem>& MenuItem, const FText& Text, UserClass* inObj, typename FShooterMenuItem::FOnConfirmMenuItem::TSPMethodDelegate< UserClass >::FMethodPtr inMethod)
 	{
 		EnsureValid(MenuItem);
@@ -316,7 +316,7 @@ namespace MenuHelper
 	}
 
 	/** add multi-choice item to menu with UObject delegate */
-	template< class UserClass >	
+	template< class UserClass >
 	FORCEINLINE TSharedRef<FShooterMenuItem> AddMenuOption(TSharedPtr<FShooterMenuItem>& MenuItem, const FText& Text, const TArray<FText>& OptionsList, UserClass* inObj, typename FShooterMenuItem::FOnOptionChanged::TUObjectMethodDelegate< UserClass >::FMethodPtr inMethod)
 	{
 		EnsureValid(MenuItem);
@@ -327,7 +327,7 @@ namespace MenuHelper
 	}
 
 	/** add multi-choice item to menu with TSharedPtr delegate */
-	template< class UserClass >	
+	template< class UserClass >
 	FORCEINLINE TSharedRef<FShooterMenuItem> AddMenuOptionSP(TSharedPtr<FShooterMenuItem>& MenuItem, const FText& Text, const TArray<FText>& OptionsList, UserClass* inObj, typename FShooterMenuItem::FOnOptionChanged::TSPMethodDelegate< UserClass >::FMethodPtr inMethod)
 	{
 		EnsureValid(MenuItem);
@@ -359,7 +359,7 @@ namespace MenuHelper
 		MenuItem->SubMenu.Empty();
 	}
 
-	template< class UserClass >	
+	template< class UserClass >
 	FORCEINLINE void PlaySoundAndCall(UWorld* World, const FSlateSound& Sound, int32 UserIndex, UserClass* inObj, typename FShooterMenuItem::FOnConfirmMenuItem::TSPMethodDelegate< UserClass >::FMethodPtr inMethod)
 	{
 		FSlateApplication::Get().PlaySound(Sound, UserIndex);

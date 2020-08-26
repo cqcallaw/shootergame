@@ -1,4 +1,4 @@
-// Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
+// Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "ShooterGame.h"
 #include "ShooterUIHelpers.h"
@@ -8,7 +8,7 @@ FText ShooterUIHelpers::GetProfileOpenText() const
 {
 	// @todo: replace button with icon
 	// @todo: replace 'GamerCard' with distribution specific terminology (Steam, Origin, UPlay, etc)
-#if PLATFORM_XBOXONE
+#if SHOOTER_XBOX_STRINGS
 	return NSLOCTEXT("Network", "XB1OpenProfile", "Press A for GamerCard");
 #elif PLATFORM_PS4
 	return NSLOCTEXT("Network", "PS4OpenProfile", "Press cross button for GamerCard");
@@ -43,7 +43,7 @@ bool ShooterUIHelpers::ProfileOpenedUI(UWorld* World, const FUniqueNetId& Reques
 FText ShooterUIHelpers::GetProfileSwapText() const
 {
 	// @todo: replace button with icon
-//#if PLATFORM_XBOXONE
+//#if SHOOTER_XBOX_STRINGS
 	return NSLOCTEXT("Network", "XB1SwapProfile", "Y Switch User");
 /*#elif PLATFORM_PS4
 	return NSLOCTEXT("Network", "PS4SwapProfile", "Triangle button Switch User");

@@ -1,4 +1,4 @@
-// Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
+// Copyright Epic Games, Inc. All Rights Reserved.
 
 #pragma once
 
@@ -24,35 +24,35 @@ struct FShooterScoreboardStyle : public FSlateWidgetStyle
 
 	/**
 	 * The brush used for the item border
-	 */	
+	 */
 	UPROPERTY(EditAnywhere, Category=Appearance)
 	FSlateBrush ItemBorderBrush;
 	FShooterScoreboardStyle& SetItemBorderBrush(const FSlateBrush& InItemBorderBrush) { ItemBorderBrush = InItemBorderBrush; return *this; }
 
 	/**
 	 * The color used for the kill stat
-	 */	
+	 */
 	UPROPERTY(EditAnywhere, Category=Appearance)
 	FSlateColor KillStatColor;
 	FShooterScoreboardStyle& SetKillStatColor(const FSlateColor& InKillStatColor) { KillStatColor = InKillStatColor; return *this; }
 
 	/**
 	 * The color used for the death stat
-	 */	
+	 */
 	UPROPERTY(EditAnywhere, Category=Appearance)
 	FSlateColor DeathStatColor;
 	FShooterScoreboardStyle& SetDeathStatColor(const FSlateColor& InDeathStatColor) { DeathStatColor = InDeathStatColor; return *this; }
 
 	/**
 	 * The color used for the score stat
-	 */	
+	 */
 	UPROPERTY(EditAnywhere, Category=Appearance)
 	FSlateColor ScoreStatColor;
 	FShooterScoreboardStyle& SetScoreStatColor(const FSlateColor& InScoreStatColor) { ScoreStatColor = InScoreStatColor; return *this; }
 
 	/**
 	 * The sound that should play when the highlighted player changes in the scoreboard
-	 */	
+	 */
 	UPROPERTY(EditAnywhere, Category=Sound)
 	FSlateSound PlayerChangeSound;
 	FShooterScoreboardStyle& SetPlayerChangeSound(const FSlateSound& InPlayerChangeSound) { PlayerChangeSound = InPlayerChangeSound; return *this; }

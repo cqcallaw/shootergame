@@ -1,4 +1,4 @@
-// Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
+// Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "ShooterGame.h"
 #include "Pickups/ShooterPickup.h"
@@ -90,7 +90,7 @@ void AShooterPickup::RespawnPickup()
 
 	for (AActor* OverlappingPawn : OverlappingPawns)
 	{
-		PickupOnTouch(CastChecked<AShooterCharacter>(OverlappingPawn));	
+		PickupOnTouch(CastChecked<AShooterCharacter>(OverlappingPawn));
 	}
 }
 

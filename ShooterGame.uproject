@@ -1,6 +1,6 @@
 {
 	"FileVersion": 3,
-	"EngineAssociation": "4.24",
+	"EngineAssociation": "4.25",
 	"Category": "Samples",
 	"Description": "",
 	"Modules": [
@@ -71,6 +71,10 @@
 		{
 			"Name": "Gauntlet",
 			"Enabled": true
+		},
+		{
+			"Name": "Synthesis",
+			"Enabled": true
 		}
 	],
 	"TargetPlatforms": [
@@ -80,7 +84,12 @@
 		"XboxOne",
 		"Switch",
 		"Quail",
-		"LinuxNoEditor"
+		"LinuxNoEditor",
+		"LinuxServer",
+		"LinuxClient",
+		"LinuxAArch64NoEditor",
+		"LinuxAArch64Server",
+		"LinuxAArchClient"
 	],
 	"EpicSampleNameHash": "3868556100"
 }

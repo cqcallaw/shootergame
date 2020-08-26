@@ -1,4 +1,4 @@
-// Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
+// Copyright Epic Games, Inc. All Rights Reserved.
 
 #pragma once
 #include "ShooterPersistentUser.generated.h"
@@ -54,7 +54,7 @@ public:
 	}
 
 	/** Is controller vibration turned on? */
-	FORCEINLINE bool GetVibration() const 
+	FORCEINLINE bool GetVibration() const
 	{
 		return bVibrationOpt;
 	}

@@ -1,4 +1,4 @@
-// Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
+// Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "ShooterGame.h"
 #include "Player/ShooterPlayerController_Menu.h"
@@ -9,7 +9,7 @@ AShooterPlayerController_Menu::AShooterPlayerController_Menu(const FObjectInitia
 {
 }
 
-void AShooterPlayerController_Menu::PostInitializeComponents() 
+void AShooterPlayerController_Menu::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
 

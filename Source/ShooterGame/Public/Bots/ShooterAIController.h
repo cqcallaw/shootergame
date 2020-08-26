@@ -1,4 +1,4 @@
-// Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
+// Copyright Epic Games, Inc. All Rights Reserved.
 
 #pragma once
 #include "AIController.h"
@@ -49,7 +49,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = Behavior)
 	bool FindClosestEnemyWithLOS(AShooterCharacter* ExcludeEnemy);
-		
+
 	bool HasWeaponLOSToEnemy(AActor* InEnemyActor, const bool bAnyEnemy) const;
 
 	// Begin AAIController interface

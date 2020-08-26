@@ -1,10 +1,10 @@
-// Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
+// Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "ShooterGame.h"
 #include "Bots/ShooterBot.h"
 #include "Bots/ShooterAIController.h"
 
-AShooterBot::AShooterBot(const FObjectInitializer& ObjectInitializer) 
+AShooterBot::AShooterBot(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
 	AIControllerClass = AShooterAIController::StaticClass();

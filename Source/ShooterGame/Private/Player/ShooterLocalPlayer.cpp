@@ -1,4 +1,4 @@
-// Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
+// Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "ShooterGame.h"
 #include "Player/ShooterLocalPlayer.h"
@@ -120,7 +120,7 @@ FString UShooterLocalPlayer::GetNickname() const
 	if ( bReplace )
 	{
 		UserNickName = FString::Printf( TEXT( "Player%i" ), GetControllerId() + 1 );
-	}	
+	}
 
 	return UserNickName;
 }

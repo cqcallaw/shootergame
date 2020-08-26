@@ -1,4 +1,4 @@
-// Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
+// Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "ShooterGameLoadingScreen.h"
 #include "GenericApplication.h"
@@ -77,12 +77,12 @@ class FShooterGameLoadingScreenModule : public IShooterGameLoadingScreenModule
 {
 public:
 	virtual void StartupModule() override
-	{		
+	{
 		// Load for cooker reference
 		LoadObject<UObject>(NULL, TEXT("/Game/UI/Menu/LoadingScreen.LoadingScreen") );
 
 
-		// Previously, we set up our startup movie here to play while the engine was initially loading. By removing this behavior, 
+		// Previously, we set up our startup movie here to play while the engine was initially loading. By removing this behavior,
 		// the startup movie can be set up in DefaultGame.ini or in the project settings, and is no longer hard coded
 
 		/*
@@ -95,7 +95,7 @@ public:
 		}
 		*/
 	}
-	
+
 	virtual bool IsGameModule() const override
 	{
 		return true;

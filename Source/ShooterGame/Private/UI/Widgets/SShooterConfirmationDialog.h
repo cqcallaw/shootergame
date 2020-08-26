@@ -1,4 +1,4 @@
-// Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
+// Copyright Epic Games, Inc. All Rights Reserved.
 #pragma once
 
 #include "SlateBasics.h"
@@ -34,7 +34,7 @@ public:
 	SLATE_ARGUMENT(FOnClicked, OnConfirmClicked)
 	SLATE_ARGUMENT(FOnClicked, OnCancelClicked)
 
-	SLATE_END_ARGS()	
+	SLATE_END_ARGS()
 
 	void Construct(const FArguments& InArgs);
 

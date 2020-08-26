@@ -1,4 +1,4 @@
-// Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
+// Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "ShooterGame.h"
 #include "ShooterWelcomeMenu.h"
@@ -22,6 +22,9 @@ class SShooterWelcomeMenuWidget : public SCompoundWidget
 	FCurveHandle TextColorCurve;
 
 	TSharedPtr<SRichTextBlock> PressPlayText;
+
+	/* On the first tick ensure we have set the keyboard focus */
+	bool bFirstTick = true;
 
 	SLATE_BEGIN_ARGS( SShooterWelcomeMenuWidget )
 	{}
@@ -48,7 +51,7 @@ class SShooterWelcomeMenuWidget : public SCompoundWidget
 	void Construct( const FArguments& InArgs )
 	{
 		MenuOwner = InArgs._MenuOwner;
-		
+
 		TextAnimation = FCurveSequence();
 		const float AnimDuration = 1.5f;
 		TextColorCurve = TextAnimation.AddCurve(0, AnimDuration, ECurveEaseFunction::QuadInOut);
@@ -59,7 +62,7 @@ class SShooterWelcomeMenuWidget : public SCompoundWidget
 			.Padding(30.0f)
 			.VAlign(VAlign_Center)
 			.HAlign(HAlign_Center)
-			[ 
+			[
 				SAssignNew( PressPlayText, SRichTextBlock )
 #if PLATFORM_PS4
 				.Text( LOCTEXT("PressStartPS4", "PRESS CROSS BUTTON TO PLAY" ) )
@@ -77,6 +80,14 @@ class SShooterWelcomeMenuWidget : public SCompoundWidget
 
 	virtual void Tick( const FGeometry& AllottedGeometry, const double InCurrentTime, const float InDeltaTime ) override
 	{
+		// During construction we may miss out on setting focus of the keyboard due to the GameViewport not having its Parent pointer
+		// setup. If this happens we will be unable to set the keyboard focus in AddToGameViewport()
+		if (bFirstTick)
+		{
+			bFirstTick = false;
+			FSlateApplication::Get().SetKeyboardFocus(this->AsShared());
+		}
+
 		if(!TextAnimation.IsPlaying())
 		{
 			if(TextAnimation.IsAtEnd())
@@ -165,6 +176,11 @@ class SShooterWelcomeMenuWidget : public SCompoundWidget
 		return FReply::Unhandled();
 	}
 
+	virtual void OnFocusLost(const FFocusEvent& InFocusEvent) override
+	{
+		bFirstTick = true;
+	}
+
 	virtual FReply OnFocusReceived(const FGeometry& MyGeometry, const FFocusEvent& InFocusEvent) override
 	{
 		return FReply::Handled().ReleaseMouseCapture().SetUserFocus(SharedThis( this ), EFocusCause::SetDirectly, true);
@@ -178,7 +194,7 @@ void FShooterWelcomeMenu::Construct( TWeakObjectPtr< UShooterGameInstance > InGa
 	PendingControllerIndex = -1;
 
 	MenuWidget = SNew( SShooterWelcomeMenuWidget )
-		.MenuOwner(this);	
+		.MenuOwner(this);
 }
 
 void FShooterWelcomeMenu::AddToGameViewport()
@@ -216,7 +232,7 @@ void FShooterWelcomeMenu::HandleLoginUIClosed(TSharedPtr<const FUniqueNetId> Uni
 		const FText StopReason	= NSLOCTEXT( "ProfileMessages", "NeedLicense", "The signed in users do not have a license for this game. Please purchase ShooterGame from the Xbox Marketplace or sign in a user with a valid license." );
 		const FText OKButton	= NSLOCTEXT( "DialogButtons", "OKAY", "OK" );
 
-		ShooterViewport->ShowDialog( 
+		ShooterViewport->ShowDialog(
 			nullptr,
 			EShooterDialogType::Generic,
 			StopReason,
@@ -245,10 +261,10 @@ void FShooterWelcomeMenu::HandleLoginUIClosed(TSharedPtr<const FUniqueNetId> Uni
 	}
 	else
 	{
-		// Show a warning that your progress won't be saved if you continue without logging in. 
+		// Show a warning that your progress won't be saved if you continue without logging in.
 		if (ShooterViewport != NULL)
 		{
-			ShooterViewport->ShowDialog( 
+			ShooterViewport->ShowDialog(
 				nullptr,
 				EShooterDialogType::Generic,
 				NSLOCTEXT("ProfileMessages", "ProgressWillNotBeSaved", "If you continue without signing in, your progress will not be saved."),
@@ -277,7 +293,7 @@ void FShooterWelcomeMenu::SetControllerAndAdvanceToMainMenu(const int Controller
 
 		// tell gameinstance to transition to main menu
 		GameInstance->GotoState(ShooterGameInstanceState::MainMenu);
-	}	
+	}
 }
 
 FReply FShooterWelcomeMenu::OnContinueWithoutSavingConfirm()
@@ -330,7 +346,7 @@ void FShooterWelcomeMenu::OnUserCanPlay(const FUniqueNetId& UserId, EUserPrivile
 			const FText ReturnReason = NSLOCTEXT("PrivilegeFailures", "CannotPlayAgeRestriction", "You cannot play this game due to age restrictions.");
 			const FText OKButton = NSLOCTEXT("DialogButtons", "OKAY", "OK");
 
-			ShooterViewport->ShowDialog( 
+			ShooterViewport->ShowDialog(
 				nullptr,
 				EShooterDialogType::Generic,
 				ReturnReason,

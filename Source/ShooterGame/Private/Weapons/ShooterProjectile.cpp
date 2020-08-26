@@ -1,4 +1,4 @@
-// Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
+// Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "ShooterGame.h"
 #include "Weapons/ShooterProjectile.h"
@@ -123,7 +123,7 @@ void AShooterProjectile::OnRep_Exploded()
 	const FVector StartTrace = GetActorLocation() - ProjDirection * 200;
 	const FVector EndTrace = GetActorLocation() + ProjDirection * 150;
 	FHitResult Impact;
-	
+
 	if (!GetWorld()->LineTraceSingleByChannel(Impact, StartTrace, EndTrace, COLLISION_PROJECTILE, FCollisionQueryParams(SCENE_QUERY_STAT(ProjClient), true, GetInstigator())))
 	{
 		// failsafe
@@ -146,6 +146,6 @@ void AShooterProjectile::PostNetReceiveVelocity(const FVector& NewVelocity)
 void AShooterProjectile::GetLifetimeReplicatedProps( TArray< FLifetimeProperty > & OutLifetimeProps ) const
 {
 	Super::GetLifetimeReplicatedProps( OutLifetimeProps );
-	
+
 	DOREPLIFETIME( AShooterProjectile, bExploded );
 }

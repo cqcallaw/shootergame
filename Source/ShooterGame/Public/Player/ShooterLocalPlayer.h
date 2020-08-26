@@ -1,4 +1,4 @@
-// Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
+// Copyright Epic Games, Inc. All Rights Reserved.
 
 #pragma once
 
@@ -17,7 +17,7 @@ public:
 	virtual FString GetNickname() const;
 
 	class UShooterPersistentUser* GetPersistentUser() const;
-	
+
 	/** Initializes the PersistentUser */
 	void LoadPersistentUser();
 

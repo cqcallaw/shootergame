@@ -1,4 +1,4 @@
-// Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
+// Copyright Epic Games, Inc. All Rights Reserved.
 
 #pragma once
 
@@ -9,7 +9,7 @@ struct FHitData
 {
 	/** Last hit time. */
 	float HitTime;
-	
+
 	/** strength of hit icon */
 	float HitPercentage;
 
@@ -31,7 +31,7 @@ struct FDeathMessage
 
 	/** Killer is local player. */
 	uint8 bKillerIsOwner : 1;
-	
+
 	/** Victim is local player. */
 	uint8 bVictimIsOwner : 1;
 
@@ -39,7 +39,7 @@ struct FDeathMessage
 	int32 KillerTeamNum;
 
 	/** Team number of the victim. */
-	int32 VictimTeamNum; 
+	int32 VictimTeamNum;
 
 	/** timestamp for removing message */
 	float HideTime;
@@ -52,7 +52,7 @@ struct FDeathMessage
 		: bKillerIsOwner(false)
 		, bVictimIsOwner(false)
 		, KillerTeamNum(0)
-		, VictimTeamNum(0)		
+		, VictimTeamNum(0)
 		, HideTime(0.f)
 	{
 	}
@@ -85,7 +85,7 @@ public:
 	/** Notifies we have hit the enemy. */
 	void NotifyEnemyHit();
 
-	/** 
+	/**
 	 * Set state of current match.
 	 *
 	 * @param	NewState	The new match state.
@@ -101,7 +101,7 @@ public:
 	/** Toggles scoreboard */
 	void ToggleScoreboard();
 
-	/** 
+	/**
 	 * Toggles in game scoreboard.
 	 * Note:Will not display if the game menu is visible.
 
@@ -111,7 +111,7 @@ public:
 	 */
 	bool ShowScoreboard(bool bEnable, bool bFocus = false);
 
-	/** 
+	/**
 	 * Add death message.
 	 *
 	 * @param	KillerPlayerState	Player that did the killings state.
@@ -126,7 +126,7 @@ public:
 	 */
 	void ToggleChat();
 
-	/** 
+	/**
 	 * Set chat window visibility.
 	 *
 	 * @param	RequiredVisibility	The required visibility.
@@ -143,7 +143,7 @@ public:
 
 	/* Is the match over (IE Is the state Won or Lost). */
 	bool IsMatchOver() const;
-		
+
 protected:
 	/** Floor for automatic hud scaling. */
 	static const float MinHudScale;
@@ -310,7 +310,7 @@ protected:
 	/** Called every time game is started. */
 	virtual void PostInitializeComponents() override;
 
-	/** 
+	/**
 	 * Converts floating point seconds to MM:SS string.
 	 *
 	 * @param TimeSeconds		The time to get a string for.
@@ -331,7 +331,7 @@ protected:
 
 	/** Draws weapon crosshair. */
 	void DrawCrosshair();
-	
+
 	/** Draws hit indicator. */
 	void DrawHitIndicator();
 
@@ -363,8 +363,8 @@ protected:
 	bool TryCreateChatWidget();
 
 	/*
-	 * Add information string that will be displayed on the hud. They are added as required and rendered together to prevent overlaps 
-	 * 
+	 * Add information string that will be displayed on the hud. They are added as required and rendered together to prevent overlaps
+	 *
 	 * @param InInfoString	InInfoString
 	*/
 	void AddMatchInfoString(const FCanvasTextItem InfoItem);
@@ -379,5 +379,5 @@ protected:
 	* @returns The next Y position to draw any further strings
 	*/
 	float ShowInfoItems(float YOffset, float TextScale);
-	
+
 };

@@ -1,4 +1,4 @@
-// Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
+// Copyright Epic Games, Inc. All Rights Reserved.
 
 #pragma once
 
@@ -56,7 +56,7 @@ struct FShooterPlayTogetherInfo
 	{
 		UserIdList.Append(InUserIdList);
 	}
-	
+
 	int32 UserIndex;
 	TArray<TSharedPtr<const FUniqueNetId>> UserIdList;
 };
@@ -120,7 +120,7 @@ public:
 	void SetPendingInvite(const FShooterPendingInvite& InPendingInvite);
 
 	bool PlayDemo(ULocalPlayer* LocalPlayer, const FString& DemoName);
-	
+
 	/** Travel directly to the named session */
 	void TravelToSession(const FName& SessionName);
 
@@ -287,7 +287,7 @@ private:
 	void HandleNetworkConnectionStatusChanged(const FString& ServiceName, EOnlineServerConnectionStatus::Type LastConnectionStatus, EOnlineServerConnectionStatus::Type ConnectionStatus );
 
 	void HandleSessionFailure( const FUniqueNetId& NetId, ESessionFailure::Type FailureType );
-	
+
 	void OnPreLoadMap(const FString& MapName);
 	void OnPostLoadMap(UWorld*);
 	void OnPostDemoPlay();
@@ -391,7 +391,7 @@ private:
 	void HandleSafeFrameChanged();
 
 	// Callback to handle controller connection changes.
-	void HandleControllerConnectionChange(bool bIsConnection, int32 Unused, int32 GameUserIndex);
+	void HandleControllerConnectionChange(bool bIsConnection, FPlatformUserId Unused, int32 GameUserIndex);
 
 	// Callback to handle controller pairing changes.
 	FReply OnPairingUsePreviousProfile();
@@ -400,10 +400,10 @@ private:
 	FReply OnPairingUseNewProfile();
 
 	// Callback to handle controller pairing changes.
-	void HandleControllerPairingChanged(int GameUserIndex, const FUniqueNetId& PreviousUser, const FUniqueNetId& NewUser);
+	void HandleControllerPairingChanged(int GameUserIndex, FControllerPairingChangedUserInfo PreviousUserInfo, FControllerPairingChangedUserInfo NewUserInfo);
 
 	// Handle confirming the controller disconnected dialog.
-	FReply OnControllerReconnectConfirm();	
+	FReply OnControllerReconnectConfirm();
 
 protected:
 	bool HandleOpenCommand(const TCHAR* Cmd, FOutputDevice& Ar, UWorld* InWorld);

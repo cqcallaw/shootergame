@@ -1,4 +1,4 @@
-// Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
+// Copyright Epic Games, Inc. All Rights Reserved.
 
 using UnrealBuildTool;
 
@@ -9,7 +9,7 @@ public class ShooterGame : ModuleRules
 		PrivatePCHHeaderFile = "Public/ShooterGame.h";
 
 		PrivateIncludePaths.AddRange(
-			new string[] { 
+			new string[] {
 				"ShooterGame/Private",
 				"ShooterGame/Private/UI",
 				"ShooterGame/Private/UI/Menu",

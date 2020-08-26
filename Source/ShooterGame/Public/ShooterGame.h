@@ -1,4 +1,4 @@
-// Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
+// Copyright Epic Games, Inc. All Rights Reserved.
 
 #pragma once
 
@@ -34,9 +34,13 @@ DECLARE_LOG_CATEGORY_EXTERN(LogShooterWeapon, Log, All);
 /** Set to 1 to pretend we're building for console even on a PC, for testing purposes */
 #define SHOOTER_SIMULATE_CONSOLE_UI	0
 
-#if PLATFORM_PS4 || PLATFORM_XBOXONE || PLATFORM_SWITCH || SHOOTER_SIMULATE_CONSOLE_UI || PLATFORM_QUAIL
+#if PLATFORM_PS4 || PLATFORM_SWITCH || SHOOTER_SIMULATE_CONSOLE_UI
 	#define SHOOTER_CONSOLE_UI 1
 #else
 	#define SHOOTER_CONSOLE_UI 0
 #endif
+#endif
+
+#ifndef SHOOTER_XBOX_STRINGS
+	#define SHOOTER_XBOX_STRINGS 0
 #endif

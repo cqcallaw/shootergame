@@ -1,4 +1,4 @@
-// Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
+// Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "ShooterGame.h"
 #include "SShooterDemoHUD.h"
@@ -86,11 +86,11 @@ int32 SShooterReplayTimeline::OnPaint(const FPaintArgs& Args, const FGeometry& A
 			AllottedGeometry.GetLocalSize().X * ReplayPercent,
 			AllottedGeometry.GetLocalSize().Y * 0.5f
 		);
-		
+
 		const FVector2D Offset = Center - ImageBrush->ImageSize * 0.5f;
 
 		const int32 IndicatorLayerId = ParentLayerId + 1;
-			
+
 		FSlateDrawElement::MakeBox(
 			OutDrawElements,
 			IndicatorLayerId,
@@ -123,7 +123,7 @@ FReply SShooterReplayTimeline::OnTimelineClicked(const FGeometry& Geometry, cons
 }
 
 void SShooterDemoHUD::Construct(const FArguments& InArgs)
-{	
+{
 	PlayerOwner = InArgs._PlayerOwner;
 	check(PlayerOwner.IsValid());
 
@@ -134,7 +134,7 @@ void SShooterDemoHUD::Construct(const FArguments& InArgs)
 		+SVerticalBox::Slot()
 		.FillHeight(8.5f)
 		.VAlign(VAlign_Bottom)
-		[		
+		[
 			SNew(SHorizontalBox)
 			+SHorizontalBox::Slot()
 			.FillWidth(1.5f)

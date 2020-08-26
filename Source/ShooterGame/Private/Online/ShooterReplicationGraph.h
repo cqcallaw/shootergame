@@ -1,4 +1,4 @@
-// Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
+// Copyright Epic Games, Inc. All Rights Reserved.
 
 #pragma once
 
@@ -19,7 +19,7 @@ enum class EClassRepNodeMapping : uint32
 {
 	NotRouted,						// Doesn't map to any node. Used for special case actors that handled by special case nodes (UShooterReplicationGraphNode_PlayerStateFrequencyLimiter)
 	RelevantAllConnections,			// Routes to an AlwaysRelevantNode or AlwaysRelevantStreamingLevelNode node
-	
+
 	// ONLY SPATIALIZED Enums below here! See UShooterReplicationGraph::IsSpatialized
 
 	Spatialize_Static,				// Routes to GridNode: these actors don't move and don't need to be updated every frame.
@@ -44,7 +44,7 @@ public:
 	virtual void InitConnectionGraphNodes(UNetReplicationGraphConnection* RepGraphConnection) override;
 	virtual void RouteAddNetworkActorToNodes(const FNewReplicatedActorInfo& ActorInfo, FGlobalActorReplicationInfo& GlobalInfo) override;
 	virtual void RouteRemoveNetworkActorToNodes(const FNewReplicatedActorInfo& ActorInfo) override;
-	
+
 	UPROPERTY()
 	TArray<UClass*>	SpatializedClasses;
 
@@ -53,7 +53,7 @@ public:
 
 	UPROPERTY()
 	TArray<UClass*>	AlwaysRelevantClasses;
-	
+
 	UPROPERTY()
 	UReplicationGraphNode_GridSpatialization2D* GridNode;
 
@@ -141,7 +141,7 @@ class UShooterReplicationGraphNode_PlayerStateFrequencyLimiter : public UReplica
 	int32 TargetActorsPerFrame = 2;
 
 private:
-	
+
 	TArray<FActorRepListRefView> ReplicationActorLists;
 	FActorRepListRefView ForceNetUpdateReplicationActorList;
 };

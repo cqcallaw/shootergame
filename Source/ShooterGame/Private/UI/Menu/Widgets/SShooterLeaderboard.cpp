@@ -1,4 +1,4 @@
-// Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
+// Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "ShooterGame.h"
 #include "SShooterLeaderboard.h"
@@ -6,9 +6,7 @@
 #include "ShooterUIHelpers.h"
 #include "OnlineSubsystemUtils.h"
 
-#if PLATFORM_XBOXONE
-#define INTERACTIVE_LEADERBOARD	1
-#else
+#if !defined(INTERACTIVE_LEADERBOARD)
 #define INTERACTIVE_LEADERBOARD	0
 #endif
 
@@ -44,12 +42,12 @@ void SShooterLeaderboard::Construct(const FArguments& InArgs)
 	ChildSlot
 	.VAlign(VAlign_Fill)
 	.HAlign(HAlign_Fill)
-	[		
+	[
 		SNew(SVerticalBox)
 		+ SVerticalBox::Slot()
 		.AutoHeight()
 		[
-			SNew(SBox)  
+			SNew(SBox)
 			.WidthOverride(600)
 			.HeightOverride(600)
 			[
@@ -196,7 +194,7 @@ bool SShooterLeaderboard::IsPlayerSelectedAndValid() const
 }
 
 EVisibility SShooterLeaderboard::GetProfileUIVisibility() const
-{	
+{
 	return IsPlayerSelectedAndValid() ? EVisibility::Visible : EVisibility::Hidden;
 }
 
@@ -225,7 +223,7 @@ void SShooterLeaderboard::MoveSelection(int32 MoveBy)
 	}
 }
 
-FReply SShooterLeaderboard::OnKeyDown(const FGeometry& MyGeometry, const FKeyEvent& InKeyEvent) 
+FReply SShooterLeaderboard::OnKeyDown(const FGeometry& MyGeometry, const FKeyEvent& InKeyEvent)
 {
 	FReply Result = FReply::Unhandled();
 	const FKey Key = InKeyEvent.GetKey();
@@ -299,7 +297,7 @@ TSharedRef<ITableRow> SShooterLeaderboard::MakeListViewWidget(TSharedPtr<FLeader
 			}
 			return SNew(STextBlock)
 				.Text(ItemText)
-				.TextStyle(FShooterStyle::Get(), "ShooterGame.ScoreboardListTextStyle");		
+				.TextStyle(FShooterStyle::Get(), "ShooterGame.ScoreboardListTextStyle");
 		}
 		TSharedPtr<FLeaderboardRow> Item;
 	};

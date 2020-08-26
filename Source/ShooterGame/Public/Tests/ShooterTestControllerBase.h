@@ -1,4 +1,4 @@
-// Copyright 1998-2019 Epic Games, Inc.All Rights Reserved.
+// Copyright Epic Games, Inc.All Rights Reserved.
 #pragma once
 
 #include "GauntletTestController.h"
@@ -39,7 +39,7 @@ protected:
 	uint8 bIsSearchingForGame : 1;
 	uint8 bFoundGame : 1;
 
-	// Match Cycling 
+	// Match Cycling
 	uint8 NumOfCycledMatches;
 	uint8 TargetNumOfCycledMatches;
 

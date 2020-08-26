@@ -1,4 +1,4 @@
-// Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
+// Copyright Epic Games, Inc. All Rights Reserved.
 
 #pragma once
 
@@ -24,49 +24,49 @@ struct FShooterMenuStyle : public FSlateWidgetStyle
 
 	/**
 	 * The brush used for the header background
-	 */	
+	 */
 	UPROPERTY(EditAnywhere, Category=Appearance)
 	FSlateBrush HeaderBackgroundBrush;
 	FShooterMenuStyle& SetHeaderBackgroundBrush(const FSlateBrush& InHeaderBackgroundBrush) { HeaderBackgroundBrush = InHeaderBackgroundBrush; return *this; }
 
 	/**
 	 * The brush used for the left side of the menu
-	 */	
+	 */
 	UPROPERTY(EditAnywhere, Category=Appearance)
 	FSlateBrush LeftBackgroundBrush;
 	FShooterMenuStyle& SetLeftBackgroundBrush(const FSlateBrush& InLeftBackgroundBrush) { LeftBackgroundBrush = InLeftBackgroundBrush; return *this; }
 
 	/**
 	 * The brush used for the right side of the menu
-	 */	
+	 */
 	UPROPERTY(EditAnywhere, Category=Appearance)
 	FSlateBrush RightBackgroundBrush;
 	FShooterMenuStyle& SetRightBackgroundBrush(const FSlateBrush& InRightBackgroundBrush) { RightBackgroundBrush = InRightBackgroundBrush; return *this; }
 
 	/**
 	 * The sound that should play when entering a sub-menu
-	 */	
+	 */
 	UPROPERTY(EditAnywhere, Category=Sound)
 	FSlateSound MenuEnterSound;
 	FShooterMenuStyle& SetMenuEnterSound(const FSlateSound& InMenuEnterSound) { MenuEnterSound = InMenuEnterSound; return *this; }
 
 	/**
 	 * The sound that should play when leaving a sub-menu
-	 */	
+	 */
 	UPROPERTY(EditAnywhere, Category=Sound)
 	FSlateSound MenuBackSound;
 	FShooterMenuStyle& SetMenuBackSound(const FSlateSound& InMenuBackSound) { MenuBackSound = InMenuBackSound; return *this; }
 
 	/**
 	 * The sound that should play when changing an option
-	 */	
+	 */
 	UPROPERTY(EditAnywhere, Category=Sound)
 	FSlateSound OptionChangeSound;
 	FShooterMenuStyle& SetOptionChangeSound(const FSlateSound& InOptionChangeSound) { OptionChangeSound = InOptionChangeSound; return *this; }
 
 	/**
 	 * The sound that should play when changing the selected menu item
-	 */	
+	 */
 	UPROPERTY(EditAnywhere, Category=Sound)
 	FSlateSound MenuItemChangeSound;
 	FShooterMenuStyle& SetMenuItemChangeSound(const FSlateSound& InMenuItemChangeSound) { MenuItemChangeSound = InMenuItemChangeSound; return *this; }

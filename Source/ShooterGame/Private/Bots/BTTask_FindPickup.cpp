@@ -1,4 +1,4 @@
-// Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
+// Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "ShooterGame.h"
 #include "Bots/BTTask_FindPickup.h"
@@ -10,7 +10,7 @@
 #include "Pickups/ShooterPickup_Ammo.h"
 #include "Weapons/ShooterWeapon_Instant.h"
 
-UBTTask_FindPickup::UBTTask_FindPickup(const FObjectInitializer& ObjectInitializer) 
+UBTTask_FindPickup::UBTTask_FindPickup(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
 }

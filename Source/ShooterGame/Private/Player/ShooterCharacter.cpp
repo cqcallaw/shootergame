@@ -1,4 +1,4 @@
-// Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
+// Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "ShooterGame.h"
 #include "Weapons/ShooterWeapon.h"
@@ -543,7 +543,7 @@ void AShooterCharacter::OnRep_LastTakeHitInfo()
 	}
 }
 
-//Pawn::PlayDying sets this lifespan, but when that function is called on client, dead pawn's role is still SimulatedProxy despite bTearOff being true. 
+//Pawn::PlayDying sets this lifespan, but when that function is called on client, dead pawn's role is still SimulatedProxy despite bTearOff being true.
 void AShooterCharacter::TornOff()
 {
 	SetLifeSpan(25.f);
@@ -1102,7 +1102,7 @@ void AShooterCharacter::Tick(float DeltaSeconds)
 	{
 	    USoundNodeLocalPlayer::GetLocallyControlledActorCache().Add(UniqueID, bLocallyControlled);
 	});
-	
+
 	TArray<FVector> PointsToTest;
 	BuildPauseReplicationCheckPoints(PointsToTest);
 
