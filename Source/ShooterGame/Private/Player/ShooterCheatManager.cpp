@@ -1,7 +1,7 @@
 // Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
 
-#include "Player/ShooterCheatManager.h"
 #include "ShooterGame.h"
+#include "Player/ShooterCheatManager.h"
 #include "Online/ShooterPlayerState.h"
 #include "Bots/ShooterAIController.h"
 
@@ -75,6 +75,6 @@ void UShooterCheatManager::SpawnBot()
 	{
 		static int32 CheatBotNum = 50;
 		AShooterAIController* ShooterAIController = MyGame->CreateBot(CheatBotNum++);
-		MyGame->RestartPlayer(ShooterAIController);
+		MyGame->RestartPlayer(ShooterAIController);		
 	}
 }

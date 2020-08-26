@@ -1,11 +1,11 @@
 // Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
 
-#include "ShooterIngameMenu.h"
 #include "ShooterGame.h"
+#include "ShooterIngameMenu.h"
 #include "ShooterStyle.h"
 #include "ShooterMenuSoundsWidgetStyle.h"
 #include "Online.h"
-#include "Interfaces/OnlineExternalUIInterface.h"
+#include "OnlineExternalUIInterface.h"
 #include "ShooterGameInstance.h"
 #include "UI/ShooterHUD.h"
 #include "OnlineSubsystemUtils.h"
@@ -28,7 +28,7 @@ void FShooterIngameMenu::Construct(ULocalPlayer* _PlayerOwner)
 	{
 		return;
 	}
-
+	
 	//todo:  don't create ingame menus for remote players.
 	const UShooterGameInstance* GameInstance = nullptr;
 	if (PlayerOwner)
@@ -41,7 +41,7 @@ void FShooterIngameMenu::Construct(ULocalPlayer* _PlayerOwner)
 		SAssignNew(GameMenuWidget, SShooterMenuWidget)
 			.PlayerOwner(MakeWeakObjectPtr(PlayerOwner))
 			.Cursor(EMouseCursor::Default)
-			.IsGameMenu(true);
+			.IsGameMenu(true);			
 
 
 		int32 const OwnerUserIndex = GetOwnerUserIndex();
@@ -51,7 +51,7 @@ void FShooterIngameMenu::Construct(ULocalPlayer* _PlayerOwner)
 		TSharedPtr<FShooterMenuItem> MainMenuRoot = FShooterMenuItem::CreateRoot();
 		MainMenuItem = MenuHelper::AddMenuItem(MainMenuRoot,LOCTEXT("Main Menu", "MAIN MENU"));
 		MenuHelper::AddMenuItemSP(MainMenuItem,LOCTEXT("No", "NO"), this, &FShooterIngameMenu::OnCancelExitToMain);
-		MenuHelper::AddMenuItemSP(MainMenuItem,LOCTEXT("Yes", "YES"), this, &FShooterIngameMenu::OnConfirmExitToMain);
+		MenuHelper::AddMenuItemSP(MainMenuItem,LOCTEXT("Yes", "YES"), this, &FShooterIngameMenu::OnConfirmExitToMain);		
 
 		ShooterOptions = MakeShareable(new FShooterOptions());
 		ShooterOptions->Construct(PlayerOwner);
@@ -78,11 +78,11 @@ void FShooterIngameMenu::Construct(ULocalPlayer* _PlayerOwner)
 			ShooterRecentlyMet->OnApplyChanges.BindSP(this, &FShooterIngameMenu::CloseSubMenu);
 
 			MenuHelper::AddExistingMenuItem(RootMenuItem, ShooterRecentlyMet->RecentlyMetItem.ToSharedRef());
-#endif
+#endif		
 
-#if SHOOTER_CONSOLE_UI
+#if SHOOTER_CONSOLE_UI			
 			TSharedPtr<FShooterMenuItem> ShowInvitesItem = MenuHelper::AddMenuItem(RootMenuItem, LOCTEXT("Invite Players", "INVITE PLAYERS (via System UI)"));
-			ShowInvitesItem->OnConfirmMenuItem.BindRaw(this, &FShooterIngameMenu::OnShowInviteUI);
+			ShowInvitesItem->OnConfirmMenuItem.BindRaw(this, &FShooterIngameMenu::OnShowInviteUI);		
 #endif
 		}
 #endif
@@ -94,7 +94,7 @@ void FShooterIngameMenu::Construct(ULocalPlayer* _PlayerOwner)
 		}
 
 		MenuHelper::AddExistingMenuItem(RootMenuItem, MainMenuItem.ToSharedRef());
-
+				
 #if !SHOOTER_CONSOLE_UI
 		MenuHelper::AddMenuItemSP(RootMenuItem, LOCTEXT("Quit", "QUIT"), this, &FShooterIngameMenu::OnUIQuit);
 #endif
@@ -186,7 +186,7 @@ void FShooterIngameMenu::ToggleGameMenu()
 		GameMenuWidget->MenuGoBack();
 		return;
 	}
-
+	
 	AShooterPlayerController* const PCOwner = PlayerOwner ? Cast<AShooterPlayerController>(PlayerOwner->PlayerController) : nullptr;
 	if (!bIsGameMenuUp)
 	{
@@ -227,7 +227,7 @@ void FShooterIngameMenu::ToggleGameMenu()
 			FInputModeGameAndUI InputMode;
 			PCOwner->SetInputMode(InputMode);
 		}
-	}
+	} 
 	else
 	{
 		//Start hiding animation

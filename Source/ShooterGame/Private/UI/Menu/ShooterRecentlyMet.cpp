@@ -1,12 +1,12 @@
 // Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
 
-#include "ShooterRecentlyMet.h"
 #include "ShooterGame.h"
+#include "ShooterRecentlyMet.h"
 #include "ShooterTypes.h"
 #include "ShooterStyle.h"
 #include "ShooterOptionsWidgetStyle.h"
 #include "ShooterGameUserSettings.h"
-#include "Player/ShooterPersistentUser.h"
+#include "ShooterPersistentUser.h"
 #include "Player/ShooterLocalPlayer.h"
 #include "OnlineSubsystemUtils.h"
 
@@ -32,7 +32,7 @@ void FShooterRecentlyMet::Construct(ULocalPlayer* _PlayerOwner, int32 LocalUserN
 		OnlineSub = Online::GetSubsystem(PlayerOwner->GetWorld());
 	}
 
-	UserSettings = CastChecked<UShooterGameUserSettings>(GEngine->GetGameUserSettings());
+	UserSettings = CastChecked<UShooterGameUserSettings>(GEngine->GetGameUserSettings());	
 }
 
 void FShooterRecentlyMet::OnApplySettings()
@@ -73,7 +73,7 @@ UShooterPersistentUser* FShooterRecentlyMet::GetPersistentUser() const
 void FShooterRecentlyMet::UpdateRecentlyMet(int32 NewOwnerIndex)
 {
 	LocalUserNum = NewOwnerIndex;
-
+	
 	if (OnlineSub)
 	{
 		IOnlineIdentityPtr Identity = OnlineSub->GetIdentityInterface();
@@ -82,7 +82,7 @@ void FShooterRecentlyMet::UpdateRecentlyMet(int32 NewOwnerIndex)
 			LocalUsername = Identity->GetPlayerNickname(LocalUserNum);
 		}
 	}
-
+	
 	MenuHelper::ClearSubMenu(RecentlyMetItem);
 	MaxRecentlyMetIndex = 0;
 
@@ -95,7 +95,7 @@ void FShooterRecentlyMet::UpdateRecentlyMet(int32 NewOwnerIndex)
 		{
 			const APlayerState* PlayerState = MetPlayerArray[i];
 			FString Username = PlayerState->GetHumanReadableName();
-			if (Username != LocalUsername && PlayerState->IsABot() == false)
+			if (Username != LocalUsername && PlayerState->bIsABot == false)
 			{
 				TSharedPtr<FShooterMenuItem> UserItem = MenuHelper::AddMenuItem(RecentlyMetItem, FText::FromString(Username));
 				UserItem->OnControllerDownInputPressed.BindRaw(this, &FShooterRecentlyMet::IncrementRecentlyMetCounter);
@@ -137,10 +137,10 @@ void FShooterRecentlyMet::ViewSelectedUsersProfile()
 		if (Identity.IsValid() && MetPlayerArray.IsValidIndex(CurrRecentlyMetIndex))
 		{
 			const APlayerState* PlayerState = MetPlayerArray[CurrRecentlyMetIndex];
-
+		
 			TSharedPtr<const FUniqueNetId> Requestor = Identity->GetUniquePlayerId(LocalUserNum);
-			TSharedPtr<const FUniqueNetId> Requestee = PlayerState->GetUniqueId().GetUniqueNetId();
-
+			TSharedPtr<const FUniqueNetId> Requestee = PlayerState->UniqueId.GetUniqueNetId();
+			
 			IOnlineExternalUIPtr ExternalUI = OnlineSub->GetExternalUIInterface();
 			if (ExternalUI.IsValid() && Requestor.IsValid() && Requestee.IsValid())
 			{

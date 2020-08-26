@@ -3,7 +3,7 @@
 
 #include "GauntletTestController.h"
 #include "ShooterGameInstance.h"
-#include "Templates/SharedPointer.h"
+#include "SharedPointer.h"
 #include "OnlineSessionSettings.h"
 #include "ShooterTestControllerBase.generated.h"
 
@@ -39,7 +39,7 @@ protected:
 	uint8 bIsSearchingForGame : 1;
 	uint8 bFoundGame : 1;
 
-	// Match Cycling
+	// Match Cycling 
 	uint8 NumOfCycledMatches;
 	uint8 TargetNumOfCycledMatches;
 

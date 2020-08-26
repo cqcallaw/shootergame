@@ -1,7 +1,7 @@
 // Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
 
-#include "SShooterMenuItem.h"
 #include "ShooterGame.h"
+#include "SShooterMenuItem.h"
 #include "ShooterStyle.h"
 #include "ShooterMenuItemWidgetStyle.h"
 
@@ -109,7 +109,7 @@ void SShooterMenuItem::Construct(const FArguments& InArgs)
 				]
 			]
 		]
-
+		
 	];
 }
 
@@ -186,7 +186,7 @@ FSlateColor SShooterMenuItem::GetButtonBgColor() const
 	const float MinAlpha = 0.1f;
 	const float MaxAlpha = 1.f;
 	const float AnimSpeedModifier = 1.5f;
-
+	
 	float AnimPercent = 0.f;
 	ULocalPlayer* const Player = PlayerOwner.Get();
 	if (Player)

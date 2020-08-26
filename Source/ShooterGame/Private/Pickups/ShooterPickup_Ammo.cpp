@@ -1,7 +1,7 @@
 // Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
 
-#include "Pickups/ShooterPickup_Ammo.h"
 #include "ShooterGame.h"
+#include "Pickups/ShooterPickup_Ammo.h"
 #include "Weapons/ShooterWeapon.h"
 #include "OnlineSubsystemUtils.h"
 
@@ -42,7 +42,7 @@ void AShooterPickup_Ammo::GivePickupTo(class AShooterCharacter* Pawn)
 			const IOnlineIdentityPtr Identity = Online::GetIdentityInterface(World);
 
 			if (Events.IsValid() && Identity.IsValid())
-			{
+			{							
 				AShooterPlayerController* PC = Cast<AShooterPlayerController>(Pawn->Controller);
 				if (PC)
 				{
@@ -51,12 +51,12 @@ void AShooterPickup_Ammo::GivePickupTo(class AShooterCharacter* Pawn)
 					if (LocalPlayer)
 					{
 						const int32 UserIndex = LocalPlayer->GetControllerId();
-						TSharedPtr<const FUniqueNetId> UniqueID = Identity->GetUniquePlayerId(UserIndex);
+						TSharedPtr<const FUniqueNetId> UniqueID = Identity->GetUniquePlayerId(UserIndex);			
 						if (UniqueID.IsValid())
 						{
 							FVector Location = Pawn->GetActorLocation();
 
-							FOnlineEventParms Params;
+							FOnlineEventParms Params;		
 
 							Params.Add( TEXT( "SectionId" ), FVariantData( (int32)0 ) ); // unused
 							Params.Add( TEXT( "GameplayModeId" ), FVariantData( (int32)1 ) ); // @todo determine game mode (ffa v tdm)
@@ -67,7 +67,7 @@ void AShooterPickup_Ammo::GivePickupTo(class AShooterCharacter* Pawn)
 							Params.Add( TEXT( "LocationX" ), FVariantData( Location.X ) );
 							Params.Add( TEXT( "LocationY" ), FVariantData( Location.Y ) );
 							Params.Add( TEXT( "LocationZ" ), FVariantData( Location.Z ) );
-							Params.Add( TEXT( "ItemQty" ), FVariantData( (int32)Qty ) );
+							Params.Add( TEXT( "ItemQty" ), FVariantData( (int32)Qty ) );		
 
 							Events->TriggerEvent(*UniqueID, TEXT("CollectPowerup"), Params);
 						}

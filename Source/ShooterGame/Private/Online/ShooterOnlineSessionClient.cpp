@@ -1,7 +1,7 @@
 // Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
 
-#include "Online/ShooterOnlineSessionClient.h"
 #include "ShooterGame.h"
+#include "ShooterOnlineSessionClient.h"
 #include "ShooterGameInstance.h"
 
 UShooterOnlineSessionClient::UShooterOnlineSessionClient()
@@ -52,7 +52,7 @@ void UShooterOnlineSessionClient::OnSessionUserInviteAccepted(
 }
 
 void UShooterOnlineSessionClient::OnPlayTogetherEventReceived(int32 UserIndex, TArray<TSharedPtr<const FUniqueNetId>> UserIdList)
-{
+{	
 	if (UShooterGameInstance* const ShooterGameInstance = Cast<UShooterGameInstance>(GetGameInstance()))
 	{
 		ShooterGameInstance->OnPlayTogetherEventReceived(UserIndex, UserIdList);

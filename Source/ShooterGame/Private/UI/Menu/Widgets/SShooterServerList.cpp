@@ -1,8 +1,8 @@
 // Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
 
-#include "SShooterServerList.h"
 #include "ShooterGame.h"
-#include "Widgets/Views/SHeaderRow.h"
+#include "SShooterServerList.h"
+#include "SHeaderRow.h"
 #include "ShooterStyle.h"
 #include "ShooterGameLoadingScreen.h"
 #include "ShooterGameInstance.h"
@@ -20,7 +20,7 @@ void SShooterServerList::Construct(const FArguments& InArgs)
 	StatusText = FText::GetEmpty();
 	BoxWidth = 125;
 	LastSearchTime = 0.0f;
-
+	
 #if PLATFORM_SWITCH
 	MinTimeBetweenSearches = 6.0;
 #else
@@ -35,7 +35,7 @@ void SShooterServerList::Construct(const FArguments& InArgs)
 		+SVerticalBox::Slot()
 		.AutoHeight()
 		[
-			SNew(SBox)
+			SNew(SBox)  
 			.WidthOverride(600)
 			.HeightOverride(300)
 			[
@@ -70,11 +70,11 @@ void SShooterServerList::Construct(const FArguments& InArgs)
 				+ SRichTextBlock::ImageDecorator()
 			]
 		]
-
+		
 	];
 }
 
-/**
+/** 
  * Get the current game session
  */
 AShooterGameSession* SShooterServerList::GetGameSession() const
@@ -143,14 +143,14 @@ void SShooterServerList::UpdateSearchStatus()
 
 						NewServerEntry->ServerName = Result.Session.OwningUserName;
 						NewServerEntry->Ping = FString::FromInt(Result.PingInMs);
-						NewServerEntry->CurrentPlayers = FString::FromInt(Result.Session.SessionSettings.NumPublicConnections
-							+ Result.Session.SessionSettings.NumPrivateConnections
-							- Result.Session.NumOpenPublicConnections
+						NewServerEntry->CurrentPlayers = FString::FromInt(Result.Session.SessionSettings.NumPublicConnections 
+							+ Result.Session.SessionSettings.NumPrivateConnections 
+							- Result.Session.NumOpenPublicConnections 
 							- Result.Session.NumOpenPrivateConnections);
 						NewServerEntry->MaxPlayers = FString::FromInt(Result.Session.SessionSettings.NumPublicConnections
 							+ Result.Session.SessionSettings.NumPrivateConnections);
 						NewServerEntry->SearchResultsIndex = IdxResult;
-
+					
 						Result.Session.SessionSettings.Get(SETTING_GAMEMODE, NewServerEntry->GameType);
 						Result.Session.SessionSettings.Get(SETTING_MAPNAME, NewServerEntry->MapName);
 
@@ -170,7 +170,7 @@ void SShooterServerList::UpdateSearchStatus()
 	}
 
 	if (bFinishSearch)
-	{
+	{		
 		OnServerSearchFinished();
 	}
 }
@@ -278,7 +278,7 @@ void SShooterServerList::ConnectToServer()
 		{
 			GEngine->GameViewport->RemoveAllViewportWidgets();
 		}
-
+		
 		UShooterGameInstance* const GI = Cast<UShooterGameInstance>(PlayerOwner->GetGameInstance());
 		if (GI)
 		{
@@ -322,7 +322,7 @@ void SShooterServerList::MoveSelection(int32 MoveBy)
 	}
 }
 
-FReply SShooterServerList::OnKeyDown(const FGeometry& MyGeometry, const FKeyEvent& InKeyEvent)
+FReply SShooterServerList::OnKeyDown(const FGeometry& MyGeometry, const FKeyEvent& InKeyEvent) 
 {
 	if (bSearchingForServers) // lock input
 	{
@@ -331,7 +331,7 @@ FReply SShooterServerList::OnKeyDown(const FGeometry& MyGeometry, const FKeyEven
 
 	FReply Result = FReply::Unhandled();
 	const FKey Key = InKeyEvent.GetKey();
-
+	
 	if (Key == EKeys::Up || Key == EKeys::Gamepad_DPad_Up || Key == EKeys::Gamepad_LeftStick_Up)
 	{
 		MoveSelection(-1);
@@ -392,7 +392,7 @@ TSharedRef<ITableRow> SShooterServerList::MakeListViewWidget(TSharedPtr<FServerE
 			else if (ColumnName == "Ping")
 			{
 				ItemText = FText::FromString(Item->Ping);
-			}
+			} 
 			return SNew(STextBlock)
 				.Text(ItemText)
 				.TextStyle(FShooterStyle::Get(), "ShooterGame.MenuServerListTextStyle");

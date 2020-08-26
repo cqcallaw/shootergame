@@ -1,7 +1,7 @@
 // Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
 
-#include "ShooterDemoPlaybackMenu.h"
 #include "ShooterGame.h"
+#include "ShooterDemoPlaybackMenu.h"
 #include "ShooterStyle.h"
 #include "ShooterMenuSoundsWidgetStyle.h"
 #include "ShooterGameInstance.h"
@@ -17,13 +17,13 @@ void FShooterDemoPlaybackMenu::Construct( ULocalPlayer* _PlayerOwner )
 	{
 		return;
 	}
-
+	
 	if ( !GameMenuWidget.IsValid() )
 	{
 		SAssignNew( GameMenuWidget, SShooterMenuWidget )
 			.PlayerOwner( MakeWeakObjectPtr( PlayerOwner ) )
 			.Cursor( EMouseCursor::Default )
-			.IsGameMenu( true );
+			.IsGameMenu( true );			
 
 		TSharedPtr<FShooterMenuItem> MainMenuRoot = FShooterMenuItem::CreateRoot();
 		MainMenuItem = MenuHelper::AddMenuItem(MainMenuRoot,LOCTEXT( "Main Menu", "MAIN MENU" ) );
@@ -32,7 +32,7 @@ void FShooterDemoPlaybackMenu::Construct( ULocalPlayer* _PlayerOwner )
 		MenuHelper::AddMenuItemSP( MainMenuItem, LOCTEXT( "Yes", "YES" ), this, &FShooterDemoPlaybackMenu::OnConfirmExitToMain );
 
 		MenuHelper::AddExistingMenuItem( RootMenuItem, MainMenuItem.ToSharedRef() );
-
+				
 #if !SHOOTER_CONSOLE_UI
 		MenuHelper::AddMenuItemSP( RootMenuItem, LOCTEXT("Quit", "QUIT"), this, &FShooterDemoPlaybackMenu::OnUIQuit );
 #endif
@@ -75,7 +75,7 @@ void FShooterDemoPlaybackMenu::ToggleGameMenu()
 		GameMenuWidget->MenuGoBack();
 		return;
 	}
-
+	
 	if ( !bIsAddedToViewport )
 	{
 		GEngine->GameViewport->AddViewportWidgetContent( SAssignNew( GameMenuContainer, SWeakWidget ).PossiblyNullContent( GameMenuWidget.ToSharedRef() ) );
@@ -83,7 +83,7 @@ void FShooterDemoPlaybackMenu::ToggleGameMenu()
 		GameMenuWidget->BuildAndShowMenu();
 
 		bIsAddedToViewport = true;
-	}
+	} 
 	else
 	{
 		// Start hiding animation

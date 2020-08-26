@@ -15,7 +15,7 @@ class AShooterPlayerState : public APlayerState
 	virtual void Reset() override;
 
 	/**
-	 * Set the team
+	 * Set the team 
 	 *
 	 * @param	InController	The controller to initialize state with
 	 */
@@ -49,8 +49,7 @@ class AShooterPlayerState : public APlayerState
 	int32 GetDeaths() const;
 
 	/** get number of points */
-	// Deprecated
-	//float GetScore() const;
+	float GetScore() const;
 
 	/** get number of bullets fired this match */
 	int32 GetNumBulletsFired() const;

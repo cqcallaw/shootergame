@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "Styling/SlateWidgetStyleContainerBase.h"
+#include "SlateWidgetStyleContainerBase.h"
 #include "ShooterMenuItemWidgetStyle.generated.h"
 
 /**
@@ -24,21 +24,21 @@ struct FShooterMenuItemStyle : public FSlateWidgetStyle
 
 	/**
 	 * The brush used for the item background
-	 */
+	 */	
 	UPROPERTY(EditAnywhere, Category=Appearance)
 	FSlateBrush BackgroundBrush;
 	FShooterMenuItemStyle& SetBackgroundBrush(const FSlateBrush& InBackgroundBrush) { BackgroundBrush = InBackgroundBrush; return *this; }
 
 	/**
 	 * The image used for the left arrow
-	 */
+	 */	
 	UPROPERTY(EditAnywhere, Category=Appearance)
 	FSlateBrush LeftArrowImage;
 	FShooterMenuItemStyle& SetLeftArrowImage(const FSlateBrush& InLeftArrowImage) { LeftArrowImage = InLeftArrowImage; return *this; }
 
 	/**
 	 * The image used for the right arrow
-	 */
+	 */	
 	UPROPERTY(EditAnywhere, Category=Appearance)
 	FSlateBrush RightArrowImage;
 	FShooterMenuItemStyle& SetRightArrowImage(const FSlateBrush& InRightArrowImage) { RightArrowImage = InRightArrowImage; return *this; }

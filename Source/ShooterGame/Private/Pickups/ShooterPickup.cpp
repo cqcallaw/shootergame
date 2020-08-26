@@ -1,7 +1,7 @@
 // Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
 
-#include "Pickups/ShooterPickup.h"
 #include "ShooterGame.h"
+#include "Pickups/ShooterPickup.h"
 #include "Particles/ParticleSystemComponent.h"
 
 AShooterPickup::AShooterPickup(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
@@ -90,7 +90,7 @@ void AShooterPickup::RespawnPickup()
 
 	for (AActor* OverlappingPawn : OverlappingPawns)
 	{
-		PickupOnTouch(CastChecked<AShooterCharacter>(OverlappingPawn));
+		PickupOnTouch(CastChecked<AShooterCharacter>(OverlappingPawn));	
 	}
 }
 

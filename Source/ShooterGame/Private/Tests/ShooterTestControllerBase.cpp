@@ -1,7 +1,7 @@
 // Copyright 1998-2019 Epic Games, Inc.All Rights Reserved.
-#include "Tests/ShooterTestControllerBase.h"
+#include "ShooterTestControllerBase.h"
 #include "ShooterGame.h"
-#include "Online/ShooterGameSession.h"
+#include "ShooterGameSession.h"
 #include "Online/ShooterOnlineGameSettings.h"
 #include "OnlineSubsystemSessionSettings.h"
 #include "OnlineSubsystemUtils.h"
@@ -322,7 +322,7 @@ void UShooterTestControllerBase::OnMatchmakingComplete(FName SessionName, bool b
 	{
 		IOnlineSubsystem* Subsystem = Online::GetSubsystem(GetWorld());
 
-		// We only care about hosted games
+		// We only care about hosted games 
 		if (Subsystem && Subsystem->IsLocalPlayer(*MatchmadeSession->OwningUserId))
 		{
 			SessionInterface->EndSession(SessionName);
@@ -396,7 +396,7 @@ void UShooterTestControllerBase::UpdateSearchStatus()
 	}
 }
 
-UShooterGameInstance* UShooterTestControllerBase::GetGameInstance() const
+UShooterGameInstance* UShooterTestControllerBase::GetGameInstance() const 
 {
 	if (const UWorld* World = GetWorld())
 	{
@@ -406,7 +406,7 @@ UShooterGameInstance* UShooterTestControllerBase::GetGameInstance() const
 	return nullptr;
 }
 
-const FName UShooterTestControllerBase::GetGameInstanceState() const
+const FName UShooterTestControllerBase::GetGameInstanceState() const 
 {
 	if (const UShooterGameInstance* GameInstance = GetGameInstance())
 	{

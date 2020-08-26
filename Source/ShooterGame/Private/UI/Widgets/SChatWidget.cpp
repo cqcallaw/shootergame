@@ -1,7 +1,7 @@
 // Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
 
-#include "SChatWidget.h"
 #include "ShooterGame.h"
+#include "SChatWidget.h"
 #include "ShooterStyle.h"
 #include "ShooterChatWidgetStyle.h"
 
@@ -38,7 +38,7 @@ void SChatWidget::Construct(const FArguments& InArgs, const FLocalPlayerContext&
 		+ SVerticalBox::Slot()
 		// The main background
 		.AutoHeight()
-		[
+		[			
 			SNew(SBorder)
 			.BorderImage(&ChatStyle->BackingBrush)
 			.Padding(FMargin(CHAT_BOX_PADDING, 16.0f, CHAT_BOX_PADDING, 24.0f))
@@ -75,7 +75,7 @@ void SChatWidget::Construct(const FArguments& InArgs, const FLocalPlayerContext&
 	];
 	// Setup visibilty
 	LastVisibility = bAlwaysVisible ? EVisibility::Visible : EVisibility::Hidden;
-	SetEntryVisibility( LastVisibility );
+	SetEntryVisibility( LastVisibility );	
 }
 
 
@@ -119,7 +119,7 @@ void SChatWidget::AddChatLine(const FText& ChatString, bool SetFocus)
 		UE_LOG(LogOnline, Warning, TEXT("request scroll last=%s"), *LastLine->ChatString.ToString());
 		ChatHistoryListView->RequestScrollIntoView(ChatHistory[ChatHistory.Num() - 1]);
 	}
-
+	
 	FSlateApplication::Get().PlaySound(ChatStyle->RxMessgeSound);
 	SetEntryVisibility( EVisibility::Visible );
 	bVisibiltyNeedsFocus = SetFocus;
@@ -201,7 +201,7 @@ void SChatWidget::Tick( const FGeometry& AllottedGeometry, const double InCurren
 			if (ChatEditBox.IsValid())
 			{
 				FWidgetPath WidgetToFocusPath;
-
+				
 				bool bFoundPath = FSlateApplication::Get().FindPathToWidget(ChatEditBox.ToSharedRef(), WidgetToFocusPath);
 				if (bFoundPath && WidgetToFocusPath.IsValid() && bVisibiltyNeedsFocus == true )
 				{

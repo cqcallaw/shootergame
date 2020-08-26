@@ -1,7 +1,7 @@
 // Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
 
-#include "Player/ShooterPlayerCameraManager.h"
 #include "ShooterGame.h"
+#include "Player/ShooterPlayerCameraManager.h"
 
 AShooterPlayerCameraManager::AShooterPlayerCameraManager(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {

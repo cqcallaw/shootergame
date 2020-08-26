@@ -1,15 +1,15 @@
 // Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
 
+#include "ShooterGame.h"
 #include "Bots/BTTask_FindPointNearEnemy.h"
 #include "Bots/ShooterAIController.h"
-#include "ShooterGame.h"
 #include "BehaviorTree/BehaviorTreeComponent.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "BehaviorTree/Blackboard/BlackboardKeyAllTypes.h"
 #include "NavigationSystem.h"
 
 
-UBTTask_FindPointNearEnemy::UBTTask_FindPointNearEnemy(const FObjectInitializer& ObjectInitializer)
+UBTTask_FindPointNearEnemy::UBTTask_FindPointNearEnemy(const FObjectInitializer& ObjectInitializer) 
 	: Super(ObjectInitializer)
 {
 }
@@ -21,7 +21,7 @@ EBTNodeResult::Type UBTTask_FindPointNearEnemy::ExecuteTask(UBehaviorTreeCompone
 	{
 		return EBTNodeResult::Failed;
 	}
-
+	
 	APawn* MyBot = MyController->GetPawn();
 	AShooterCharacter* Enemy = MyController->GetEnemy();
 	if (Enemy && MyBot)

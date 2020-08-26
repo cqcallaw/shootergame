@@ -1,7 +1,7 @@
 // Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
 
-#include "Online/ShooterGameSession.h"
 #include "ShooterGame.h"
+#include "ShooterGameSession.h"
 #include "ShooterOnlineGameSettings.h"
 #include "OnlineSubsystemSessionSettings.h"
 #include "OnlineSubsystemUtils.h"
@@ -75,13 +75,13 @@ void AShooterGameSession::HandleMatchHasStarted()
 	}
 }
 
-/**
- * Ends a game session
+/** 
+ * Ends a game session 
  *
  */
 void AShooterGameSession::HandleMatchHasEnded()
 {
-	// end online game locally
+	// end online game locally 
 	IOnlineSubsystem* OnlineSub = Online::GetSubsystem(GetWorld());
 	if (OnlineSub)
 	{
@@ -106,7 +106,7 @@ void AShooterGameSession::HandleMatchHasEnded()
 }
 
 bool AShooterGameSession::IsBusy() const
-{
+{ 
 	if (HostSettings.IsValid() || SearchSettings.IsValid())
 	{
 		return true;
@@ -154,8 +154,8 @@ EOnlineAsyncTaskState::Type AShooterGameSession::GetSearchResultStatus(int32& Se
  * @return Search results
  */
 const TArray<FOnlineSessionSearchResult> & AShooterGameSession::GetSearchResults() const
-{
-	return SearchSettings->SearchResults;
+{ 
+	return SearchSettings->SearchResults; 
 };
 
 
@@ -176,7 +176,7 @@ void AShooterGameSession::OnCreateSessionComplete(FName InSessionName, bool bWas
 		Sessions->ClearOnCreateSessionCompleteDelegate_Handle(OnCreateSessionCompleteDelegateHandle);
 	}
 
-	OnCreatePresenceSessionComplete().Broadcast(InSessionName, bWasSuccessful);
+	OnCreatePresenceSessionComplete().Broadcast(InSessionName, bWasSuccessful);	
 }
 
 /**
@@ -234,7 +234,7 @@ bool AShooterGameSession::HostSession(TSharedPtr<const FUniqueNetId> UserId, FNa
 		}
 	}
 #if !UE_BUILD_SHIPPING
-	else
+	else 
 	{
 		// Hack workflow in development
 		OnCreatePresenceSessionComplete().Broadcast(NAME_GameSession, true);
@@ -322,7 +322,7 @@ void AShooterGameSession::StartMatchmaking()
 }
 
 void AShooterGameSession::ContinueMatchmaking()
-{
+{	
 	ChooseBestSession();
 	if (CurrentSessionParams.BestSessionIdx >= 0 && CurrentSessionParams.BestSessionIdx < SearchSettings->SearchResults.Num())
 	{
@@ -418,7 +418,7 @@ void AShooterGameSession::OnJoinSessionComplete(FName InSessionName, EOnJoinSess
 	bool bWillTravel = false;
 
 	UE_LOG(LogOnlineGame, Verbose, TEXT("OnJoinSessionComplete %s bSuccess: %d"), *InSessionName.ToString(), static_cast<int32>(Result));
-
+	
 	IOnlineSubsystem* OnlineSub = Online::GetSubsystem(GetWorld());
 	if (OnlineSub)
 	{

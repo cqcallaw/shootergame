@@ -1,7 +1,7 @@
 // Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
 
-#include "Weapons/ShooterWeapon_Instant.h"
 #include "ShooterGame.h"
+#include "Weapons/ShooterWeapon_Instant.h"
 #include "Particles/ParticleSystemComponent.h"
 #include "Effects/ShooterImpactEffect.h"
 
@@ -59,7 +59,7 @@ void AShooterWeapon_Instant::ServerNotifyHit_Implementation(const FHitResult& Im
 						ProcessInstantHit_Confirmed(Impact, Origin, ShootDir, RandomSeed, ReticleSpread);
 					}
 				}
-				// assume it told the truth about static things because the don't move and the hit
+				// assume it told the truth about static things because the don't move and the hit 
 				// usually doesn't have significant gameplay implications
 				else if (Impact.GetActor()->IsRootComponentStatic() || Impact.GetActor()->IsRootComponentStationary())
 				{

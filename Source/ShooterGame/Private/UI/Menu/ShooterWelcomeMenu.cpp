@@ -1,7 +1,7 @@
 // Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
 
-#include "ShooterWelcomeMenu.h"
 #include "ShooterGame.h"
+#include "ShooterWelcomeMenu.h"
 #include "ShooterStyle.h"
 #include "SShooterConfirmationDialog.h"
 #include "ShooterGameViewportClient.h"
@@ -48,7 +48,7 @@ class SShooterWelcomeMenuWidget : public SCompoundWidget
 	void Construct( const FArguments& InArgs )
 	{
 		MenuOwner = InArgs._MenuOwner;
-
+		
 		TextAnimation = FCurveSequence();
 		const float AnimDuration = 1.5f;
 		TextColorCurve = TextAnimation.AddCurve(0, AnimDuration, ECurveEaseFunction::QuadInOut);
@@ -59,7 +59,7 @@ class SShooterWelcomeMenuWidget : public SCompoundWidget
 			.Padding(30.0f)
 			.VAlign(VAlign_Center)
 			.HAlign(HAlign_Center)
-			[
+			[ 
 				SAssignNew( PressPlayText, SRichTextBlock )
 #if PLATFORM_PS4
 				.Text( LOCTEXT("PressStartPS4", "PRESS CROSS BUTTON TO PLAY" ) )
@@ -178,7 +178,7 @@ void FShooterWelcomeMenu::Construct( TWeakObjectPtr< UShooterGameInstance > InGa
 	PendingControllerIndex = -1;
 
 	MenuWidget = SNew( SShooterWelcomeMenuWidget )
-		.MenuOwner(this);
+		.MenuOwner(this);	
 }
 
 void FShooterWelcomeMenu::AddToGameViewport()
@@ -216,7 +216,7 @@ void FShooterWelcomeMenu::HandleLoginUIClosed(TSharedPtr<const FUniqueNetId> Uni
 		const FText StopReason	= NSLOCTEXT( "ProfileMessages", "NeedLicense", "The signed in users do not have a license for this game. Please purchase ShooterGame from the Xbox Marketplace or sign in a user with a valid license." );
 		const FText OKButton	= NSLOCTEXT( "DialogButtons", "OKAY", "OK" );
 
-		ShooterViewport->ShowDialog(
+		ShooterViewport->ShowDialog( 
 			nullptr,
 			EShooterDialogType::Generic,
 			StopReason,
@@ -245,10 +245,10 @@ void FShooterWelcomeMenu::HandleLoginUIClosed(TSharedPtr<const FUniqueNetId> Uni
 	}
 	else
 	{
-		// Show a warning that your progress won't be saved if you continue without logging in.
+		// Show a warning that your progress won't be saved if you continue without logging in. 
 		if (ShooterViewport != NULL)
 		{
-			ShooterViewport->ShowDialog(
+			ShooterViewport->ShowDialog( 
 				nullptr,
 				EShooterDialogType::Generic,
 				NSLOCTEXT("ProfileMessages", "ProgressWillNotBeSaved", "If you continue without signing in, your progress will not be saved."),
@@ -277,7 +277,7 @@ void FShooterWelcomeMenu::SetControllerAndAdvanceToMainMenu(const int Controller
 
 		// tell gameinstance to transition to main menu
 		GameInstance->GotoState(ShooterGameInstanceState::MainMenu);
-	}
+	}	
 }
 
 FReply FShooterWelcomeMenu::OnContinueWithoutSavingConfirm()
@@ -330,7 +330,7 @@ void FShooterWelcomeMenu::OnUserCanPlay(const FUniqueNetId& UserId, EUserPrivile
 			const FText ReturnReason = NSLOCTEXT("PrivilegeFailures", "CannotPlayAgeRestriction", "You cannot play this game due to age restrictions.");
 			const FText OKButton = NSLOCTEXT("DialogButtons", "OKAY", "OK");
 
-			ShooterViewport->ShowDialog(
+			ShooterViewport->ShowDialog( 
 				nullptr,
 				EShooterDialogType::Generic,
 				ReturnReason,

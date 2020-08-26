@@ -1,7 +1,7 @@
 // Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
 
-#include "Bots/BTDecorator_HasLoSTo.h"
 #include "ShooterGame.h"
+#include "BTDecorator_HasLoSTo.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "BehaviorTree/Blackboard/BlackboardKeyType_Object.h"
 #include "BehaviorTree/Blackboard/BlackboardKeyType_Vector.h"
@@ -13,7 +13,7 @@ UBTDecorator_HasLoSTo::UBTDecorator_HasLoSTo(const FObjectInitializer& ObjectIni
 	: Super(ObjectInitializer)
 {
 	NodeName = "Has LoS To";
-	// accept only actors and vectors
+	// accept only actors and vectors	
 	EnemyKey.AddObjectFilter(this, *NodeName, AActor::StaticClass());
 	EnemyKey.AddVectorFilter(this, *NodeName);
 }
@@ -68,7 +68,7 @@ bool UBTDecorator_HasLoSTo::CalculateRawConditionValue(UBehaviorTreeComponent& O
 	{
 		auto MyID = MyBlackboard->GetKeyID(EnemyKey.SelectedKeyName);
 		auto TargetKeyType = MyBlackboard->GetKeyType(MyID);
-
+		
 		FVector TargetLocation;
 		bool bGotTarget = false;
 		AActor* EnemyActor = NULL;
@@ -94,7 +94,7 @@ bool UBTDecorator_HasLoSTo::CalculateRawConditionValue(UBehaviorTreeComponent& O
 			{
 				HasLOS = true;
 			}
-		}
+		}			
 	}
 
 	return HasLOS;
@@ -103,7 +103,7 @@ bool UBTDecorator_HasLoSTo::CalculateRawConditionValue(UBehaviorTreeComponent& O
 bool UBTDecorator_HasLoSTo::LOSTrace(AActor* InActor, AActor* InEnemyActor, const FVector& EndLocation) const
 {
 	AShooterAIController* MyController = Cast<AShooterAIController>(InActor);
-	AShooterBot* MyBot = MyController ? Cast<AShooterBot>(MyController->GetPawn()) : NULL;
+	AShooterBot* MyBot = MyController ? Cast<AShooterBot>(MyController->GetPawn()) : NULL; 
 
 	bool bHasLOS = false;
 	{
@@ -111,7 +111,7 @@ bool UBTDecorator_HasLoSTo::LOSTrace(AActor* InActor, AActor* InEnemyActor, cons
 		{
 			// Perform trace to retrieve hit info
 			FCollisionQueryParams TraceParams(SCENE_QUERY_STAT(AILosTrace), true, InActor);
-
+			
 			TraceParams.bReturnPhysicalMaterial = true;
 			TraceParams.AddIgnoredActor(MyBot);
 			const FVector StartLocation = MyBot->GetActorLocation();
@@ -166,7 +166,7 @@ bool UBTDecorator_HasLoSTo::LOSTrace(AActor* InActor, AActor* InEnemyActor, cons
 
 	return bHasLOS;
 }
-//
+// 
 // FString UBTDecorator_HasLoSTo::GetStaticDescription() const
 // {
 // 	FString KeyDesc("invalid");
@@ -175,16 +175,16 @@ bool UBTDecorator_HasLoSTo::LOSTrace(AActor* InActor, AActor* InEnemyActor, cons
 // 	{
 // 		KeyDesc = BlackboardKey.SelectedKeyName.ToString();
 // 	}
-//
+// 
 // 	return FString::Printf(TEXT("%s: %s"), *Super::GetStaticDescription(), *KeyDesc);
 // }
-//
+// 
 // void UBTDecorator_HasLoSTo::DescribeRuntimeValues(const class UBehaviorTreeComponent* OwnerComp, uint8* NodeMemory, EBTDescriptionVerbosity::Type Verbosity, TArray<FString>& Values) const
 // {
 // 	Super::DescribeRuntimeValues(OwnerComp, NodeMemory, Verbosity, Values);
-//
+// 
 // 	const UBlackboardComponent* BlackboardComp = OwnerComp->GetBlackboardComponent();
-//
+// 
 // 	if (BlackboardComp)
 // 	{
 // 		FString KeyValue = BlackboardComp->DescribeKeyValue(BlackboardKey.GetSelectedKeyID(), EBlackboardDescription::OnlyValue);

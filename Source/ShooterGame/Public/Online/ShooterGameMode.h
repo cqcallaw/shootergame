@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "Interfaces/OnlineIdentityInterface.h"
-#include "Player/ShooterPlayerController.h"
+#include "OnlineIdentityInterface.h"
+#include "ShooterPlayerController.h"
 #include "ShooterGameMode.generated.h"
 
 class AShooterAIController;
