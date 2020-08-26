@@ -1,7 +1,7 @@
-// Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
+// Copyright Epic Games, Inc. All Rights Reserved.
 
-#include "ShooterOptions.h"
 #include "ShooterGame.h"
+#include "ShooterOptions.h"
 #include "ShooterTypes.h"
 #include "ShooterStyle.h"
 #include "ShooterOptionsWidgetStyle.h"
@@ -119,11 +119,11 @@ void FShooterOptions::Construct(ULocalPlayer* InPlayerOwner)
 
 	if (ensure(PlayerOwner != nullptr))
 	{
-		APlayerController* BaseController = Cast<APlayerController>(UGameplayStatics::GetPlayerController(PlayerOwner->GetWorld(), GetOwnerUserIndex()));
-		AShooterPlayerController* ShooterPlayerController = Cast<AShooterPlayerController>(UGameplayStatics::GetPlayerController(PlayerOwner->GetWorld(), GetOwnerUserIndex()));
+		APlayerController* BaseController = Cast<APlayerController>(UGameplayStatics::GetPlayerControllerFromID(PlayerOwner->GetWorld(), PlayerOwner->GetControllerId()));
 		ensure(BaseController);
 		if (BaseController)
 		{
+			AShooterPlayerController* ShooterPlayerController = Cast<AShooterPlayerController>(BaseController);
 			if (ShooterPlayerController)
 			{
 				ShooterPlayerController->SetIsVibrationEnabled(bVibrationOpt);

@@ -1,9 +1,9 @@
-// Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
+// Copyright Epic Games, Inc. All Rights Reserved.
 
 #ifndef __SHOOTERGAMELOADINGSCREEN_H__
 #define __SHOOTERGAMELOADINGSCREEN_H__
 
-#include "Modules/ModuleInterface.h"
+#include "ModuleInterface.h"
 
 
 /** Module interface for this game's loading screens */

@@ -1,14 +1,14 @@
-// Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
+// Copyright Epic Games, Inc. All Rights Reserved.
 
-#include "Online/ShooterGameMode.h"
 #include "ShooterGame.h"
 #include "ShooterGameInstance.h"
 #include "UI/ShooterHUD.h"
-#include "Bots/ShooterAIController.h"
-#include "Online/ShooterPlayerState.h"
-#include "Online/ShooterGameSession.h"
 #include "Player/ShooterSpectatorPawn.h"
 #include "Player/ShooterDemoSpectator.h"
+#include "Online/ShooterGameMode.h"
+#include "Online/ShooterPlayerState.h"
+#include "Online/ShooterGameSession.h"
+#include "Bots/ShooterAIController.h"
 #include "ShooterTeamStart.h"
 
 

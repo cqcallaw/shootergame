@@ -1,4 +1,4 @@
-// Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
+// Copyright Epic Games, Inc. All Rights Reserved.
 #pragma once
 #include "SlateBasics.h"
 #include "SlateExtras.h"
@@ -41,7 +41,7 @@ protected:
 	TSharedPtr<FShooterMenuItem> MainMenuItem;
 
 	/** HUD menu widget */
-	TSharedPtr<class SShooterMenuWidget> GameMenuWidget;	
+	TSharedPtr<class SShooterMenuWidget> GameMenuWidget;
 
 	/** if game menu is currently opened*/
 	bool bIsGameMenuUp;
@@ -62,18 +62,18 @@ protected:
 
 	/** called when going back to previous menu */
 	void OnMenuGoBack(MenuPtr Menu);
-	
+
 	/** goes back in menu structure */
 	void CloseSubMenu();
 
 	/** removes widget from viewport */
 	void DetachGameMenu();
-	
+
 	/** Delegate called when user cancels confirmation dialog to exit to main menu */
 	void OnCancelExitToMain();
 
 	/** Delegate called when user confirms confirmation dialog to exit to main menu */
-	void OnConfirmExitToMain();		
+	void OnConfirmExitToMain();
 
 	/** Plays sound and calls Quit */
 	void OnUIQuit();

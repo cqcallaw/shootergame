@@ -1,21 +1,21 @@
-// Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
+// Copyright Epic Games, Inc. All Rights Reserved.
 
-#include "ShooterMainMenu.h"
 #include "ShooterGame.h"
+#include "ShooterMainMenu.h"
 #include "ShooterGameLoadingScreen.h"
 #include "ShooterStyle.h"
 #include "ShooterMenuSoundsWidgetStyle.h"
 #include "ShooterGameInstance.h"
 #include "SlateBasics.h"
 #include "SlateExtras.h"
-#include "GenericPlatform/GenericPlatformChunkInstall.h"
+#include "GenericPlatformChunkInstall.h"
 #include "Online/ShooterOnlineGameSettings.h"
 #include "OnlineSubsystemSessionSettings.h"
 #include "SShooterConfirmationDialog.h"
 #include "ShooterMenuItemWidgetStyle.h"
 #include "ShooterGameUserSettings.h"
 #include "ShooterGameViewportClient.h"
-#include "Player/ShooterPersistentUser.h"
+#include "ShooterPersistentUser.h"
 #include "Player/ShooterLocalPlayer.h"
 #include "OnlineSubsystemUtils.h"
 
@@ -44,6 +44,10 @@ static const int ChunkMapping[] = { 1, 2 };
 #	define CONSOLE_LAN_SUPPORTED 1
 #else
 #	define CONSOLE_LAN_SUPPORTED 0
+#endif
+
+#if !defined(SHOOTER_XBOX_MENU)
+	#define SHOOTER_XBOX_MENU 0
 #endif
 
 FShooterMainMenu::~FShooterMainMenu()
@@ -178,7 +182,7 @@ void FShooterMainMenu::Construct(TWeakObjectPtr<UShooterGameInstance> _GameInsta
 		SAssignNew(QuickMatchStoppingWidgetContainer, SWeakWidget)
 			.PossiblyNullContent(QuickMatchStoppingWidget);
 
-#if PLATFORM_XBOXONE
+#if SHOOTER_XBOX_MENU
 		TSharedPtr<FShooterMenuItem> MenuItem;
 
 		// HOST ONLINE menu option

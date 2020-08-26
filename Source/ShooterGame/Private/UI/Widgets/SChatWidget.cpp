@@ -1,7 +1,7 @@
-// Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
+// Copyright Epic Games, Inc. All Rights Reserved.
 
-#include "SChatWidget.h"
 #include "ShooterGame.h"
+#include "SChatWidget.h"
 #include "ShooterStyle.h"
 #include "ShooterChatWidgetStyle.h"
 

@@ -1,7 +1,7 @@
-// Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
+// Copyright Epic Games, Inc. All Rights Reserved.
 
-#include "SShooterScoreboardWidget.h"
 #include "ShooterGame.h"
+#include "SShooterScoreboardWidget.h"
 #include "ShooterStyle.h"
 #include "ShooterScoreboardWidgetStyle.h"
 #include "ShooterUIHelpers.h"
@@ -10,10 +10,8 @@
 #define LOCTEXT_NAMESPACE "ShooterScoreboard"
 
 // @todo: prevent interaction on PC for now (see OnFocusReceived for reasons)
-#if PLATFORM_XBOXONE
-#define INTERACTIVE_SCOREBOARD	1
-#else
-#define INTERACTIVE_SCOREBOARD	0
+#if !defined(INTERACTIVE_SCOREBOARD)
+	#define INTERACTIVE_SCOREBOARD	0
 #endif
 
 #define	NORM_PADDING	(FMargin(5))
@@ -552,13 +550,13 @@ bool SShooterScoreboardWidget::IsPlayerSelectedAndValid() const
 		// Nothing is selected, default to the player
 		if( PCOwner.IsValid() && PCOwner->PlayerState )
 		{
-			const TSharedPtr<const FUniqueNetId> OwnerNetId = PCOwner->PlayerState->UniqueId.GetUniqueNetId();
+			const TSharedPtr<const FUniqueNetId> OwnerNetId = PCOwner->PlayerState->GetUniqueId().GetUniqueNetId();
 			return OwnerNetId.IsValid();
 		}
 	}
 	else if( const AShooterPlayerState* PlayerState = GetSortedPlayerState(SelectedPlayer) )
 	{
-		const TSharedPtr<const FUniqueNetId>& PlayerId = PlayerState->UniqueId.GetUniqueNetId();
+		const TSharedPtr<const FUniqueNetId>& PlayerId = PlayerState->GetUniqueId().GetUniqueNetId();
 		return PlayerId.IsValid();
 	}
 #endif
@@ -595,9 +593,10 @@ EVisibility SShooterScoreboardWidget::SpeakerIconVisibility(const FTeamPlayer Te
 	AShooterPlayerState* PlayerState = GetSortedPlayerState(TeamPlayer);
 	if (PlayerState)
 	{
+		const FUniqueNetIdRepl& PlayerUniqueId = PlayerState->GetUniqueId();
 		for (int32 i = 0; i < PlayersTalkingThisFrame.Num(); ++i)
 		{
-			if (PlayerState->GetUniqueId() == PlayersTalkingThisFrame[i].Key && PlayersTalkingThisFrame[i].Value)
+			if (PlayerUniqueId == PlayersTalkingThisFrame[i].Key && PlayersTalkingThisFrame[i].Value)
 			{
 				return EVisibility::Visible;
 			}

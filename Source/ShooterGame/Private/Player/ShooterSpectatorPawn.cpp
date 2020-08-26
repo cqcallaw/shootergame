@@ -1,8 +1,8 @@
-// Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
+// Copyright Epic Games, Inc. All Rights Reserved.
 
 
-#include "Player/ShooterSpectatorPawn.h"
 #include "ShooterGame.h"
+#include "Player/ShooterSpectatorPawn.h"
 
 AShooterSpectatorPawn::AShooterSpectatorPawn(const FObjectInitializer& ObjectInitializer)
 : Super(ObjectInitializer)

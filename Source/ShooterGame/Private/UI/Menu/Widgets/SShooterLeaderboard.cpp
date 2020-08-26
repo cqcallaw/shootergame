@@ -1,14 +1,12 @@
-// Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
+// Copyright Epic Games, Inc. All Rights Reserved.
 
-#include "SShooterLeaderboard.h"
 #include "ShooterGame.h"
+#include "SShooterLeaderboard.h"
 #include "ShooterStyle.h"
 #include "ShooterUIHelpers.h"
 #include "OnlineSubsystemUtils.h"
 
-#if PLATFORM_XBOXONE
-#define INTERACTIVE_LEADERBOARD	1
-#else
+#if !defined(INTERACTIVE_LEADERBOARD)
 #define INTERACTIVE_LEADERBOARD	0
 #endif
 

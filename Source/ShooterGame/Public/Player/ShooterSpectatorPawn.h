@@ -1,4 +1,4 @@
-// Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
+// Copyright Epic Games, Inc. All Rights Reserved.
 
 #pragma once
 #include "ShooterSpectatorPawn.generated.h"
@@ -13,7 +13,7 @@ class AShooterSpectatorPawn : public ASpectatorPawn
 	/** Overridden to implement Key Bindings the match the player controls */
 	virtual void SetupPlayerInputComponent(class UInputComponent* InputComponent) override;
 	// End Pawn overrides
-	
+
 	// Frame rate linked look
 	void LookUpAtRate(float Val);
 };

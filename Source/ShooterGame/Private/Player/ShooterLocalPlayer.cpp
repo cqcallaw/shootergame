@@ -1,7 +1,7 @@
-// Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
+// Copyright Epic Games, Inc. All Rights Reserved.
 
-#include "Player/ShooterLocalPlayer.h"
 #include "ShooterGame.h"
+#include "Player/ShooterLocalPlayer.h"
 #include "OnlineSubsystemUtilsClasses.h"
 #include "ShooterGameInstance.h"
 #include "OnlineSubsystemUtils.h"

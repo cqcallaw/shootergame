@@ -1,7 +1,7 @@
-// Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
+// Copyright Epic Games, Inc. All Rights Reserved.
 
-#include "UI/ShooterHUD.h"
 #include "ShooterGame.h"
+#include "UI/ShooterHUD.h"
 #include "SShooterScoreboardWidget.h"
 #include "SChatWidget.h"
 #include "Engine/ViewportSplitScreen.h"

@@ -1,13 +1,13 @@
-// Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
+// Copyright Epic Games, Inc. All Rights Reserved.
 
-#include "ShooterFriends.h"
 #include "ShooterGame.h"
+#include "ShooterFriends.h"
 #include "ShooterTypes.h"
 #include "ShooterStyle.h"
 #include "ShooterOptionsWidgetStyle.h"
 #include "Player/ShooterPersistentUser.h"
 #include "ShooterGameUserSettings.h"
-#include "Player/ShooterLocalPlayer.h"
+#include "ShooterLocalPlayer.h"
 #include "OnlineSubsystemUtils.h"
 
 #define LOCTEXT_NAMESPACE "ShooterGame.HUD.Menu"

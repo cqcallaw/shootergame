@@ -1,10 +1,10 @@
-// Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
+// Copyright Epic Games, Inc. All Rights Reserved.
 
 #pragma once
 
 #include "ShooterGame.h"
-#include "Interfaces/OnlineIdentityInterface.h"
-#include "Interfaces/OnlineSessionInterface.h"
+#include "OnlineIdentityInterface.h"
+#include "OnlineSessionInterface.h"
 #include "Engine/GameInstance.h"
 #include "Engine/NetworkDelegates.h"
 #include "ShooterGameInstance.generated.h"
@@ -391,7 +391,7 @@ private:
 	void HandleSafeFrameChanged();
 
 	// Callback to handle controller connection changes.
-	void HandleControllerConnectionChange(bool bIsConnection, int32 Unused, int32 GameUserIndex);
+	void HandleControllerConnectionChange(bool bIsConnection, FPlatformUserId Unused, int32 GameUserIndex);
 
 	// Callback to handle controller pairing changes.
 	FReply OnPairingUsePreviousProfile();
@@ -400,7 +400,7 @@ private:
 	FReply OnPairingUseNewProfile();
 
 	// Callback to handle controller pairing changes.
-	void HandleControllerPairingChanged(int GameUserIndex, const FControllerPairingChangedUserInfo PreviousUserInfo, const FControllerPairingChangedUserInfo NewUserInfo);
+	void HandleControllerPairingChanged(int GameUserIndex, FControllerPairingChangedUserInfo PreviousUserInfo, FControllerPairingChangedUserInfo NewUserInfo);
 
 	// Handle confirming the controller disconnected dialog.
 	FReply OnControllerReconnectConfirm();

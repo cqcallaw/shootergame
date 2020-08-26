@@ -1,11 +1,11 @@
-// Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
+// Copyright Epic Games, Inc. All Rights Reserved.
 
-#include "ShooterIngameMenu.h"
 #include "ShooterGame.h"
+#include "ShooterIngameMenu.h"
 #include "ShooterStyle.h"
 #include "ShooterMenuSoundsWidgetStyle.h"
 #include "Online.h"
-#include "Interfaces/OnlineExternalUIInterface.h"
+#include "OnlineExternalUIInterface.h"
 #include "ShooterGameInstance.h"
 #include "UI/ShooterHUD.h"
 #include "OnlineSubsystemUtils.h"
@@ -16,6 +16,10 @@
 #	define FRIENDS_SUPPORTED 0
 #else
 #	define FRIENDS_SUPPORTED 1
+#endif
+
+#if !defined(FRIENDS_IN_INGAME_MENU)
+	#define FRIENDS_IN_INGAME_MENU 1
 #endif
 
 
@@ -64,7 +68,7 @@ void FShooterIngameMenu::Construct(ULocalPlayer* _PlayerOwner)
 #if FRIENDS_SUPPORTED
 		if (GameInstance && GameInstance->GetOnlineMode() == EOnlineMode::Online)
 		{
-#if !PLATFORM_XBOXONE
+#if !FRIENDS_IN_INGAME_MENU
 			ShooterFriends = MakeShareable(new FShooterFriends());
 			ShooterFriends->Construct(PlayerOwner, OwnerUserIndex);
 			ShooterFriends->TellInputAboutKeybindings();

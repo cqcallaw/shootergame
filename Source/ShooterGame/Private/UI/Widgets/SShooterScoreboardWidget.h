@@ -1,4 +1,4 @@
-// Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
+// Copyright Epic Games, Inc. All Rights Reserved.
 
 #pragma once
 
@@ -41,7 +41,7 @@ struct FTeamPlayer
 {
 	/** The team the player belongs to */
 	uint8 TeamNum;
-		
+
 	/** The number within that team */
 	int32 PlayerId;
 

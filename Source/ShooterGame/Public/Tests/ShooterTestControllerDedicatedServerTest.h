@@ -1,8 +1,8 @@
-// Copyright 1998-2019 Epic Games, Inc.All Rights Reserved.
+// Copyright Epic Games, Inc.All Rights Reserved.
 #pragma once
 
 #include "ShooterTestControllerBase.h"
-#include "Templates/SharedPointer.h"
+#include "SharedPointer.h"
 #include "ShooterTestControllerDedicatedServerTest.generated.h"
 
 UCLASS()

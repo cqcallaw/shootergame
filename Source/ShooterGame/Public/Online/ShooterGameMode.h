@@ -1,9 +1,9 @@
-// Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
+// Copyright Epic Games, Inc. All Rights Reserved.
 
 #pragma once
 
-#include "Interfaces/OnlineIdentityInterface.h"
-#include "Player/ShooterPlayerController.h"
+#include "OnlineIdentityInterface.h"
+#include "ShooterPlayerController.h"
 #include "ShooterGameMode.generated.h"
 
 class AShooterAIController;

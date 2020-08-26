@@ -1,8 +1,8 @@
-// Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
+// Copyright Epic Games, Inc. All Rights Reserved.
 
-#include "SShooterSplitScreenLobbyWidget.h"
 #include "ShooterGame.h"
 #include "ShooterStyle.h"
+#include "SShooterSplitScreenLobbyWidget.h"
 #include "ShooterMenuItemWidgetStyle.h"
 #include "ShooterMenuWidgetStyle.h"
 #include "SShooterConfirmationDialog.h"
@@ -369,6 +369,13 @@ void SShooterSplitScreenLobby::ReadyPlayer( const int ControllerId )
 		// We have UserId, but we want to make sure we're using the same shared pointer from the game instance so all the reference counting works out
 		TSharedPtr< const FUniqueNetId > UniqueNetId = GetGameInstance()->GetUniqueNetIdFromControllerId(ControllerId);
 		LocalPlayer->SetCachedUniqueNetId(UniqueNetId);
+
+		// The new player is given the game viewport as the focus widget by default, so ensure it is focused on the lobby
+		int32 LocalPlayerIndex = GetGameInstance()->GetLocalPlayers().IndexOfByKey(LocalPlayer);
+		if (ensure(LocalPlayerIndex != INDEX_NONE))
+		{
+			FSlateApplication::Get().SetUserFocus(LocalPlayerIndex, SharedThis(this), EFocusCause::SetDirectly);
+		}
 	}
 }
 
@@ -580,10 +587,7 @@ FReply SShooterSplitScreenLobby::OnKeyDown(const FGeometry& MyGeometry, const FK
 FReply SShooterSplitScreenLobby::OnFocusReceived(const FGeometry& MyGeometry, const FFocusEvent& InFocusEvent)
 {
 	// focus all possible users
-	for (int Index = 0; Index < GShooterSplitScreenMax; Index++)
-	{
-		FSlateApplication::Get().SetUserFocus(Index, SharedThis(this), EFocusCause::SetDirectly);
-	}
+	FSlateApplication::Get().SetAllUserFocus(SharedThis(this), EFocusCause::SetDirectly);
 	return FReply::Handled().ReleaseMouseCapture();
 
 }

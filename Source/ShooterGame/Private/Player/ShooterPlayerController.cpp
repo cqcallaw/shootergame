@@ -1,7 +1,7 @@
-// Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
+// Copyright Epic Games, Inc. All Rights Reserved.
 
-#include "Player/ShooterPlayerController.h"
 #include "ShooterGame.h"
+#include "Player/ShooterPlayerController.h"
 #include "Player/ShooterPlayerCameraManager.h"
 #include "Player/ShooterCheatManager.h"
 #include "Player/ShooterLocalPlayer.h"
@@ -11,11 +11,11 @@
 #include "UI/Style/ShooterStyle.h"
 #include "UI/ShooterHUD.h"
 #include "Online.h"
-#include "Interfaces/OnlineAchievementsInterface.h"
-#include "Interfaces/OnlineEventsInterface.h"
-#include "Interfaces/OnlineStatsInterface.h"
-#include "Interfaces/OnlineIdentityInterface.h"
-#include "Interfaces/OnlineSessionInterface.h"
+#include "OnlineAchievementsInterface.h"
+#include "OnlineEventsInterface.h"
+#include "OnlineStatsInterface.h"
+#include "OnlineIdentityInterface.h"
+#include "OnlineSessionInterface.h"
 #include "ShooterGameInstance.h"
 #include "ShooterLeaderboards.h"
 #include "ShooterGameViewportClient.h"
@@ -47,6 +47,10 @@ static const int32 LotsBulletsCount = 100;
 static const int32 LotsRocketsCount = 10;
 static const int32 GoodScoreCount = 10;
 static const int32 GreatScoreCount = 15;
+
+#if !defined(TRACK_STATS_LOCALLY)
+#define TRACK_STATS_LOCALLY 1
+#endif
 
 AShooterPlayerController::AShooterPlayerController(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
@@ -1308,7 +1312,7 @@ void AShooterPlayerController::UpdateLeaderboardsOnGameEnd()
 							int32 KillsWriteData = ShooterPlayerState->GetKills();
 							int32 DeathsWriteData = ShooterPlayerState->GetDeaths();
 
-#if !PLATFORM_XBOXONE
+#if TRACK_STATS_LOCALLY
 							StatMatchesPlayed = (MatchWriteData += StatMatchesPlayed);
 							StatKills = (KillsWriteData += StatKills);
 							StatDeaths = (DeathsWriteData += StatDeaths);

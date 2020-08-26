@@ -1,10 +1,10 @@
-// Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
+// Copyright Epic Games, Inc. All Rights Reserved.
 
-#include "SShooterDemoHUD.h"
 #include "ShooterGame.h"
+#include "SShooterDemoHUD.h"
 #include "Engine/DemoNetDriver.h"
 #include "ShooterStyle.h"
-#include "Styling/CoreStyle.h"
+#include "CoreStyle.h"
 
 /** Widget to represent the main replay timeline bar */
 class SShooterReplayTimeline : public SCompoundWidget

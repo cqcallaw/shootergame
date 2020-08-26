@@ -1,9 +1,9 @@
-// Copyright 1998-2019 Epic Games, Inc.All Rights Reserved.
+// Copyright Epic Games, Inc.All Rights Reserved.
 #pragma once
 
 #include "GauntletTestController.h"
 #include "ShooterGameInstance.h"
-#include "Templates/SharedPointer.h"
+#include "SharedPointer.h"
 #include "OnlineSessionSettings.h"
 #include "ShooterTestControllerBase.generated.h"
 

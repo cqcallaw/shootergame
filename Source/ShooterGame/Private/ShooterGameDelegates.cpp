@@ -1,6 +1,5 @@
-// Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
+// Copyright Epic Games, Inc. All Rights Reserved.
 
-#include "ShooterGameDelegates.h"
 #include "ShooterGame.h"
 #include "Online/ShooterPlayerState.h"
 #include "GameDelegates.h"
@@ -15,15 +14,11 @@ struct FShooterGameGlobalDelegateInit
 {
 	FShooterGameGlobalDelegateInit()
 	{
-		// deprecated
-		/*FPakPlatformFile::GetPakChunkSignatureCheckFailedHandler().AddStatic(FShooterGameGlobalDelegateInit::HandlePakChunkSignatureCheckFailed);
-		FPakPlatformFile::GetPakMasterSignatureTableCheckFailureHandler().AddStatic(FShooterGameGlobalDelegateInit::HandlePakMasterSignatureTableCheckFailure);*/
-
-		// ref: https://answers.unrealengine.com/questions/207675/fcriticalsection-lock-causes-crash.html
+		FPakPlatformFile::FPakSigningFailureHandlerData& HandlerData = FPakPlatformFile::GetPakSigningFailureHandlerData();
 		{
-			FScopeLock Lock(&FPakPlatformFile::GetPakSigningFailureHandlerData().Lock);
-			FPakPlatformFile::GetPakSigningFailureHandlerData().ChunkSignatureCheckFailedDelegate.AddStatic(FShooterGameGlobalDelegateInit::HandlePakChunkSignatureCheckFailed);
-			FPakPlatformFile::GetPakSigningFailureHandlerData().MasterSignatureTableCheckFailedDelegate.AddStatic(FShooterGameGlobalDelegateInit::HandlePakMasterSignatureTableCheckFailure);
+			FScopeLock Lock(&HandlerData.Lock);
+			HandlerData.ChunkSignatureCheckFailedDelegate.AddStatic(FShooterGameGlobalDelegateInit::HandlePakChunkSignatureCheckFailed);
+			HandlerData.MasterSignatureTableCheckFailedDelegate.AddStatic(FShooterGameGlobalDelegateInit::HandlePakMasterSignatureTableCheckFailure);
 		}
 	}
 
@@ -59,7 +54,7 @@ FAutoConsoleCommand CmdPlayGoNext(
 #endif
 
 #endif
-#include "Online/ShooterGameState.h"
+#include "ShooterGameState.h"
 
 
 // respond to requests from a companion app

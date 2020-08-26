@@ -1,6 +1,6 @@
-// Copyright 1998-2019 Epic Games, Inc.All Rights Reserved.
-#include "Tests/ShooterTestControllerListenServerClient.h"
-#include "Online/ShooterGameSession.h"
+// Copyright Epic Games, Inc.All Rights Reserved.
+#include "ShooterTestControllerListenServerClient.h"
+#include "ShooterGameSession.h"
 
 void UShooterTestControllerListenServerClient::OnTick(float TimeDelta)
 {

@@ -1,4 +1,4 @@
-// Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
+// Copyright Epic Games, Inc. All Rights Reserved.
 
 #pragma once
 
@@ -38,7 +38,7 @@ public:
 
 	/** focus received handler - keep the ActionBindingsList focused */
 	virtual FReply OnFocusReceived(const FGeometry& MyGeometry, const FFocusEvent& InFocusEvent) override;
-	
+
 	/** focus lost handler - keep the ActionBindingsList focused */
 	virtual void OnFocusLost( const FFocusEvent& InFocusEvent ) override;
 
@@ -103,7 +103,7 @@ protected:
 	TArray< TSharedPtr<FStoreEntry> > OfferList;
 
 	/** action bindings list slate widget */
-	TSharedPtr< SListView< TSharedPtr<FStoreEntry> > > OfferListWidget; 
+	TSharedPtr< SListView< TSharedPtr<FStoreEntry> > > OfferListWidget;
 
 	/** currently selected list item */
 	TSharedPtr<FStoreEntry> SelectedItem;

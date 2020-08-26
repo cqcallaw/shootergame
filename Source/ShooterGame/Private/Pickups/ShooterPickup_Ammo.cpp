@@ -1,7 +1,7 @@
-// Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
+// Copyright Epic Games, Inc. All Rights Reserved.
 
-#include "Pickups/ShooterPickup_Ammo.h"
 #include "ShooterGame.h"
+#include "Pickups/ShooterPickup_Ammo.h"
 #include "Weapons/ShooterWeapon.h"
 #include "OnlineSubsystemUtils.h"
 

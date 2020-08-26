@@ -1,4 +1,4 @@
-// Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
+// Copyright Epic Games, Inc. All Rights Reserved.
 
 #pragma once
 
@@ -31,7 +31,7 @@ class UShooterGameUserSettings : public UGameUserSettings
 	{
 		bIsLanMatch = InbIsLanMatch;
 	}
-	
+
 	bool IsDedicatedServer() const
 	{
 		return bIsDedicatedServer;

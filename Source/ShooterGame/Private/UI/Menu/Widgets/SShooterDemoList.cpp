@@ -1,10 +1,10 @@
-// Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
+// Copyright Epic Games, Inc. All Rights Reserved.
 
-#include "SShooterDemoList.h"
 #include "ShooterGame.h"
-#include "Widgets/Views/SHeaderRow.h"
+#include "SShooterDemoList.h"
+#include "SHeaderRow.h"
 #include "ShooterStyle.h"
-#include "Styling/CoreStyle.h"
+#include "CoreStyle.h"
 #include "ShooterGameLoadingScreen.h"
 #include "ShooterGameInstance.h"
 #include "NetworkReplayStreaming.h"

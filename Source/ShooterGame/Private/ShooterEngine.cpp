@@ -1,11 +1,11 @@
-// Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
+// Copyright Epic Games, Inc. All Rights Reserved.
 
 /*=============================================================================
 	ShooterEngine.cpp: ShooterEngine c++ code.
 =============================================================================*/
 
-#include "ShooterEngine.h"
 #include "ShooterGame.h"
+#include "ShooterEngine.h"
 #include "ShooterGameInstance.h"
 
 UShooterEngine::UShooterEngine(const FObjectInitializer& ObjectInitializer)

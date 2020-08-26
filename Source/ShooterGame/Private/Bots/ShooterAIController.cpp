@@ -1,8 +1,8 @@
-// Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
+// Copyright Epic Games, Inc. All Rights Reserved.
 
+#include "ShooterGame.h"
 #include "Bots/ShooterAIController.h"
 #include "Bots/ShooterBot.h"
-#include "ShooterGame.h"
 #include "Online/ShooterPlayerState.h"
 #include "BehaviorTree/BehaviorTree.h"
 #include "BehaviorTree/BehaviorTreeComponent.h"

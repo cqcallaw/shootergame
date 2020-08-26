@@ -1,7 +1,7 @@
-// Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
+// Copyright Epic Games, Inc. All Rights Reserved.
 
-#include "Weapons/ShooterWeapon_Projectile.h"
 #include "ShooterGame.h"
+#include "Weapons/ShooterWeapon_Projectile.h"
 #include "Weapons/ShooterProjectile.h"
 
 AShooterWeapon_Projectile::AShooterWeapon_Projectile(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)

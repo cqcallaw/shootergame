@@ -1,7 +1,7 @@
-// Copyright 1998-2019 Epic Games, Inc.All Rights Reserved.
-#include "Tests/ShooterTestControllerBase.h"
+// Copyright Epic Games, Inc.All Rights Reserved.
+#include "ShooterTestControllerBase.h"
 #include "ShooterGame.h"
-#include "Online/ShooterGameSession.h"
+#include "ShooterGameSession.h"
 #include "Online/ShooterOnlineGameSettings.h"
 #include "OnlineSubsystemSessionSettings.h"
 #include "OnlineSubsystemUtils.h"

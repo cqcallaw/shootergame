@@ -1,8 +1,8 @@
-// Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
+// Copyright Epic Games, Inc. All Rights Reserved.
 
-#include "SShooterMenuWidget.h"
 #include "ShooterGame.h"
 #include "Engine/Console.h"
+#include "SShooterMenuWidget.h"
 #include "ShooterMenuItem.h"
 #include "SShooterMenuItem.h"
 #include "ShooterStyle.h"
@@ -15,9 +15,7 @@
 
 #define LOCTEXT_NAMESPACE "SShooterMenuWidget"
 
-#if PLATFORM_XBOXONE
-#define PROFILE_SWAPPING	1
-#else
+#if !defined(PROFILE_SWAPPING)
 #define PROFILE_SWAPPING	0
 #endif
 

@@ -1,8 +1,8 @@
-// Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
+// Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "ShooterGameLoadingScreen.h"
-#include "GenericPlatform/GenericApplication.h"
-#include "GenericPlatform/GenericApplicationMessageHandler.h"
+#include "GenericApplication.h"
+#include "GenericApplicationMessageHandler.h"
 #include "SlateBasics.h"
 #include "SlateExtras.h"
 #include "MoviePlayer.h"

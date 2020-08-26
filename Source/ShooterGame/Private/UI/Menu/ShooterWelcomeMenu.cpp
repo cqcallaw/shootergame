@@ -1,7 +1,7 @@
-// Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
+// Copyright Epic Games, Inc. All Rights Reserved.
 
-#include "ShooterWelcomeMenu.h"
 #include "ShooterGame.h"
+#include "ShooterWelcomeMenu.h"
 #include "ShooterStyle.h"
 #include "SShooterConfirmationDialog.h"
 #include "ShooterGameViewportClient.h"
@@ -22,6 +22,9 @@ class SShooterWelcomeMenuWidget : public SCompoundWidget
 	FCurveHandle TextColorCurve;
 
 	TSharedPtr<SRichTextBlock> PressPlayText;
+
+	/* On the first tick ensure we have set the keyboard focus */
+	bool bFirstTick = true;
 
 	SLATE_BEGIN_ARGS( SShooterWelcomeMenuWidget )
 	{}
@@ -77,6 +80,14 @@ class SShooterWelcomeMenuWidget : public SCompoundWidget
 
 	virtual void Tick( const FGeometry& AllottedGeometry, const double InCurrentTime, const float InDeltaTime ) override
 	{
+		// During construction we may miss out on setting focus of the keyboard due to the GameViewport not having its Parent pointer
+		// setup. If this happens we will be unable to set the keyboard focus in AddToGameViewport()
+		if (bFirstTick)
+		{
+			bFirstTick = false;
+			FSlateApplication::Get().SetKeyboardFocus(this->AsShared());
+		}
+
 		if(!TextAnimation.IsPlaying())
 		{
 			if(TextAnimation.IsAtEnd())
@@ -163,6 +174,11 @@ class SShooterWelcomeMenuWidget : public SCompoundWidget
 		}
 
 		return FReply::Unhandled();
+	}
+
+	virtual void OnFocusLost(const FFocusEvent& InFocusEvent) override
+	{
+		bFirstTick = true;
 	}
 
 	virtual FReply OnFocusReceived(const FGeometry& MyGeometry, const FFocusEvent& InFocusEvent) override

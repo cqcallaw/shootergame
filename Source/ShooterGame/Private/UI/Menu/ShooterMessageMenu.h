@@ -1,4 +1,4 @@
-// Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
+// Copyright Epic Games, Inc. All Rights Reserved.
 #pragma once
 #include "SlateBasics.h"
 #include "SlateExtras.h"
@@ -30,7 +30,7 @@ public:
 	void SetOKClickedDelegate(FMessageMenuButtonClicked	InButtonDelegate);
 	void SetCancelClickedDelegate(FMessageMenuButtonClicked	InButtonDelegate);
 
-	
+
 private:
 
 	/** Owning game instance */
@@ -41,7 +41,7 @@ private:
 
 	/** Cache the desired next state so we can advance to that after the confirmation dialog */
 	FName PendingNextState;
-	
+
 	/** Handler for ok confirmation. */
 	FReply OnClickedOK();
 	FMessageMenuButtonClicked	OKButtonDelegate;

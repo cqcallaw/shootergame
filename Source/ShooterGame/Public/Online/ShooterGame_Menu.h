@@ -1,4 +1,4 @@
-// Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
+// Copyright Epic Games, Inc. All Rights Reserved.
 
 #pragma once
 
@@ -23,7 +23,7 @@ protected:
 
 	/** Perform some final tasks before hosting/joining a session. Remove menus, set king state etc */
 	void BeginSession();
-	
+
 	/** Display a loading screen */
 	void ShowLoadingScreen();
 };

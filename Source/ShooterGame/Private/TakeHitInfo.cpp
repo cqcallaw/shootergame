@@ -1,8 +1,8 @@
-// Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
+// Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "ShooterGame.h"
 #include "ShooterTypes.h"
-#include "Player/ShooterCharacter.h"
+#include "ShooterCharacter.h"
 
 FTakeHitInfo::FTakeHitInfo()
 	: ActualDamage(0)

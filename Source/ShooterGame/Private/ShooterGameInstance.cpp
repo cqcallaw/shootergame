@@ -1,11 +1,11 @@
-// Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
+// Copyright Epic Games, Inc. All Rights Reserved.
 
 /*=============================================================================
 	ShooterGameInstance.cpp
 =============================================================================*/
 
-#include "ShooterGameInstance.h"
 #include "ShooterGame.h"
+#include "ShooterGameInstance.h"
 #include "ShooterMainMenu.h"
 #include "ShooterWelcomeMenu.h"
 #include "ShooterMessageMenu.h"
@@ -19,6 +19,14 @@
 #include "Online/ShooterGameSession.h"
 #include "Online/ShooterOnlineSessionClient.h"
 #include "OnlineSubsystemUtils.h"
+
+#if !defined(CONTROLLER_SWAPPING)
+	#define CONTROLLER_SWAPPING 0
+#endif
+
+#if !defined(NEED_XBOX_LIVE_FOR_ONLINE)
+	#define NEED_XBOX_LIVE_FOR_ONLINE 0
+#endif
 
 FAutoConsoleVariable CVarShooterGameTestEncryption(TEXT("ShooterGame.TestEncryption"), 0, TEXT("If true, clients will send an encryption token with their request to join the server and attempt to encrypt the connection using a debug key. This is NOT SECURE and for demonstration purposes only."));
 
@@ -178,7 +186,7 @@ void UShooterGameInstance::HandleNetworkConnectionStatusChanged( const FString& 
 		UE_LOG( LogOnlineGame, Log, TEXT( "UShooterGameInstance::HandleNetworkConnectionStatusChanged: Going to main menu" ) );
 
 		// Display message on consoles
-#if PLATFORM_XBOXONE
+#if SHOOTER_XBOX_STRINGS
 		const FText ReturnReason	= NSLOCTEXT( "NetworkFailures", "ServiceUnavailable", "Connection to Xbox LIVE has been lost." );
 #elif PLATFORM_PS4
 		const FText ReturnReason	= NSLOCTEXT( "NetworkFailures", "ServiceUnavailable", "Connection to \"PSN\" has been lost." );
@@ -214,7 +222,7 @@ void UShooterGameInstance::HandleSessionFailure( const FUniqueNetId& NetId, ESes
 		UE_LOG( LogOnlineGame, Log, TEXT( "UShooterGameInstance::HandleSessionFailure: Going to main menu" ) );
 
 		// Display message on consoles
-#if PLATFORM_XBOXONE
+#if SHOOTER_XBOX_STRINGS
 		const FText ReturnReason	= NSLOCTEXT( "NetworkFailures", "ServiceUnavailable", "Connection to Xbox LIVE has been lost." );
 #elif PLATFORM_PS4
 		const FText ReturnReason	= NSLOCTEXT( "NetworkFailures", "ServiceUnavailable", "Connection to PSN has been lost." );
@@ -363,17 +371,6 @@ void UShooterGameInstance::StartGameInstance()
 			}
 		}
 	}
-
-	// handle benchmark start
-	if (FParse::Param(FCommandLine::Get(), TEXT("benchmark"))) {
-		const FString StartURL = FString::Printf(TEXT("/Game/Maps/Highrise?game=FFA"));
-		SetOnlineMode(EOnlineMode::Offline);
-		// Game instance will handle success, failure and dialogs
-		this->HostGame(nullptr, TEXT("FFA"), StartURL);
-		return;
-	}
-
-
 #endif
 
 	GotoInitialState();
@@ -1631,10 +1628,10 @@ FReply UShooterGameInstance::OnPairingUseNewProfile()
 	return FReply::Handled();
 }
 
-void UShooterGameInstance::HandleControllerPairingChanged( int GameUserIndex, const FControllerPairingChangedUserInfo PreviousUserInfo, const FControllerPairingChangedUserInfo NewUserInfo )
+void UShooterGameInstance::HandleControllerPairingChanged(int GameUserIndex, FControllerPairingChangedUserInfo PreviousUserInfo, FControllerPairingChangedUserInfo NewUserInfo)
 {
 	UE_LOG(LogOnlineGame, Log, TEXT("UShooterGameInstance::HandleControllerPairingChanged GameUserIndex %d PreviousUser '%s' NewUser '%s'"),
-		GameUserIndex, *(PreviousUserInfo.User.ToString()), *(NewUserInfo.User.ToString()));
+		GameUserIndex, *PreviousUserInfo.User.ToDebugString(), *NewUserInfo.User.ToDebugString());
 
 	if ( CurrentState == ShooterGameInstanceState::WelcomeScreen )
 	{
@@ -1642,7 +1639,9 @@ void UShooterGameInstance::HandleControllerPairingChanged( int GameUserIndex, co
 		return;
 	}
 
-#if SHOOTER_CONSOLE_UI && PLATFORM_XBOXONE
+#if SHOOTER_CONSOLE_UI && CONTROLLER_SWAPPING
+	const FUniqueNetId& PreviousUser = PreviousUserInfo.User;
+	const FUniqueNetId& NewUser = NewUserInfo.User;
 	if ( IgnorePairingChangeForControllerId != -1 && GameUserIndex == IgnorePairingChangeForControllerId )
 	{
 		// We were told to ignore
@@ -1698,7 +1697,7 @@ void UShooterGameInstance::HandleControllerPairingChanged( int GameUserIndex, co
 #endif
 }
 
-void UShooterGameInstance::HandleControllerConnectionChange( bool bIsConnection, int32 Unused, int32 GameUserIndex )
+void UShooterGameInstance::HandleControllerConnectionChange( bool bIsConnection, FPlatformUserId Unused, int32 GameUserIndex )
 {
 	UE_LOG(LogOnlineGame, Log, TEXT("UShooterGameInstance::HandleControllerConnectionChange bIsConnection %d GameUserIndex %d"),
 		bIsConnection, GameUserIndex);
@@ -1843,7 +1842,7 @@ bool UShooterGameInstance::ValidatePlayerForOnlinePlay(ULocalPlayer* LocalPlayer
 	// Get the viewport
 	UShooterGameViewportClient * ShooterViewport = Cast<UShooterGameViewportClient>(GetGameViewportClient());
 
-#if PLATFORM_XBOXONE
+#if NEED_XBOX_LIVE_FOR_ONLINE
 	if (CurrentConnectionStatus != EOnlineServerConnectionStatus::Connected)
 	{
 		// Don't let them play online if they aren't connected to Xbox LIVE

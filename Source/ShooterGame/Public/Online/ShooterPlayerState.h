@@ -1,4 +1,4 @@
-// Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
+// Copyright Epic Games, Inc. All Rights Reserved.
 
 #pragma once
 
@@ -47,10 +47,6 @@ class AShooterPlayerState : public APlayerState
 
 	/** get number of deaths */
 	int32 GetDeaths() const;
-
-	/** get number of points */
-	// Deprecated
-	//float GetScore() const;
 
 	/** get number of bullets fired this match */
 	int32 GetNumBulletsFired() const;
