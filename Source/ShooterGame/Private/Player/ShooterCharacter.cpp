@@ -9,6 +9,7 @@
 #include "Animation/AnimInstance.h"
 #include "Sound/SoundNodeLocalPlayer.h"
 #include "AudioThread.h"
+#include "Player/ShooterCharacterMovement.h"
 
 static int32 NetVisualizeRelevancyTestPoints = 0;
 FAutoConsoleVariableRef CVarNetVisualizeRelevancyTestPoints(

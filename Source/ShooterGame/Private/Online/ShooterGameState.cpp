@@ -4,7 +4,7 @@
 #include "Online/ShooterPlayerState.h"
 #include "ShooterGameInstance.h"
 #include "OnlineSubsystemUtils.h"
-#include "OnlineGameMatchesInterface.h"
+#include "Interfaces/OnlineGameMatchesInterface.h"
 
 AShooterGameState::AShooterGameState(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {

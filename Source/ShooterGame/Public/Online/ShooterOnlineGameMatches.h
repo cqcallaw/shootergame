@@ -1,8 +1,8 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #pragma once
-#include "OnlineGameMatchesInterface.h"
-#include "ShooterGameState.h"
+#include "Interfaces/OnlineGameMatchesInterface.h"
+#include "Online/ShooterGameState.h"
 #include "ShooterGameInstance.h"
 
 class AShooterGameState;

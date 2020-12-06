@@ -4,7 +4,7 @@
 #include "SShooterDemoHUD.h"
 #include "Engine/DemoNetDriver.h"
 #include "ShooterStyle.h"
-#include "CoreStyle.h"
+#include "Styling/CoreStyle.h"
 
 /** Widget to represent the main replay timeline bar */
 class SShooterReplayTimeline : public SCompoundWidget

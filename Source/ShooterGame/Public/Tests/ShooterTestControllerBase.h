@@ -3,7 +3,7 @@
 
 #include "GauntletTestController.h"
 #include "ShooterGameInstance.h"
-#include "SharedPointer.h"
+#include "Templates/SharedPointer.h"
 #include "OnlineSessionSettings.h"
 #include "ShooterTestControllerBase.generated.h"
 

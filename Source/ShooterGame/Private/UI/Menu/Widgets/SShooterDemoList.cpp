@@ -2,9 +2,9 @@
 
 #include "ShooterGame.h"
 #include "SShooterDemoList.h"
-#include "SHeaderRow.h"
+#include "Widgets/Views/SHeaderRow.h"
 #include "ShooterStyle.h"
-#include "CoreStyle.h"
+#include "Styling/CoreStyle.h"
 #include "ShooterGameLoadingScreen.h"
 #include "ShooterGameInstance.h"
 #include "NetworkReplayStreaming.h"

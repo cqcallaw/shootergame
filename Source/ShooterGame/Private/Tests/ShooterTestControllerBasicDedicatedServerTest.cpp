@@ -1,5 +1,5 @@
 // Copyright Epic Games, Inc.All Rights Reserved.
-#include "ShooterTestControllerBasicDedicatedServerTest.h"
+#include "Tests/ShooterTestControllerBasicDedicatedServerTest.h"
 #include "ShooterGameInstance.h"
 
 void UShooterTestControllerBasicDedicatedServerTest::OnTick(float TimeDelta)

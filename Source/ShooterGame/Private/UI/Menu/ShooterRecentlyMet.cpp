@@ -6,7 +6,7 @@
 #include "ShooterStyle.h"
 #include "ShooterOptionsWidgetStyle.h"
 #include "ShooterGameUserSettings.h"
-#include "ShooterPersistentUser.h"
+#include "Player/ShooterPersistentUser.h"
 #include "Player/ShooterLocalPlayer.h"
 #include "OnlineSubsystemUtils.h"
 

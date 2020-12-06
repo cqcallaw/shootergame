@@ -1,7 +1,7 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "ShooterGame.h"
-#include "ShooterPlayerState.h"
+#include "Online/ShooterPlayerState.h"
 #include "Net/OnlineEngineInterface.h"
 
 AShooterPlayerState::AShooterPlayerState(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)

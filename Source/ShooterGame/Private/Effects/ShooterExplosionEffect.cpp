@@ -1,7 +1,7 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "ShooterGame.h"
-#include "ShooterExplosionEffect.h"
+#include "Effects/ShooterExplosionEffect.h"
 
 AShooterExplosionEffect::AShooterExplosionEffect(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {

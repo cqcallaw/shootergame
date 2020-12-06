@@ -1,7 +1,7 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "ShooterGame.h"
-#include "ShooterGameState.h"
+#include "Online/ShooterGameState.h"
 #include "Online/ShooterPlayerState.h"
 #include "GameDelegates.h"
 #include "IPlatformFilePak.h"

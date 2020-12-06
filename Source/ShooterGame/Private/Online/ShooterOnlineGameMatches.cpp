@@ -1,9 +1,9 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
-#include "ShooterOnlineGameMatches.h"
+#include "Online/ShooterOnlineGameMatches.h"
 #include "OnlineSubsystemUtils.h"
 #include "ShooterGameInstance.h"
-#include "ShooterPlayerState.h"
+#include "Online/ShooterPlayerState.h"
 
 void FShooterOnlineGameMatches::Initialize(AShooterGameState* InGameState, UShooterGameInstance* InGameInstance)
 {

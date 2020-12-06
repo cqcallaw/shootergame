@@ -1,7 +1,7 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "ShooterGame.h"
-#include "ShooterImpactEffect.h"
+#include "Effects/ShooterImpactEffect.h"
 
 AShooterImpactEffect::AShooterImpactEffect(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
