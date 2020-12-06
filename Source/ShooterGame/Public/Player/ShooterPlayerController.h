@@ -244,12 +244,16 @@ protected:
 	int32 StatMatchesPlayed;
 	int32 StatKills;
 	int32 StatDeaths;
-	bool bHasFetchedPlatformData;
+	bool bHasQueriedPlatformStats;
+	bool bHasQueriedPlatformAchievements;
 
 	/** Internal. Reads the stats from the platform backend to sync online status with local */
 	FOnlineLeaderboardReadPtr ReadObject;
 	FDelegateHandle LeaderboardReadCompleteDelegateHandle;
 	void ClearLeaderboardDelegate();
+
+	/* Flag to prevent duplicate input bindings when using the same player controller for multiple maps */
+	bool bHasInitializedInputComponent;
 
 public:
 	virtual void TickActor(float DeltaTime, enum ELevelTick TickType, FActorTickFunction& ThisTickFunction) override;
@@ -313,6 +317,14 @@ public:
 
 	// For tracking whether or not to send the end event
 	bool bHasSentStartEvents;
+
+	/** enable analog fire trigger mode */
+	UPROPERTY(config)
+	bool bAnalogFireTrigger;
+
+	/** threshold trigger fires */
+	UPROPERTY(config)
+	float FireTriggerThreshold;
 
 private:
 

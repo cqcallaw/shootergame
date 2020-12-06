@@ -5,6 +5,7 @@
 #include "ShooterGame.h"
 #include "OnlineIdentityInterface.h"
 #include "OnlineSessionInterface.h"
+#include "OnlineGameActivityInterface.h"
 #include "Engine/GameInstance.h"
 #include "Engine/NetworkDelegates.h"
 #include "ShooterGameInstance.generated.h"
@@ -46,19 +47,6 @@ public:
 	TSharedPtr< const FUniqueNetId > UserId;
 	FOnlineSessionSearchResult 		 InviteResult;
 	bool							 bPrivilegesCheckedAndAllowed;
-};
-
-struct FShooterPlayTogetherInfo
-{
-	FShooterPlayTogetherInfo() : UserIndex(-1) {}
-	FShooterPlayTogetherInfo(int32 InUserIndex, const TArray<TSharedPtr<const FUniqueNetId>>& InUserIdList)
-		: UserIndex(InUserIndex)
-	{
-		UserIdList.Append(InUserIdList);
-	}
-
-	int32 UserIndex;
-	TArray<TSharedPtr<const FUniqueNetId>> UserIdList;
 };
 
 class SShooterWaitDialog : public SCompoundWidget
@@ -210,11 +198,12 @@ public:
 	/** Create a session with the default map and game-type with the selected online settings */
 	bool HostQuickSession(ULocalPlayer& LocalPlayer, const FOnlineSessionSettings& SessionSettings);
 
-	/** Called when we receive a Play Together system event on PS4 */
-	void OnPlayTogetherEventReceived(const int32 UserIndex, const TArray<TSharedPtr<const FUniqueNetId>>& UserIdList);
+	/** Sets a rich presence string for all local players. */
+	void SetPresenceForLocalPlayers(const FString& StatusStr, const FVariantData& PresenceData);
 
-	/** Resets Play Together PS4 system event info after it's been handled */
-	void ResetPlayTogetherInfo() { PlayTogetherInfo = FShooterPlayTogetherInfo(); }
+	/** Handle game activity requests */
+	void OnGameActivityActivationRequestComplete(const FUniqueNetId& PlayerId, const FString& ActivityId, const FOnlineSessionSearchResult* SessionInfo);
+
 
 private:
 
@@ -274,9 +263,9 @@ private:
 	FDelegateHandle OnEndSessionCompleteDelegateHandle;
 	FDelegateHandle OnDestroySessionCompleteDelegateHandle;
 	FDelegateHandle OnCreatePresenceSessionCompleteDelegateHandle;
+	FDelegateHandle OnGameActivityActivationRequestedDelegateHandle;
 
-	/** Play Together on PS4 system event info */
-	FShooterPlayTogetherInfo PlayTogetherInfo;
+	FOnGameActivityActivationRequestedDelegate OnGameActivityActivationRequestedDelegate;
 
 	/** Local player login status when the system is suspended */
 	TArray<ELoginStatus::Type> LocalPlayerOnlineStatus;
@@ -296,9 +285,6 @@ private:
 
 	/** Delegate function executed after checking privileges for starting quick match */
 	void OnUserCanPlayInvite(const FUniqueNetId& UserId, EUserPrivileges::Type Privilege, uint32 PrivilegeResults);
-
-	/** Delegate function executed after checking privileges for Play Together on PS4 */
-	void OnUserCanPlayTogether(const FUniqueNetId& UserId, EUserPrivileges::Type Privilege, uint32 PrivilegeResults);
 
 	/** Delegate for ending a session */
 	FOnEndSessionCompleteDelegate OnEndSessionCompleteDelegate;
@@ -346,9 +332,6 @@ private:
 	/** Called after all the local players are registered in a session we're joining */
 	void FinishJoinSession(EOnJoinSessionCompleteResult::Type Result);
 
-	/** Send all invites for the current game session if we've created it because Play Together on PS4 was initiated*/
-	void SendPlayTogetherInvites();
-
 	/**
 	* Creates the message menu, clears other menus and sets the KingState to Message.
 	*
@@ -362,9 +345,6 @@ private:
 	void OnSearchSessionsComplete(bool bWasSuccessful);
 
 	bool LoadFrontEndMap(const FString& MapName);
-
-	/** Sets a rich presence string for all local players. */
-	void SetPresenceForLocalPlayers(const FString& StatusStr, const FVariantData& PresenceData);
 
 	/** Travel directly to the named session */
 	void InternalTravelToSession(const FName& SessionName);

@@ -1,6 +1,7 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "ShooterGame.h"
+#include "ShooterGameState.h"
 #include "Online/ShooterPlayerState.h"
 #include "GameDelegates.h"
 #include "IPlatformFilePak.h"
@@ -20,6 +21,8 @@ struct FShooterGameGlobalDelegateInit
 			HandlerData.ChunkSignatureCheckFailedDelegate.AddStatic(FShooterGameGlobalDelegateInit::HandlePakChunkSignatureCheckFailed);
 			HandlerData.MasterSignatureTableCheckFailedDelegate.AddStatic(FShooterGameGlobalDelegateInit::HandlePakMasterSignatureTableCheckFailure);
 		}
+
+		FPakPlatformFile::GetPakSetIndexSettingsDelegate().BindStatic(GetPakSetIndexSettings);
 	}
 
 	static void HandlePakChunkSignatureCheckFailed(const FPakChunkSignatureCheckFailedData& Data)
@@ -31,30 +34,14 @@ struct FShooterGameGlobalDelegateInit
 	{
 		UE_LOG(LogShooter, Fatal, TEXT("Pak master signature table check failed for pak '%s'"), *InPakFilename);
 	}
-}
-GShooterGameGlobalDelegateInit;
 
-#if !UE_BUILD_SHIPPING
-
-#if PLATFORM_PS4
-static void PlayGoNext()
-{
-	IPlatformChunkInstall* ChunkInstaller = FPlatformMisc::GetPlatformChunkInstall();
-	if (ChunkInstaller)
+	static void GetPakSetIndexSettings(bool& bKeepFullDirectory, bool& bValidatePruning, bool& bDelayPruning)
 	{
-		ChunkInstaller->DebugStartNextChunk();
+		// Keep the full directory of filenames in PakFileIndexes, so that FindOrLoadAssetsByPath will be able to find files in a given path
+		bKeepFullDirectory = true;
 	}
 }
-
-FAutoConsoleCommand CmdPlayGoNext(
-	TEXT("r.PlayGoNext"),
-	TEXT("Tell PlayGo to start downloading the next chunk."),
-	FConsoleCommandDelegate::CreateStatic(PlayGoNext)
-	);
-#endif
-
-#endif
-#include "ShooterGameState.h"
+GShooterGameGlobalDelegateInit;
 
 
 // respond to requests from a companion app
@@ -99,28 +86,6 @@ static void WebServerDelegate(int32 UserIndex, const FString& Action, const FStr
 				Response.Add(TEXT("Content-Type"), TEXT("text/html; charset=utf-8"));
 				Response.Add(TEXT("Body"), ScoreboardStr);
 			}
-		}
-	}
-}
-
-static void AssignLayerChunkDelegate(const FAssignLayerChunkMap* ChunkManifest, const FString& Platform, const int32 ChunkIndex, int32& OutChunkLayer)
-{
-	OutChunkLayer = 0;
-
-	static FString PS4PlatformString(TEXT("PS4"));
-	if (Platform.Compare(TEXT("PS4"), ESearchCase::IgnoreCase) == 0)
-	{
-		// test dual layer BD50 packaging.
-		switch (ChunkIndex)
-		{
-			case 0:
-			case 1:
-			default:
-				OutChunkLayer = 0;
-				break;
-			case 2:
-				OutChunkLayer = 1;
-				break;
 		}
 	}
 }
@@ -224,7 +189,6 @@ static void ReloadPackagesCallback( const TArray<FString>& PackageNames)
 void InitializeShooterGameDelegates()
 {
 	FGameDelegates::Get().GetWebServerActionDelegate() = FWebServerActionDelegate::CreateStatic(WebServerDelegate);
-	FGameDelegates::Get().GetAssignLayerChunkDelegate() = FAssignLayerChunkDelegate::CreateStatic(AssignLayerChunkDelegate);
 	FGameDelegates::Get().GetExtendedSaveGameInfoDelegate() = FExtendedSaveGameInfoDelegate::CreateStatic(ExtendedSaveGameInfoDelegate);
 
 	FCoreUObjectDelegates::NetworkFileRequestPackageReload.BindStatic(&ReloadPackagesCallback);

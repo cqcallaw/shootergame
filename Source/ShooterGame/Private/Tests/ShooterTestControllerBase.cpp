@@ -78,22 +78,47 @@ void UShooterTestControllerBase::StartPlayerLoginProcess()
 
 	if (IdentityInterface.IsValid())
 	{
-		TSharedPtr<GenericApplication> GenericApplication = FSlateApplication::Get().GetPlatformApplication();
-		const bool bIsLicensed = GenericApplication->ApplicationLicenseValid();
-
 		const ELoginStatus::Type LoginStatus = IdentityInterface->GetLoginStatus(0);
-		if (LoginStatus == ELoginStatus::NotLoggedIn || !bIsLicensed)
+		if (LoginStatus == ELoginStatus::NotLoggedIn)
 		{
-			UE_LOG(LogGauntlet, Error, TEXT("Failed!  No player is logged in!"));
-			EndTest(-1);
+			// Show the account picker.
+			const IOnlineExternalUIPtr ExternalUI = Online::GetExternalUIInterface(GetWorld());
+			if (ExternalUI.IsValid())
+			{
+				ExternalUI->ShowLoginUI(0, false, true, FOnLoginUIClosedDelegate::CreateUObject(this, &UShooterTestControllerBase::OnLoginUIClosed));
+			}
 			return;
 		}
+
+		CheckApplicationLicenseValid();
 
 		TSharedPtr<const FUniqueNetId> UserId = IdentityInterface->GetUniquePlayerId(0);
 
 		if (UserId.IsValid())
 		{
-			IdentityInterface->GetUserPrivilege(*UserId, EUserPrivileges::CanPlay, IOnlineIdentity::FOnGetUserPrivilegeCompleteDelegate::CreateSP(this, &UShooterTestControllerBase::OnUserCanPlay));
+			IdentityInterface->GetUserPrivilege(*UserId, EUserPrivileges::CanPlay,
+				IOnlineIdentity::FOnGetUserPrivilegeCompleteDelegate::CreateUObject(this, &UShooterTestControllerBase::OnUserCanPlay));
+		}
+		else
+		{
+			UE_LOG(LogGauntlet, Error, TEXT("Failed!  Player has invalid UniqueNetId!"));
+			EndTest(-1);
+		}
+	}
+}
+
+void UShooterTestControllerBase::OnLoginUIClosed(TSharedPtr<const FUniqueNetId> UniqueId, const int ControllerIndex, const FOnlineError& Error)
+{
+	CheckApplicationLicenseValid();
+
+	const IOnlineIdentityPtr IdentityInterface = Online::GetIdentityInterface(GetWorld());
+
+	if (IdentityInterface.IsValid())
+	{
+		if (UniqueId.IsValid())
+		{
+			IdentityInterface->GetUserPrivilege(*UniqueId, EUserPrivileges::CanPlay,
+				IOnlineIdentity::FOnGetUserPrivilegeCompleteDelegate::CreateUObject(this, &UShooterTestControllerBase::OnUserCanPlay));
 		}
 		else
 		{
@@ -143,7 +168,9 @@ void UShooterTestControllerBase::StartLoginTask()
 
 	if (IdentityInterface.IsValid())
 	{
-		OnLoginCompleteDelegateHandle = IdentityInterface->AddOnLoginCompleteDelegate_Handle(0, FOnLoginCompleteDelegate::CreateSP(this, &UShooterTestControllerBase::OnLoginTaskComplete));
+		OnLoginCompleteDelegateHandle = IdentityInterface->AddOnLoginCompleteDelegate_Handle(0,
+			FOnLoginCompleteDelegate::CreateUObject(this, &UShooterTestControllerBase::OnLoginTaskComplete));
+
 		IdentityInterface->Login(0, FOnlineAccountCredentials());
 	}
 	else
@@ -188,7 +215,7 @@ void UShooterTestControllerBase::StartOnlinePrivilegeTask()
 	if (PlayerOwner && IdentityInterface.IsValid())
 	{
 		IdentityInterface->GetUserPrivilege(*PlayerOwner->GetCachedUniqueNetId().GetUniqueNetId(), EUserPrivileges::CanPlayOnline,
-			IOnlineIdentity::FOnGetUserPrivilegeCompleteDelegate::CreateSP(this, &UShooterTestControllerBase::OnUserCanPlayOnline));
+			IOnlineIdentity::FOnGetUserPrivilegeCompleteDelegate::CreateUObject(this, &UShooterTestControllerBase::OnUserCanPlayOnline));
 	}
 	else
 	{
@@ -216,6 +243,21 @@ void UShooterTestControllerBase::OnUserCanPlayOnline(const FUniqueNetId& UserId,
 	}
 }
 
+void UShooterTestControllerBase::CheckApplicationLicenseValid()
+{
+	if (FSlateApplication::IsInitialized())
+	{
+		TSharedPtr<GenericApplication> GenericApplication = FSlateApplication::Get().GetPlatformApplication();
+		const bool bIsLicensed = GenericApplication->ApplicationLicenseValid();
+
+		if (!bIsLicensed)
+		{
+			UE_LOG(LogGauntlet, Error, TEXT("Failed!  The signed in user(s) do not have a license for this game!"));
+			EndTest(-1);
+		}
+	}
+}
+
 void UShooterTestControllerBase::HostGame()
 {
 	UShooterGameInstance* GameInstance = GetGameInstance();
@@ -223,8 +265,8 @@ void UShooterTestControllerBase::HostGame()
 
 	if (PlayerOwner)
 	{
-		const FString GameType = TEXT("TDM");
-		const FString StartURL = FString::Printf(TEXT("/Game/Maps/%s?game=%s%s"), TEXT("Sanctuary"), *GameType, TEXT("?listen"));
+		const FString GameType = TEXT("FFA");
+		const FString StartURL = FString::Printf(TEXT("/Game/Maps/%s?game=%s%s"), TEXT("Highrise"), *GameType, TEXT("?listen"));
 
 		GameInstance->HostGame(PlayerOwner, GameType, StartURL);
 	}
@@ -247,42 +289,43 @@ void UShooterTestControllerBase::StartQuickMatch()
 	}
 
 	QuickMatchSearchSettings = MakeShareable(new FShooterOnlineSearchSettings(false, true));
-	QuickMatchSearchSettings->QuerySettings.Set(SEARCH_XBOX_LIVE_HOPPER_NAME, FString("TeamDeathmatch"), EOnlineComparisonOp::Equals);
+	QuickMatchSearchSettings->QuerySettings.Set(SEARCH_XBOX_LIVE_HOPPER_NAME, FString("FreeForAll"), EOnlineComparisonOp::Equals);
 	QuickMatchSearchSettings->QuerySettings.Set(SEARCH_XBOX_LIVE_SESSION_TEMPLATE_NAME, FString("MatchSession"), EOnlineComparisonOp::Equals);
 	QuickMatchSearchSettings->TimeoutInSeconds = 120.0f;
 
 	FShooterOnlineSessionSettings SessionSettings(false, true, 8);
-	SessionSettings.Set(SETTING_GAMEMODE, FString("TDM"), EOnlineDataAdvertisementType::ViaOnlineService);
-	SessionSettings.Set(SETTING_MATCHING_HOPPER, FString("TeamDeathmatch"), EOnlineDataAdvertisementType::DontAdvertise);
+	SessionSettings.Set(SETTING_GAMEMODE, FString("FFA"), EOnlineDataAdvertisementType::ViaOnlineService);
+	SessionSettings.Set(SETTING_MATCHING_HOPPER, FString("FreeForAll"), EOnlineDataAdvertisementType::DontAdvertise);
 	SessionSettings.Set(SETTING_MATCHING_TIMEOUT, 120.0f, EOnlineDataAdvertisementType::ViaOnlineService);
 	SessionSettings.Set(SETTING_SESSION_TEMPLATE_NAME, FString("GameSession"), EOnlineDataAdvertisementType::DontAdvertise);
 
 	TSharedRef<FOnlineSessionSearch> QuickMatchSearchSettingsRef = QuickMatchSearchSettings.ToSharedRef();
 
-	Sessions->ClearOnMatchmakingCompleteDelegate_Handle(OnMatchmakingCompleteDelegateHandle);
-	OnMatchmakingCompleteDelegateHandle = Sessions->AddOnMatchmakingCompleteDelegate_Handle(FOnMatchmakingCompleteDelegate::CreateSP(this, &UShooterTestControllerBase::OnMatchmakingComplete));
-
 	// Perform matchmaking with all local players
-	TArray<TSharedRef<const FUniqueNetId>> LocalPlayerIds;
-	for (int32 i = 0; i < GameInstance->GetNumLocalPlayers(); ++i)
+	TArray<FSessionMatchmakingUser> LocalPlayers;
+	for (auto It = GameInstance->GetLocalPlayerIterator(); It; ++It)
 	{
-		FUniqueNetIdRepl PlayerId = GameInstance->GetLocalPlayerByIndex(i)->GetPreferredUniqueNetId();
+		FUniqueNetIdRepl PlayerId = (*It)->GetPreferredUniqueNetId();
 		if (PlayerId.IsValid())
 		{
-			LocalPlayerIds.Add((*PlayerId).AsShared());
+			FSessionMatchmakingUser LocalPlayer = { (*PlayerId).AsShared() };
+			LocalPlayers.Emplace(LocalPlayer);
 		}
 	}
 
 	bInQuickMatchSearch = true;
 
-	if (!Sessions->StartMatchmaking(LocalPlayerIds, NAME_GameSession, SessionSettings, QuickMatchSearchSettingsRef))
+	FOnStartMatchmakingComplete CompletionDelegate;
+	CompletionDelegate.BindUObject(this, &UShooterTestControllerBase::OnMatchmakingComplete);
+	if (!Sessions->StartMatchmaking(LocalPlayers, NAME_GameSession, SessionSettings, QuickMatchSearchSettingsRef, CompletionDelegate))
 	{
-		OnMatchmakingComplete(NAME_GameSession, false);
+		OnMatchmakingComplete(NAME_GameSession, FOnlineError(false), FSessionMatchmakingResults());
 	}
 }
 
-void UShooterTestControllerBase::OnMatchmakingComplete(FName SessionName, bool bWasSuccessful)
+void UShooterTestControllerBase::OnMatchmakingComplete(FName SessionName, const FOnlineError& ErrorDetails, const FSessionMatchmakingResults& Results)
 {
+	const bool bWasSuccessful = ErrorDetails.WasSuccessful();
 	IOnlineSessionPtr SessionInterface = Online::GetSessionInterface(GetWorld());
 	if (!SessionInterface.IsValid())
 	{
@@ -292,7 +335,6 @@ void UShooterTestControllerBase::OnMatchmakingComplete(FName SessionName, bool b
 	}
 
 	bInQuickMatchSearch = false;
-	SessionInterface->ClearOnMatchmakingCompleteDelegate_Handle(OnMatchmakingCompleteDelegateHandle);
 
 	if (!bWasSuccessful)
 	{
@@ -353,7 +395,7 @@ void UShooterTestControllerBase::UpdateSearchStatus()
 		int32 CurrentSearchIdx, NumSearchResults;
 		EOnlineAsyncTaskState::Type SearchState = ShooterSession->GetSearchResultStatus(CurrentSearchIdx, NumSearchResults);
 
-		UE_LOG(LogGauntlet, Log, TEXT("ShooterSession->GetSearchResultStatus: %s"), EOnlineAsyncTaskState::ToString(SearchState));
+		UE_LOG(LogGauntlet, VeryVerbose, TEXT("ShooterSession->GetSearchResultStatus: %s"), EOnlineAsyncTaskState::ToString(SearchState));
 
 		switch (SearchState)
 		{
@@ -368,15 +410,28 @@ void UShooterTestControllerBase::UpdateSearchStatus()
 
 			if (NumSearchResults > 0)
 			{
-				bFoundGame = true;
-
-				UShooterGameInstance* GameInstance = GetGameInstance();
-				ULocalPlayer* PlayerOwner          = GameInstance ? GameInstance->GetFirstGamePlayer() : nullptr;
-
-				if (PlayerOwner)
+				for (int i = 0; i < SearchResults.Num(); ++i)
 				{
-					// Join First Result
-					GameInstance->JoinSession(PlayerOwner, 0);
+					const FOnlineSessionSearchResult& Result = SearchResults[i];
+
+					FString GameType;
+					FString MapName;
+
+					Result.Session.SessionSettings.Get(SETTING_GAMEMODE, GameType);
+					Result.Session.SessionSettings.Get(SETTING_MAPNAME, MapName);
+
+					if (GameType == "FFA" && MapName == "Highrise")
+					{
+						bFoundGame = true;
+
+						UShooterGameInstance* GameInstance = GetGameInstance();
+						ULocalPlayer* PlayerOwner          = GameInstance ? GameInstance->GetFirstGamePlayer() : nullptr;
+
+						if (PlayerOwner)
+						{
+							GameInstance->JoinSession(PlayerOwner, i);
+						}
+					}
 				}
 			}
 

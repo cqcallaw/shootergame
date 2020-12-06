@@ -43,13 +43,14 @@ bool ShooterUIHelpers::ProfileOpenedUI(UWorld* World, const FUniqueNetId& Reques
 FText ShooterUIHelpers::GetProfileSwapText() const
 {
 	// @todo: replace button with icon
-//#if SHOOTER_XBOX_STRINGS
+#if SHOOTER_XBOX_STRINGS
 	return NSLOCTEXT("Network", "XB1SwapProfile", "Y Switch User");
 /*#elif PLATFORM_PS4
 	return NSLOCTEXT("Network", "PS4SwapProfile", "Triangle button Switch User");
+*/
 #else
-	return NSLOCTEXT("Network", "PCSwapProfile", "Space Switch User");
-#endif*/
+	return NSLOCTEXT("Network", "PCSwapProfile", "Space - Switch User");
+#endif
 }
 
 bool ShooterUIHelpers::ProfileSwapUI(UWorld* World, const int ControllerIndex, bool bShowOnlineOnly, const FOnLoginUIClosedDelegate* Delegate) const

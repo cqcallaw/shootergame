@@ -6,7 +6,7 @@
 
 AShooterGame_FreeForAll::AShooterGame_FreeForAll(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
-	bDelayedStart = !bBenchmarkMode;
+	bDelayedStart = true;
 }
 
 void AShooterGame_FreeForAll::DetermineMatchWinner()

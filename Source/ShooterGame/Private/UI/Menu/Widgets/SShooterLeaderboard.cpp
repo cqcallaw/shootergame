@@ -15,18 +15,11 @@ FLeaderboardRow::FLeaderboardRow(const FOnlineStatsRow& Row)
 	, PlayerName(Row.NickName)
 	, PlayerId(Row.PlayerId)
 {
-	if (const FVariantData* KillData = Row.Columns.Find(LEADERBOARD_STAT_KILLS))
+	if (const FVariantData* ScoreData = Row.Columns.Find(LEADERBOARD_STAT_SCORE))
 	{
 		int32 Val;
-		KillData->GetValue(Val);
-		Kills = FString::FromInt(Val);
-	}
-
-	if (const FVariantData* DeathData = Row.Columns.Find(LEADERBOARD_STAT_DEATHS))
-	{
-		int32 Val;
-		DeathData->GetValue(Val);
-		Deaths = FString::FromInt(Val);
+		ScoreData->GetValue(Val);
+		Score = FString::FromInt(Val);
 	}
 }
 
@@ -61,8 +54,7 @@ void SShooterLeaderboard::Construct(const FArguments& InArgs)
 				SNew(SHeaderRow)
 				+ SHeaderRow::Column("Rank").FixedWidth(BoxWidth/3) .DefaultLabel(NSLOCTEXT("LeaderBoard", "PlayerRankColumn", "Rank"))
 				+ SHeaderRow::Column("PlayerName").FixedWidth(BoxWidth*2) .DefaultLabel(NSLOCTEXT("LeaderBoard", "PlayerNameColumn", "Player Name"))
-				+ SHeaderRow::Column("Kills") .DefaultLabel(NSLOCTEXT("LeaderBoard", "KillsColumn", "Kills"))
-				+ SHeaderRow::Column("Deaths") .DefaultLabel(NSLOCTEXT("LeaderBoard", "DeathsColumn", "Deaths")))
+				+ SHeaderRow::Column("Score") .DefaultLabel(NSLOCTEXT("LeaderBoard", "ScoreColumn", "Score")))
 			]
 		]
 		+ SVerticalBox::Slot()
@@ -128,7 +120,13 @@ void SShooterLeaderboard::ReadStats()
 			{
 				ReadObject = MakeShareable(new FShooterAllTimeMatchResultsRead());
 				FOnlineLeaderboardReadRef ReadObjectRef = ReadObject.ToSharedRef();
-				bReadingStats = Leaderboards->ReadLeaderboardsForFriends(0, ReadObjectRef);
+
+				check(PlayerOwner.IsValid());
+				FUniqueNetIdRepl OwnerNetId = PlayerOwner->GetPreferredUniqueNetId();
+				TArray<TSharedRef<const FUniqueNetId> > Players;
+				Players.Add(OwnerNetId->AsShared());
+
+				bReadingStats = Leaderboards->ReadLeaderboards(Players, ReadObjectRef);
 			}
 		}
 		else
@@ -287,13 +285,9 @@ TSharedRef<ITableRow> SShooterLeaderboard::MakeListViewWidget(TSharedPtr<FLeader
 					ItemText = FText::FromString(Item->PlayerName);
 				}
 			}
-			else if (ColumnName == "Kills")
+			else if (ColumnName == "Score")
 			{
-				ItemText = FText::FromString(Item->Kills);
-			}
-			else if (ColumnName == "Deaths")
-			{
-				ItemText = FText::FromString(Item->Deaths);
+				ItemText = FText::FromString(Item->Score);
 			}
 			return SNew(STextBlock)
 				.Text(ItemText)

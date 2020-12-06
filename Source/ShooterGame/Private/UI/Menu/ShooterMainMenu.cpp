@@ -71,7 +71,6 @@ void FShooterMainMenu::Construct(TWeakObjectPtr<UShooterGameInstance> _GameInsta
 	PlayerOwner = _PlayerOwner;
 
 	OnCancelMatchmakingCompleteDelegate = FOnCancelMatchmakingCompleteDelegate::CreateSP(this, &FShooterMainMenu::OnCancelMatchmakingComplete);
-	OnMatchmakingCompleteDelegate = FOnMatchmakingCompleteDelegate::CreateSP(this, &FShooterMainMenu::OnMatchmakingComplete);
 
 	// read user settings
 #if SHOOTER_CONSOLE_UI
@@ -84,6 +83,7 @@ void FShooterMainMenu::Construct(TWeakObjectPtr<UShooterGameInstance> _GameInsta
 
 	BotsCountOpt = 1;
 	bIsRecordingDemo = false;
+	bIsQuitting = false;
 
 	if(GetPersistentUser())
 	{
@@ -227,6 +227,7 @@ void FShooterMainMenu::Construct(TWeakObjectPtr<UShooterGameInstance> _GameInsta
 #elif SHOOTER_CONSOLE_UI
 		TSharedPtr<FShooterMenuItem> MenuItem;
 
+#if HOST_ONLINE_GAMEMODE_ENABLED
 		// HOST ONLINE menu option
 		{
 			HostOnlineMenuItem = MenuHelper::AddMenuItemSP(RootMenuItem, LOCTEXT("HostOnline", "HOST ONLINE"), this, &FShooterMainMenu::OnHostOnlineSelected);
@@ -247,7 +248,7 @@ void FShooterMainMenu::Construct(TWeakObjectPtr<UShooterGameInstance> _GameInsta
 			HostLANItem->SelectedMultiChoice = bIsLanMatch;
 #endif
 		}
-
+#endif //HOST_ONLINE_GAMEMODE_ENABLED
 		// HOST OFFLINE menu option
 		{
 			MenuItem = MenuHelper::AddMenuItemSP(RootMenuItem, LOCTEXT("HostOffline", "HOST OFFLINE"),this, &FShooterMainMenu::OnHostOfflineSelected);
@@ -270,6 +271,7 @@ void FShooterMainMenu::Construct(TWeakObjectPtr<UShooterGameInstance> _GameInsta
 #endif
 		}
 
+#if JOIN_ONLINE_GAME_ENABLED
 		// JOIN menu option
 		{
 			// JOIN menu option
@@ -291,6 +293,7 @@ void FShooterMainMenu::Construct(TWeakObjectPtr<UShooterGameInstance> _GameInsta
 			JoinLANItem->SelectedMultiChoice = bIsLanMatch;
 #endif
 		}
+#endif //JOIN_ONLINE_GAME_ENABLED
 
 #else
 		TSharedPtr<FShooterMenuItem> MenuItem;
@@ -331,10 +334,11 @@ void FShooterMainMenu::Construct(TWeakObjectPtr<UShooterGameInstance> _GameInsta
 		MenuHelper::AddMenuItemSP(RootMenuItem, LOCTEXT("Leaderboards", "LEADERBOARDS"), this, &FShooterMainMenu::OnShowLeaderboard);
 		MenuHelper::AddCustomMenuItem(LeaderboardItem,SAssignNew(LeaderboardWidget,SShooterLeaderboard).OwnerWidget(MenuWidget).PlayerOwner(GetPlayerOwner()));
 
+#if ONLINE_STORE_ENABLED
 		// Purchases
 		MenuHelper::AddMenuItemSP(RootMenuItem, LOCTEXT("Store", "ONLINE STORE"), this, &FShooterMainMenu::OnShowOnlineStore);
 		MenuHelper::AddCustomMenuItem(OnlineStoreItem, SAssignNew(OnlineStoreWidget, SShooterOnlineStore).OwnerWidget(MenuWidget).PlayerOwner(GetPlayerOwner()));
-
+#endif //ONLINE_STORE_ENABLED
 #if !SHOOTER_CONSOLE_UI
 
 		// Demos
@@ -354,7 +358,7 @@ void FShooterMainMenu::Construct(TWeakObjectPtr<UShooterGameInstance> _GameInsta
 		}
 
 		// QUIT option (for PC)
-#if !SHOOTER_CONSOLE_UI
+#if SHOOTER_SHOW_QUIT_MENU_ITEM
 		MenuHelper::AddMenuItemSP(RootMenuItem, LOCTEXT("Quit", "QUIT"), this, &FShooterMainMenu::OnUIQuit);
 #endif
 
@@ -374,7 +378,7 @@ void FShooterMainMenu::AddMenuToGameViewport()
 	{
 		UGameViewportClient* GVC = GEngine->GameViewport;
 		GVC->AddViewportWidgetContent(MenuWidgetContainer.ToSharedRef());
-		GVC->SetCaptureMouseOnClick(EMouseCaptureMode::NoCapture);
+		GVC->SetMouseCaptureMode(EMouseCaptureMode::NoCapture);
 	}
 }
 
@@ -463,8 +467,12 @@ TStatId FShooterMainMenu::GetStatId() const
 void FShooterMainMenu::OnMenuHidden()
 {
 #if SHOOTER_CONSOLE_UI
+	if (bIsQuitting)
+	{
+		RemoveMenuFromGameViewport();
+	}
 	// Menu was hidden from the top-level main menu, on consoles show the welcome screen again.
-	if ( ensure(GameInstance.IsValid()))
+	else if ( ensure(GameInstance.IsValid()))
 	{
 		GameInstance->GotoState(ShooterGameInstanceState::WelcomeScreen);
 	}
@@ -570,7 +578,8 @@ void FShooterMainMenu::BeginQuickMatchSearch()
 		return;
 	}
 
-	QuickMatchSearchSettings = MakeShareable(new FShooterOnlineSearchSettings(false, true));
+	QuickMatchSearchSettings = MakeShared<FShooterOnlineSearchSettings>(false, true);
+	QuickMatchSearchSettings->QuerySettings.Set(SEARCH_MATCHMAKING_QUEUE, FString("TeamDeathmatch"), EOnlineComparisonOp::Equals);
 	QuickMatchSearchSettings->QuerySettings.Set(SEARCH_XBOX_LIVE_HOPPER_NAME, FString("TeamDeathmatch"), EOnlineComparisonOp::Equals);
 	QuickMatchSearchSettings->QuerySettings.Set(SEARCH_XBOX_LIVE_SESSION_TEMPLATE_NAME, FString("MatchSession"), EOnlineComparisonOp::Equals);
 	QuickMatchSearchSettings->TimeoutInSeconds = 120.0f;
@@ -585,23 +594,23 @@ void FShooterMainMenu::BeginQuickMatchSearch()
 
 	DisplayQuickmatchSearchingUI();
 
-	Sessions->ClearOnMatchmakingCompleteDelegate_Handle(OnMatchmakingCompleteDelegateHandle);
-	OnMatchmakingCompleteDelegateHandle = Sessions->AddOnMatchmakingCompleteDelegate_Handle(OnMatchmakingCompleteDelegate);
-
 	// Perform matchmaking with all local players
-	TArray<TSharedRef<const FUniqueNetId>> LocalPlayerIds;
-	for (int32 i = 0; i < GameInstance->GetNumLocalPlayers(); ++i)
+	TArray<FSessionMatchmakingUser> LocalPlayers;
+	for (auto It = GameInstance->GetLocalPlayerIterator(); It; ++It)
 	{
-		FUniqueNetIdRepl PlayerId = GameInstance->GetLocalPlayerByIndex(i)->GetPreferredUniqueNetId();
+		FUniqueNetIdRepl PlayerId = (*It)->GetPreferredUniqueNetId();
 		if (PlayerId.IsValid())
 		{
-			LocalPlayerIds.Add((*PlayerId).AsShared());
+			FSessionMatchmakingUser LocalPlayer = {(*PlayerId).AsShared()};
+			LocalPlayers.Emplace(LocalPlayer);
 		}
 	}
 
-	if (!Sessions->StartMatchmaking(LocalPlayerIds, NAME_GameSession, SessionSettings, QuickMatchSearchSettingsRef))
+	FOnStartMatchmakingComplete CompletionDelegate;
+	CompletionDelegate.BindSP(this, &FShooterMainMenu::OnMatchmakingComplete);
+	if (!Sessions->StartMatchmaking(LocalPlayers, NAME_GameSession, SessionSettings, QuickMatchSearchSettingsRef, CompletionDelegate))
 	{
-		OnMatchmakingComplete(NAME_GameSession, false);
+		OnMatchmakingComplete(NAME_GameSession, FOnlineError(false), FSessionMatchmakingResults());
 	}
 }
 
@@ -635,8 +644,8 @@ void FShooterMainMenu::OnSplitScreenSelected()
 
 	RemoveMenuFromGameViewport();
 
-#if PLATFORM_PS4 || MAX_LOCAL_PLAYERS == 1
-	if (GameInstance.IsValid() && GameInstance->GetOnlineMode() == EOnlineMode::Online)
+#if PLATFORM_PS4 || MAX_LOCAL_PLAYERS == 1 || !SHOOTER_SUPPORTS_OFFLINE_SPLIT_SCREEEN
+	if (!SHOOTER_SUPPORTS_OFFLINE_SPLIT_SCREEEN || (GameInstance.IsValid() && GameInstance->GetOnlineMode() == EOnlineMode::Online))
 	{
 		OnUIHostTeamDeathMatch();
 	}
@@ -890,16 +899,15 @@ void FShooterMainMenu::DisplayQuickmatchSearchingUI()
 	bAnimateQuickmatchSearchingUI = true;
 }
 
-void FShooterMainMenu::OnMatchmakingComplete(FName SessionName, bool bWasSuccessful)
+void FShooterMainMenu::OnMatchmakingComplete(FName SessionName, const FOnlineError& ErrorDetails, const FSessionMatchmakingResults& Results)
 {
+	const bool bWasSuccessful = ErrorDetails.WasSuccessful();
 	IOnlineSessionPtr SessionInterface = Online::GetSessionInterface(GetTickableGameObjectWorld());
 	if (!SessionInterface.IsValid())
 	{
 		UE_LOG(LogOnline, Warning, TEXT("OnMatchmakingComplete: Couldn't find session interface."));
 		return;
 	}
-
-	SessionInterface->ClearOnMatchmakingCompleteDelegate_Handle(OnMatchmakingCompleteDelegateHandle);
 
 	if (bQuickmatchSearchRequestCanceled && bUsedInputToCancelQuickmatchSearch)
 	{
@@ -1006,13 +1014,6 @@ void FShooterMainMenu::OnMenuGoBack(MenuPtr Menu)
 	if (ShooterOptions->OptionsItem->SubMenu == Menu)
 	{
 		ShooterOptions->RevertChanges();
-	}
-
-	// In case a Play Together event was received, don't act on it
-	// if the player changes their mind.
-	if (HostOnlineMenuItem.IsValid() && HostOnlineMenuItem->SubMenu == Menu)
-	{
-		GameInstance->ResetPlayTogetherInfo();
 	}
 
 	// if we've backed all the way out we need to make sure online is false.
@@ -1346,6 +1347,7 @@ void FShooterMainMenu::OnShowDemoBrowser()
 
 void FShooterMainMenu::OnUIQuit()
 {
+	bIsQuitting = true;
 	LockAndHideMenu();
 
 	const FShooterMenuSoundsStyle& MenuSounds = FShooterStyle::Get().GetWidgetStyle<FShooterMenuSoundsStyle>("DefaultShooterMenuSoundsStyle");
@@ -1442,12 +1444,6 @@ void FShooterMainMenu::OnCancelMatchmakingComplete(FName SessionName, bool bWasS
 	GVC->RemoveViewportWidgetContent(QuickMatchStoppingWidgetContainer.ToSharedRef());
 	AddMenuToGameViewport();
 	FSlateApplication::Get().SetKeyboardFocus(MenuWidget);
-}
-
-void FShooterMainMenu::OnPlayTogetherEventReceived()
-{
-	HostOnlineMenuItem->Widget->SetMenuItemActive(true);
-	MenuWidget->ConfirmMenuItem();
 }
 
 #undef LOCTEXT_NAMESPACE

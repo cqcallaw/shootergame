@@ -16,11 +16,8 @@ struct FLeaderboardRow
 	/** player name */
 	FString PlayerName;
 
-	/** player total kills to display */
-	FString Kills;
-
-	/** player total deaths to display */
-	FString Deaths;
+	/** player total score to display */
+	FString Score;
 
 	/** Unique Id for the player at this rank */
 	const TSharedPtr<const FUniqueNetId> PlayerId;

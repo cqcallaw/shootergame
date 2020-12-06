@@ -113,7 +113,7 @@ void FShooterFriends::OnFriendsUpdated(int32 /*unused*/, bool bWasSuccessful, co
 	Friends.Reset();
 	if (OnlineFriendsPtr->GetFriendsList(LocalUserNum, EFriendsLists::ToString(EFriendsLists::OnlinePlayers), Friends))
 	{
-		for (const TSharedRef<FOnlineFriend> Friend : Friends)
+		for (const TSharedRef<FOnlineFriend>& Friend : Friends)
 		{
 			TSharedRef<FShooterMenuItem> FriendItem = MenuHelper::AddMenuItem(FriendsItem, FText::FromString(Friend->GetDisplayName()));
 			FriendItem->OnControllerFacebuttonDownPressed.BindSP(this, &FShooterFriends::ViewSelectedFriendProfile);

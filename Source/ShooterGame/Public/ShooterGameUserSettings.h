@@ -27,6 +27,11 @@ class UShooterGameUserSettings : public UGameUserSettings
 		return bIsLanMatch;
 	}
 
+	bool IsForceSystemResolution() const
+	{
+		return bIsForceSystemResolution;
+	}
+
 	void SetLanMatch(bool InbIsLanMatch)
 	{
 		bIsLanMatch = InbIsLanMatch;
@@ -40,6 +45,11 @@ class UShooterGameUserSettings : public UGameUserSettings
 	void SetDedicatedServer(bool InbIsDedicatedServer)
 	{
 		bIsDedicatedServer = InbIsDedicatedServer;
+	}
+
+	void SetForceSystemResolution(bool InbIsForceSystemResolution)
+	{
+		bIsForceSystemResolution = InbIsForceSystemResolution;
 	}
 
 	// interface UGameUserSettings
@@ -61,4 +71,8 @@ private:
 	/** is dedicated server? */
 	UPROPERTY(config)
 	bool bIsDedicatedServer;
+
+	/** Enable if UShooterGameUserSettings is not the authority on resolution */
+	UPROPERTY(config)
+	bool bIsForceSystemResolution;
 };

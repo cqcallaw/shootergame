@@ -5,10 +5,10 @@
 #include "OnlineLeaderboardInterface.h"
 
 // these are normally exported from platform-specific tools
-#define LEADERBOARD_STAT_SCORE				"Score"
-#define LEADERBOARD_STAT_KILLS				"Frags"
-#define LEADERBOARD_STAT_DEATHS				"Deaths"
-#define LEADERBOARD_STAT_MATCHESPLAYED		"MatchesPlayed"
+#define LEADERBOARD_STAT_SCORE			"ShooterAllTimeMatchResultsScore"
+#define LEADERBOARD_STAT_KILLS			"ShooterAllTimeMatchResultsFrags"
+#define LEADERBOARD_STAT_DEATHS			"ShooterAllTimeMatchResultsDeaths"
+#define LEADERBOARD_STAT_MATCHESPLAYED	"ShooterAllTimeMatchResultsMatchesPlayed"
 
 /**
  *	'AllTime' leaderboard read object
@@ -25,9 +25,6 @@ public:
 
 		// Define default columns
 		new (ColumnMetadata) FColumnMetaData(LEADERBOARD_STAT_SCORE, EOnlineKeyValuePairDataType::Int32);
-		new (ColumnMetadata) FColumnMetaData(LEADERBOARD_STAT_KILLS, EOnlineKeyValuePairDataType::Int32);
-		new (ColumnMetadata) FColumnMetaData(LEADERBOARD_STAT_DEATHS, EOnlineKeyValuePairDataType::Int32);
-		new (ColumnMetadata) FColumnMetaData(LEADERBOARD_STAT_MATCHESPLAYED, EOnlineKeyValuePairDataType::Int32);
 	}
 };
 

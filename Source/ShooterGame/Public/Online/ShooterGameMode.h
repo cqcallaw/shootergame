@@ -122,8 +122,6 @@ protected:
 
 	bool bAllowBots;
 
-	bool bBenchmarkMode;
-
 	/** spawning all bots for this game */
 	void StartBots();
 

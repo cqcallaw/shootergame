@@ -57,6 +57,9 @@ class AShooterPlayerState : public APlayerState
 	/** get whether the player quit the match */
 	bool IsQuitter() const;
 
+	/** get match id that the player is in */
+	FString GetMatchId() const;
+
 	/** gets truncated player name to fit in death log and scoreboards */
 	FString GetShortPlayerName() const;
 
@@ -78,6 +81,9 @@ class AShooterPlayerState : public APlayerState
 
 	/** Set whether the player is a quitter */
 	void SetQuitter(bool bInQuitter);
+
+	/** Set the player's current match id */
+	void SetMatchId(const FString& CurrentMatchId);
 
 	virtual void CopyProperties(class APlayerState* PlayerState) override;
 protected:
@@ -108,6 +114,10 @@ protected:
 	/** whether the user quit the match */
 	UPROPERTY()
 	uint8 bQuitter : 1;
+
+	/** Match id */
+	UPROPERTY(Replicated)
+	FString MatchId;
 
 	/** helper for scoring points */
 	void ScorePoints(int32 Points);

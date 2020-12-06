@@ -9,7 +9,7 @@
 AShooterGame_TeamDeathMatch::AShooterGame_TeamDeathMatch(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
 	NumTeams = 2;
-	bDelayedStart = !bBenchmarkMode;
+	bDelayedStart = true;
 }
 
 void AShooterGame_TeamDeathMatch::PostLogin(APlayerController* NewPlayer)

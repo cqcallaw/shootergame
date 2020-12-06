@@ -7,6 +7,7 @@
 #include "Bots/ShooterAIController.h"
 #include "Online/ShooterPlayerState.h"
 #include "UI/ShooterHUD.h"
+#include "Camera/CameraShake.h"
 
 AShooterWeapon::AShooterWeapon(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
@@ -868,7 +869,7 @@ void AShooterWeapon::SimulateWeaponFire()
 	{
 		if (FireCameraShake != NULL)
 		{
-			PC->ClientPlayCameraShake(FireCameraShake, 1);
+			PC->ClientStartCameraShake(FireCameraShake, 1);
 		}
 		if (FireForceFeedback != NULL && PC->IsVibrationEnabled())
 		{

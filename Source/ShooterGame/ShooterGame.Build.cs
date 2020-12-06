@@ -8,6 +8,11 @@ public class ShooterGame : ModuleRules
 	{
 		PrivatePCHHeaderFile = "Public/ShooterGame.h";
 
+		PublicDefinitions.Add("HOST_ONLINE_GAMEMODE_ENABLED=" + HostOnlineGameEnabled);
+		PublicDefinitions.Add("JOIN_ONLINE_GAME_ENABLED=" + JoinOnlineGameEnabled);
+		PublicDefinitions.Add("INVITE_ONLINE_GAME_ENABLED=" + InviteOnlineGameEnabled);
+		PublicDefinitions.Add("ONLINE_STORE_ENABLED=" + OnlineStoreEnabled);
+
 		PrivateIncludePaths.AddRange(
 			new string[] {
 				"ShooterGame/Private",
@@ -43,7 +48,8 @@ public class ShooterGame : ModuleRules
 				"ApplicationCore",
 				"ReplicationGraph",
 				"PakFile",
-				"RHI"
+				"RHI",
+				"PhysicsCore"
 			}
 		);
 
@@ -71,6 +77,38 @@ public class ShooterGame : ModuleRules
 		else
 		{
 			PublicDefinitions.Add("WITH_GAMEPLAY_DEBUGGER=0");
+		}
+	}
+
+	protected virtual int HostOnlineGameEnabled
+	{
+		get
+		{
+			return 1;
+		}
+	}
+
+	protected virtual int JoinOnlineGameEnabled
+    {
+        get
+        {
+			return 1;
+        }
+    }
+
+	protected virtual int InviteOnlineGameEnabled
+    {
+		get
+        {
+			return 1;
+        }
+    }
+
+	protected virtual int OnlineStoreEnabled
+	{
+		get
+		{
+			return 1;
 		}
 	}
 }

@@ -77,6 +77,11 @@ void AShooterPlayerState::SetQuitter(bool bInQuitter)
 	bQuitter = bInQuitter;
 }
 
+void AShooterPlayerState::SetMatchId(const FString& CurrentMatchId)
+{
+	MatchId = CurrentMatchId;
+}
+
 void AShooterPlayerState::CopyProperties(APlayerState* PlayerState)
 {
 	Super::CopyProperties(PlayerState);
@@ -129,6 +134,11 @@ int32 AShooterPlayerState::GetNumRocketsFired() const
 bool AShooterPlayerState::IsQuitter() const
 {
 	return bQuitter;
+}
+
+FString AShooterPlayerState::GetMatchId() const
+{
+	return MatchId;
 }
 
 void AShooterPlayerState::ScoreKill(AShooterPlayerState* Victim, int32 Points)

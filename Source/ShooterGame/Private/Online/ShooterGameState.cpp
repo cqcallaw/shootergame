@@ -3,12 +3,18 @@
 #include "ShooterGame.h"
 #include "Online/ShooterPlayerState.h"
 #include "ShooterGameInstance.h"
+#include "OnlineSubsystemUtils.h"
+#include "OnlineGameMatchesInterface.h"
 
 AShooterGameState::AShooterGameState(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
 	NumTeams = 0;
 	RemainingTime = 0;
 	bTimerPaused = false;
+
+	UShooterGameInstance* GameInstance = GetWorld() != nullptr ? Cast<UShooterGameInstance>(GetWorld()->GetGameInstance()) : nullptr;
+
+	GameMatches.Initialize(this, GameInstance);
 }
 
 void AShooterGameState::GetLifetimeReplicatedProps( TArray< FLifetimeProperty > & OutLifetimeProps ) const
@@ -78,5 +84,16 @@ void AShooterGameState::RequestFinishAndExitToMainMenu()
 			PrimaryPC->HandleReturnToMainMenu();
 		}
 	}
+}
 
+void AShooterGameState::HandleMatchHasStarted()
+{
+	Super::HandleMatchHasStarted();
+	GameMatches.HandleMatchHasStarted(ActivityId, NumTeams);
+}
+
+void AShooterGameState::HandleMatchHasEnded()
+{
+	Super::HandleMatchHasEnded();
+	GameMatches.HandleMatchHasEnded(bEnableGameFeedback, NumTeams, MakeArrayView(TeamScores));
 }

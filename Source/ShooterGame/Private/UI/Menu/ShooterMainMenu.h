@@ -43,9 +43,6 @@ public:
 	/** Returns the string name of the currently selected map */
 	FString GetMapName() const;
 
-	/** Called if a play together invite is sent from the PS4 system */
-	void OnPlayTogetherEventReceived();
-
 protected:
 
 	enum class EMap
@@ -172,7 +169,7 @@ protected:
 
 	FReply OnSplitScreenPlay();
 
-	void OnMatchmakingComplete(FName SessionName, bool bWasSuccessful);
+	void OnMatchmakingComplete(FName SessionName, const FOnlineError& ErrorDetails, const FSessionMatchmakingResults& Results);
 
 	/** bot count option changed callback */
 	void BotCountOptionChanged(TSharedPtr<FShooterMenuItem> MenuItem, int32 MultiOptionIndex);
@@ -291,9 +288,6 @@ protected:
 	/** Delegate for canceling matchmaking */
 	FOnCancelMatchmakingCompleteDelegate OnCancelMatchmakingCompleteDelegate;
 
-	/** Delegate executed when matchmaking completes */
-	FOnMatchmakingCompleteDelegate OnMatchmakingCompleteDelegate;
-
 	/** number of bots in game */
 	int32 BotsCountOpt;
 
@@ -326,6 +320,9 @@ protected:
 	/** Dedicated server? */
 	bool bIsDedicatedServer;
 
+	/** Quitting */
+	bool bIsQuitting;
+
 	/** used for displaying the quickmatch confirmation dialog when a quickmatch to join is not found */
 	TSharedPtr<class SShooterConfirmationDialog> QuickMatchFailureWidget;
 
@@ -349,7 +346,6 @@ protected:
 	void HelperQuickMatchSearchingUICancel(bool bShouldRemoveSession); //helper for removing QuickMatch Searching UI
 	FReply OnQuickMatchSearchingUICancel();
 
-	FDelegateHandle OnMatchmakingCompleteDelegateHandle;
 	FDelegateHandle OnCancelMatchmakingCompleteDelegateHandle;
 	FDelegateHandle OnLoginCompleteDelegateHandle;
 };

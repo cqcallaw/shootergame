@@ -67,25 +67,31 @@ AShooterPlayerController::AShooterPlayerController(const FObjectInitializer& Obj
 	StatMatchesPlayed = 0;
 	StatKills = 0;
 	StatDeaths = 0;
-	bHasFetchedPlatformData = false;
+	bHasQueriedPlatformStats = false;
+	bHasQueriedPlatformAchievements = false;
+	bHasInitializedInputComponent = false;
 }
 
 void AShooterPlayerController::SetupInputComponent()
 {
 	Super::SetupInputComponent();
+	if(!bHasInitializedInputComponent)
+	{
+		// UI input
+		InputComponent->BindAction("InGameMenu", IE_Pressed, this, &AShooterPlayerController::OnToggleInGameMenu);
+		InputComponent->BindAction("Scoreboard", IE_Pressed, this, &AShooterPlayerController::OnShowScoreboard);
+		InputComponent->BindAction("Scoreboard", IE_Released, this, &AShooterPlayerController::OnHideScoreboard);
+		InputComponent->BindAction("ConditionalCloseScoreboard", IE_Pressed, this, &AShooterPlayerController::OnConditionalCloseScoreboard);
+		InputComponent->BindAction("ToggleScoreboard", IE_Pressed, this, &AShooterPlayerController::OnToggleScoreboard);
 
-	// UI input
-	InputComponent->BindAction("InGameMenu", IE_Pressed, this, &AShooterPlayerController::OnToggleInGameMenu);
-	InputComponent->BindAction("Scoreboard", IE_Pressed, this, &AShooterPlayerController::OnShowScoreboard);
-	InputComponent->BindAction("Scoreboard", IE_Released, this, &AShooterPlayerController::OnHideScoreboard);
-	InputComponent->BindAction("ConditionalCloseScoreboard", IE_Pressed, this, &AShooterPlayerController::OnConditionalCloseScoreboard);
-	InputComponent->BindAction("ToggleScoreboard", IE_Pressed, this, &AShooterPlayerController::OnToggleScoreboard);
+		// voice chat
+		InputComponent->BindAction("PushToTalk", IE_Pressed, this, &APlayerController::StartTalking);
+		InputComponent->BindAction("PushToTalk", IE_Released, this, &APlayerController::StopTalking);
 
-	// voice chat
-	InputComponent->BindAction("PushToTalk", IE_Pressed, this, &APlayerController::StartTalking);
-	InputComponent->BindAction("PushToTalk", IE_Released, this, &APlayerController::StopTalking);
+		InputComponent->BindAction("ToggleChat", IE_Pressed, this, &AShooterPlayerController::ToggleChatWindow);
 
-	InputComponent->BindAction("ToggleChat", IE_Pressed, this, &AShooterPlayerController::ToggleChatWindow);
+		bHasInitializedInputComponent = true;
+	}
 }
 
 
@@ -196,6 +202,11 @@ void AShooterPlayerController::SetPlayer( UPlayer* InPlayer )
 
 void AShooterPlayerController::QueryAchievements()
 {
+	if (bHasQueriedPlatformAchievements)
+	{
+		return;
+	}
+	bHasQueriedPlatformAchievements = true;
 	// precache achievements
 	ULocalPlayer* LocalPlayer = Cast<ULocalPlayer>(Player);
 	if (LocalPlayer && LocalPlayer->GetControllerId() != -1)
@@ -245,9 +256,9 @@ void AShooterPlayerController::OnQueryAchievementsComplete(const FUniqueNetId& P
 
 void AShooterPlayerController::OnLeaderboardReadComplete(bool bWasSuccessful)
 {
-	if (ReadObject.IsValid() && ReadObject->ReadState == EOnlineAsyncTaskState::Done && !bHasFetchedPlatformData)
+	if (ReadObject.IsValid() && ReadObject->ReadState == EOnlineAsyncTaskState::Done && !bHasQueriedPlatformStats)
 	{
-		bHasFetchedPlatformData = true;
+		bHasQueriedPlatformStats = true;
 		ClearLeaderboardDelegate();
 
 		// We should only have one stat.
@@ -290,7 +301,7 @@ void AShooterPlayerController::QueryStats()
 				if (UserId.IsValid())
 				{
 					IOnlineLeaderboardsPtr Leaderboards = OnlineSub->GetLeaderboardsInterface();
-					if (Leaderboards.IsValid() && !bHasFetchedPlatformData)
+					if (Leaderboards.IsValid() && !bHasQueriedPlatformStats)
 					{
 						TArray<TSharedRef<const FUniqueNetId>> QueryPlayers;
 						QueryPlayers.Add(UserId.ToSharedRef());
@@ -662,9 +673,11 @@ void AShooterPlayerController::ClientGameStarted_Implementation()
 	}
 	bGameEndedFrame = false;
 
+
 	QueryAchievements();
 
 	QueryStats();
+
 
 	const UWorld* World = GetWorld();
 
@@ -847,6 +860,8 @@ void AShooterPlayerController::ClientSendRoundEndEvent_Implementation(bool bIsWi
 			FString MapName = *FPackageName::GetShortName(World->PersistentLevel->GetOutermost()->GetName());
 			AShooterPlayerState* ShooterPlayerState = Cast<AShooterPlayerState>(PlayerState);
 			int32 PlayerScore = ShooterPlayerState ? ShooterPlayerState->GetScore() : 0;
+			int32 PlayerDeaths = ShooterPlayerState ? ShooterPlayerState->GetDeaths() : 0;
+			int32 PlayerKills = ShooterPlayerState ? ShooterPlayerState->GetKills() : 0;
 
 			// Fire session end event for all cases
 			FOnlineEventParms Params;
@@ -860,24 +875,28 @@ void AShooterPlayerController::ClientSendRoundEndEvent_Implementation(bool bIsWi
 
 			Events->TriggerEvent(*UniqueId, TEXT("PlayerSessionEnd"), Params);
 
+			// Update all time results
+			FOnlineEventParms AllTimeMatchParams;
+			AllTimeMatchParams.Add(TEXT("ShooterAllTimeMatchResultsScore"), FVariantData((uint64)PlayerScore));
+			AllTimeMatchParams.Add(TEXT("ShooterAllTimeMatchResultsDeaths"), FVariantData((int32)PlayerDeaths));
+			AllTimeMatchParams.Add(TEXT("ShooterAllTimeMatchResultsFrags"), FVariantData((int32)PlayerKills));
+			AllTimeMatchParams.Add(TEXT("ShooterAllTimeMatchResultsMatchesPlayed"), FVariantData((int32)1));
+
+			Events->TriggerEvent(*UniqueId, TEXT("ShooterAllTimeMatchResults"), AllTimeMatchParams);
+
 			// Online matches require the MultiplayerRoundEnd event as well
 			UShooterGameInstance* SGI = Cast<UShooterGameInstance>(World->GetGameInstance());
 			if (SGI && (SGI->GetOnlineMode() == EOnlineMode::Online))
 			{
 				FOnlineEventParms MultiplayerParams;
+				MultiplayerParams.Add( TEXT( "SectionId" ), FVariantData( (int32)0 ) ); // unused
+				MultiplayerParams.Add( TEXT( "GameplayModeId" ), FVariantData( (int32)1 ) ); // @todo determine game mode (ffa v tdm)
+				MultiplayerParams.Add( TEXT( "MatchTypeId" ), FVariantData( (int32)1 ) ); // @todo abstract the specific meaning of this value across platforms
+				MultiplayerParams.Add( TEXT( "DifficultyLevelId" ), FVariantData( (int32)0 ) ); // unused
+				MultiplayerParams.Add( TEXT( "TimeInSeconds" ), FVariantData( (float)ExpendedTimeInSeconds ) );
+				MultiplayerParams.Add( TEXT( "ExitStatusId" ), FVariantData( (int32)0 ) ); // unused
 
-				AShooterGameState* const MyGameState = World->GetGameState<AShooterGameState>();
-				if (ensure(MyGameState != nullptr))
-				{
-					MultiplayerParams.Add( TEXT( "SectionId" ), FVariantData( (int32)0 ) ); // unused
-					MultiplayerParams.Add( TEXT( "GameplayModeId" ), FVariantData( (int32)1 ) ); // @todo determine game mode (ffa v tdm)
-					MultiplayerParams.Add( TEXT( "MatchTypeId" ), FVariantData( (int32)1 ) ); // @todo abstract the specific meaning of this value across platforms
-					MultiplayerParams.Add( TEXT( "DifficultyLevelId" ), FVariantData( (int32)0 ) ); // unused
-					MultiplayerParams.Add( TEXT( "TimeInSeconds" ), FVariantData( (float)ExpendedTimeInSeconds ) );
-					MultiplayerParams.Add( TEXT( "ExitStatusId" ), FVariantData( (int32)0 ) ); // unused
-
-					Events->TriggerEvent(*UniqueId, TEXT("MultiplayerRoundEnd"), MultiplayerParams);
-				}
+				Events->TriggerEvent(*UniqueId, TEXT("MultiplayerRoundEnd"), MultiplayerParams);
 			}
 		}
 
