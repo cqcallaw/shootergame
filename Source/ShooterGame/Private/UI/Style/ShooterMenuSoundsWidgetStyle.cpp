@@ -1,7 +1,7 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
-#include "ShooterGame.h"
 #include "ShooterMenuSoundsWidgetStyle.h"
+#include "ShooterGame.h"
 
 FShooterMenuSoundsStyle::FShooterMenuSoundsStyle()
 {

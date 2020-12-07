@@ -1,7 +1,7 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
-#include "ShooterGame.h"
 #include "ShooterGameUserSettings.h"
+#include "ShooterGame.h"
 
 UShooterGameUserSettings::UShooterGameUserSettings(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)

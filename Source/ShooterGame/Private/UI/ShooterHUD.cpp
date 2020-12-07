@@ -1,7 +1,7 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
-#include "ShooterGame.h"
 #include "UI/ShooterHUD.h"
+#include "ShooterGame.h"
 #include "SShooterScoreboardWidget.h"
 #include "SChatWidget.h"
 #include "Engine/ViewportSplitScreen.h"

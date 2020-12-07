@@ -1,7 +1,7 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
-#include "ShooterGame.h"
 #include "Online/ShooterOnlineSessionClient.h"
+#include "ShooterGame.h"
 #include "ShooterGameInstance.h"
 
 UShooterOnlineSessionClient::UShooterOnlineSessionClient()

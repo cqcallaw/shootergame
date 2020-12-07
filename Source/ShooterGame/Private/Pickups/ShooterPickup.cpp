@@ -1,7 +1,7 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
-#include "ShooterGame.h"
 #include "Pickups/ShooterPickup.h"
+#include "ShooterGame.h"
 #include "Particles/ParticleSystemComponent.h"
 
 AShooterPickup::AShooterPickup(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)

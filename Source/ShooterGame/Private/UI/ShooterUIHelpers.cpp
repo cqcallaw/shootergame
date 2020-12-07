@@ -1,7 +1,7 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
-#include "ShooterGame.h"
 #include "ShooterUIHelpers.h"
+#include "ShooterGame.h"
 #include "OnlineSubsystemUtils.h"
 
 FText ShooterUIHelpers::GetProfileOpenText() const

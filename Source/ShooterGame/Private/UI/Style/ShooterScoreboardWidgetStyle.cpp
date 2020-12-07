@@ -1,7 +1,7 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
-#include "ShooterGame.h"
 #include "ShooterScoreboardWidgetStyle.h"
+#include "ShooterGame.h"
 
 FShooterScoreboardStyle::FShooterScoreboardStyle()
 {

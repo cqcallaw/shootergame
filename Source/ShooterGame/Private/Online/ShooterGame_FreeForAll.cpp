@@ -1,7 +1,7 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
-#include "ShooterGame.h"
 #include "Online/ShooterGame_FreeForAll.h"
+#include "ShooterGame.h"
 #include "Online/ShooterPlayerState.h"
 
 AShooterGame_FreeForAll::AShooterGame_FreeForAll(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)

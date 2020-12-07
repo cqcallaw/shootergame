@@ -1,7 +1,7 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
-#include "ShooterGame.h"
 #include "Player/ShooterDemoSpectator.h"
+#include "ShooterGame.h"
 #include "UI/Menu/ShooterDemoPlaybackMenu.h"
 #include "UI/Widgets/SShooterDemoHUD.h"
 #include "Engine/DemoNetDriver.h"

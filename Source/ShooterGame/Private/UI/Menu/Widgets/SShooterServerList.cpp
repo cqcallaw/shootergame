@@ -1,7 +1,7 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
-#include "ShooterGame.h"
 #include "SShooterServerList.h"
+#include "ShooterGame.h"
 #include "Widgets/Views/SHeaderRow.h"
 #include "ShooterStyle.h"
 #include "ShooterGameLoadingScreen.h"

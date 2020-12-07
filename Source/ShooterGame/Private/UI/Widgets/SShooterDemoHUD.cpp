@@ -1,7 +1,7 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
-#include "ShooterGame.h"
 #include "SShooterDemoHUD.h"
+#include "ShooterGame.h"
 #include "Engine/DemoNetDriver.h"
 #include "ShooterStyle.h"
 #include "Styling/CoreStyle.h"

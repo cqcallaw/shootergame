@@ -1,7 +1,7 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
-#include "ShooterGame.h"
 #include "Weapons/ShooterWeapon.h"
+#include "ShooterGame.h"
 #include "Player/ShooterCharacter.h"
 #include "Particles/ParticleSystemComponent.h"
 #include "Bots/ShooterAIController.h"

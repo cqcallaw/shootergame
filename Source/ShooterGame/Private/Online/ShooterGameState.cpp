@@ -1,5 +1,6 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
+#include "Online/ShooterGameState.h"
 #include "ShooterGame.h"
 #include "Online/ShooterPlayerState.h"
 #include "ShooterGameInstance.h"
