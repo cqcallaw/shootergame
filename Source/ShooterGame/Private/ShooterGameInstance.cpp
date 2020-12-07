@@ -364,6 +364,16 @@ void UShooterGameInstance::StartGameInstance()
 			}
 		}
 	}
+
+	// handle benchmark start
+	if (FParse::Param(FCommandLine::Get(), TEXT("benchmark"))) {
+		const FString StartURL = FString::Printf(TEXT("/Game/Maps/Highrise?game=FFA"));
+		SetOnlineMode(EOnlineMode::Offline);
+		// Game instance will handle success, failure and dialogs
+		this->HostGame(nullptr, TEXT("FFA"), StartURL);
+		return;
+	}
+
 #endif
 
 	GotoInitialState();

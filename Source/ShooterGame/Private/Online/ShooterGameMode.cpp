@@ -29,8 +29,13 @@ AShooterGameMode::AShooterGameMode(const FObjectInitializer& ObjectInitializer) 
 
 	MinRespawnDelay = 5.0f;
 
-	bAllowBots = true;
-	bNeedsBotCreation = true;
+	bBenchmarkMode = FParse::Param(FCommandLine::Get(), TEXT("benchmark"));
+	if (bBenchmarkMode) {
+		UE_LOG(LogShooter, Warning, TEXT("Running benchmark"));
+	}
+
+	bAllowBots = !bBenchmarkMode;
+	bNeedsBotCreation = bBenchmarkMode;
 	bUseSeamlessTravel = FParse::Param(FCommandLine::Get(), TEXT("NoSeamlessTravel")) ? false : true;
 }
 
@@ -51,7 +56,9 @@ FString AShooterGameMode::GetBotsCountOptionName()
 void AShooterGameMode::InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage)
 {
 	const int32 BotsCountOptionValue = UGameplayStatics::GetIntOption(Options, GetBotsCountOptionName(), 0);
-	SetAllowBots(BotsCountOptionValue > 0 ? true : false, BotsCountOptionValue);
+	const bool allowBots = (!bBenchmarkMode) && (BotsCountOptionValue > 0 ? true : false);
+	const int32 botCount = allowBots ? BotsCountOptionValue : 0;
+	SetAllowBots(allowBots, botCount);
 	Super::InitGame(MapName, Options, ErrorMessage);
 
 	const UGameInstance* GameInstance = GetGameInstance();
@@ -165,7 +172,22 @@ void AShooterGameMode::HandleMatchHasStarted()
 	Super::HandleMatchHasStarted();
 
 	AShooterGameState* const MyGameState = Cast<AShooterGameState>(GameState);
-	MyGameState->RemainingTime = RoundTime;
+
+	uint32 timeout = RoundTime;
+	if (bBenchmarkMode) {
+		timeout = 60; // default timeout of 60 seconds for benchmark mode
+		UShooterGameInstance* const GameInstance = Cast<UShooterGameInstance>(GetGameInstance());
+		UGameViewportClient* const Viewport = GameInstance->GetGameViewportClient();
+		if (ensure(Viewport))
+		{
+			Viewport->ConsoleCommand("stat FPS");
+		}
+	}
+
+	// allow command line to override default timeouts
+	FParse::Value(FCommandLine::Get(), TEXT("timeout"), timeout);
+	MyGameState->RemainingTime = timeout;
+
 	StartBots();
 
 	// notify players
@@ -174,6 +196,9 @@ void AShooterGameMode::HandleMatchHasStarted()
 		AShooterPlayerController* PC = Cast<AShooterPlayerController>(*It);
 		if (PC)
 		{
+			if (bBenchmarkMode) {
+				PC->SetCinematicMode(true, false, false, true, true);
+			}
 			PC->ClientGameStarted();
 		}
 	}
@@ -189,28 +214,37 @@ void AShooterGameMode::FinishMatch()
 	AShooterGameState* const MyGameState = Cast<AShooterGameState>(GameState);
 	if (IsMatchInProgress())
 	{
-		EndMatch();
-		DetermineMatchWinner();
+		if (bBenchmarkMode) {
+			UShooterGameInstance* const GameInstance = Cast<UShooterGameInstance>(GetGameInstance());
+			UGameViewportClient* const Viewport = GameInstance->GetGameViewportClient();
+			if (ensure(Viewport))
+			{
+				Viewport->ConsoleCommand("quit");
+			}
+		} else {
+			EndMatch();
+			DetermineMatchWinner();
 
-		// notify players
-		for (FConstControllerIterator It = GetWorld()->GetControllerIterator(); It; ++It)
-		{
-			AShooterPlayerState* PlayerState = Cast<AShooterPlayerState>((*It)->PlayerState);
-			const bool bIsWinner = IsWinner(PlayerState);
+			// notify players
+			for (FConstControllerIterator It = GetWorld()->GetControllerIterator(); It; ++It)
+			{
+				AShooterPlayerState* PlayerState = Cast<AShooterPlayerState>((*It)->PlayerState);
+				const bool bIsWinner = IsWinner(PlayerState);
 
-			(*It)->GameHasEnded(NULL, bIsWinner);
+				(*It)->GameHasEnded(NULL, bIsWinner);
+			}
+
+			// lock all pawns
+			// pawns are not marked as keep for seamless travel, so we will create new pawns on the next match rather than
+			// turning these back on.
+			for (APawn* Pawn : TActorRange<APawn>(GetWorld()))
+			{
+				Pawn->TurnOff();
+			}
+
+			// set up to restart the match
+			MyGameState->RemainingTime = TimeBetweenMatches;
 		}
-
-		// lock all pawns
-		// pawns are not marked as keep for seamless travel, so we will create new pawns on the next match rather than
-		// turning these back on.
-		for (APawn* Pawn : TActorRange<APawn>(GetWorld()))
-		{
-			Pawn->TurnOff();
-		}
-
-		// set up to restart the match
-		MyGameState->RemainingTime = TimeBetweenMatches;
 	}
 }
 
@@ -436,6 +470,10 @@ bool AShooterGameMode::IsSpawnpointAllowed(APlayerStart* SpawnPoint, AController
 	AShooterTeamStart* ShooterSpawnPoint = Cast<AShooterTeamStart>(SpawnPoint);
 	if (ShooterSpawnPoint)
 	{
+		if (bBenchmarkMode) {
+			return ShooterSpawnPoint->PlayerStartTag == FName(TEXT("Benchmark"));
+		}
+
 		AShooterAIController* AIController = Cast<AShooterAIController>(Player);
 		if (ShooterSpawnPoint->bNotForBots && AIController)
 		{
