@@ -1,7 +1,7 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
-#include "ShooterGame.h"
 #include "SShooterScoreboardWidget.h"
+#include "ShooterGame.h"
 #include "ShooterStyle.h"
 #include "ShooterScoreboardWidgetStyle.h"
 #include "ShooterUIHelpers.h"

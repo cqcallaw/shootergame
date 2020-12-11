@@ -1,8 +1,8 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
-#include "ShooterGame.h"
 #include "ShooterStyle.h"
-#include "SlateGameResources.h"
+#include "ShooterGame.h"
+#include "Slate/SlateGameResources.h"
 
 TSharedPtr< FSlateStyleSet > FShooterStyle::ShooterStyleInstance = NULL;
 

@@ -7,6 +7,9 @@ public class ShooterGameEditorTarget : TargetRules
 {
 	public ShooterGameEditorTarget(TargetInfo Target) : base(Target)
 	{
+		DefaultBuildSettings = BuildSettingsVersion.V2;
+		bLegacyPublicIncludePaths = true;
+		ShadowVariableWarningLevel = WarningLevel.Error;
 		Type = TargetType.Editor;
 
 		ExtraModuleNames.Add("ShooterGame");

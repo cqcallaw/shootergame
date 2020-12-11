@@ -1,7 +1,7 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
+#include "Online/ShooterOnlineSessionClient.h"
 #include "ShooterGame.h"
-#include "ShooterOnlineSessionClient.h"
 #include "ShooterGameInstance.h"
 
 UShooterOnlineSessionClient::UShooterOnlineSessionClient()
@@ -48,13 +48,5 @@ void UShooterOnlineSessionClient::OnSessionUserInviteAccepted(
 
 		ShooterGameInstance->SetPendingInvite(PendingInvite);
 		ShooterGameInstance->GotoState(ShooterGameInstanceState::PendingInvite);
-	}
-}
-
-void UShooterOnlineSessionClient::OnPlayTogetherEventReceived(int32 UserIndex, TArray<TSharedPtr<const FUniqueNetId>> UserIdList)
-{
-	if (UShooterGameInstance* const ShooterGameInstance = Cast<UShooterGameInstance>(GetGameInstance()))
-	{
-		ShooterGameInstance->OnPlayTogetherEventReceived(UserIndex, UserIdList);
 	}
 }

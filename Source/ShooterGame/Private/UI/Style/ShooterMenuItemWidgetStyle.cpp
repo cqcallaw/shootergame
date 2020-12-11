@@ -1,7 +1,7 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
-#include "ShooterGame.h"
 #include "ShooterMenuItemWidgetStyle.h"
+#include "ShooterGame.h"
 
 FShooterMenuItemStyle::FShooterMenuItemStyle()
 {

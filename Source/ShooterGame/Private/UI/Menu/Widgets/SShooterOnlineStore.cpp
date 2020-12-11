@@ -1,8 +1,8 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
-#include "ShooterGame.h"
 #include "SShooterOnlineStore.h"
-#include "SHeaderRow.h"
+#include "ShooterGame.h"
+#include "Widgets/Views/SHeaderRow.h"
 #include "ShooterStyle.h"
 #include "ShooterGameLoadingScreen.h"
 #include "ShooterGameInstance.h"
@@ -31,7 +31,7 @@ void SShooterOnlineStore::Construct(const FArguments& InArgs)
 		[
 			SNew(SBox)
 			.WidthOverride(600)
-			.HeightOverride(300)
+			.HeightOverride(250)
 			[
 				SAssignNew(OfferListWidget, SListView<TSharedPtr<FStoreEntry>>)
 				.ItemHeight(20)
@@ -356,7 +356,13 @@ void SShooterOnlineStore::MoveSelection(int32 MoveBy)
 
 	if (SelectedItemIndex+MoveBy > -1 && SelectedItemIndex+MoveBy < OfferList.Num())
 	{
-		OfferListWidget->SetSelection(OfferList[SelectedItemIndex+MoveBy]);
+		TSharedPtr<FStoreEntry> NewSelectedItem = OfferList[SelectedItemIndex + MoveBy];
+		OfferListWidget->SetSelection(NewSelectedItem);
+
+		if (!OfferListWidget->IsItemVisible(NewSelectedItem))
+		{
+			OfferListWidget->RequestScrollIntoView(NewSelectedItem);
+		}
 	}
 }
 

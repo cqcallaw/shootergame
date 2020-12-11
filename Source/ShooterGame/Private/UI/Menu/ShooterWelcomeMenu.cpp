@@ -1,7 +1,7 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
-#include "ShooterGame.h"
 #include "ShooterWelcomeMenu.h"
+#include "ShooterGame.h"
 #include "ShooterStyle.h"
 #include "SShooterConfirmationDialog.h"
 #include "ShooterGameViewportClient.h"
@@ -68,8 +68,10 @@ class SShooterWelcomeMenuWidget : public SCompoundWidget
 				.Text( LOCTEXT("PressStartPS4", "PRESS CROSS BUTTON TO PLAY" ) )
 #elif PLATFORM_SWITCH
 				.Text(LOCTEXT("PressStartSwitch", "PRESS <img src=\"ShooterGame.Switch.Right\"/> TO PLAY"))
-#else
+#elif SHOOTER_XBOX_STRINGS
 				.Text( LOCTEXT("PressStartXboxOne", "PRESS A TO PLAY" ) )
+#else
+				.Text( LOCTEXT("PressStartPC", "PRESS ENTER TO PLAY" ) )
 #endif
 				.TextStyle( FShooterStyle::Get(), "ShooterGame.WelcomeScreen.WelcomeTextStyle" )
 				.DecoratorStyleSet(&FShooterStyle::Get())
@@ -268,8 +270,13 @@ void FShooterWelcomeMenu::HandleLoginUIClosed(TSharedPtr<const FUniqueNetId> Uni
 				nullptr,
 				EShooterDialogType::Generic,
 				NSLOCTEXT("ProfileMessages", "ProgressWillNotBeSaved", "If you continue without signing in, your progress will not be saved."),
+#if SHOOTER_XBOX_STRINGS
 				NSLOCTEXT("DialogButtons", "AContinue", "A - Continue"),
 				NSLOCTEXT("DialogButtons", "BBack", "B - Back"),
+#else
+				NSLOCTEXT("DialogButtons", "EnterContinue", "Enter - Continue"),
+				NSLOCTEXT("DialogButtons", "EscBack", "Esc - Back"),
+#endif
 				FOnClicked::CreateRaw(this, &FShooterWelcomeMenu::OnContinueWithoutSavingConfirm),
 				FOnClicked::CreateRaw(this, &FShooterWelcomeMenu::OnConfirmGeneric)
 			);

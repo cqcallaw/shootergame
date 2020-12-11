@@ -1,7 +1,7 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
-#include "ShooterGame.h"
 #include "ShooterGameUserSettings.h"
+#include "ShooterGame.h"
 
 UShooterGameUserSettings::UShooterGameUserSettings(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -16,6 +16,7 @@ void UShooterGameUserSettings::SetToDefaults()
 	GraphicsQuality = 1;
 	bIsLanMatch = true;
 	bIsDedicatedServer = false;
+	bIsForceSystemResolution = false;
 }
 
 void UShooterGameUserSettings::ApplySettings(bool bCheckForCommandLineOverrides)

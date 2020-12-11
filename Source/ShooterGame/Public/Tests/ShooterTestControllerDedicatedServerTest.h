@@ -2,7 +2,7 @@
 #pragma once
 
 #include "ShooterTestControllerBase.h"
-#include "SharedPointer.h"
+#include "Templates/SharedPointer.h"
 #include "ShooterTestControllerDedicatedServerTest.generated.h"
 
 UCLASS()

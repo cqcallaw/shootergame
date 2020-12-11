@@ -1,9 +1,9 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
+#include "ShooterMessageMenu.h"
 #include "ShooterGame.h"
 #include "ShooterStyle.h"
 #include "SShooterConfirmationDialog.h"
-#include "ShooterMessageMenu.h"
 #include "ShooterGameViewportClient.h"
 #include "ShooterGameInstance.h"
 

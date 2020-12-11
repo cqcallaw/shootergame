@@ -1,11 +1,11 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
-#include "ShooterGame.h"
 #include "ShooterIngameMenu.h"
+#include "ShooterGame.h"
 #include "ShooterStyle.h"
 #include "ShooterMenuSoundsWidgetStyle.h"
 #include "Online.h"
-#include "OnlineExternalUIInterface.h"
+#include "Interfaces/OnlineExternalUIInterface.h"
 #include "ShooterGameInstance.h"
 #include "UI/ShooterHUD.h"
 #include "OnlineSubsystemUtils.h"
@@ -21,7 +21,6 @@
 #if !defined(FRIENDS_IN_INGAME_MENU)
 	#define FRIENDS_IN_INGAME_MENU 1
 #endif
-
 
 void FShooterIngameMenu::Construct(ULocalPlayer* _PlayerOwner)
 {
@@ -84,7 +83,7 @@ void FShooterIngameMenu::Construct(ULocalPlayer* _PlayerOwner)
 			MenuHelper::AddExistingMenuItem(RootMenuItem, ShooterRecentlyMet->RecentlyMetItem.ToSharedRef());
 #endif
 
-#if SHOOTER_CONSOLE_UI
+#if SHOOTER_CONSOLE_UI && INVITE_ONLINE_GAME_ENABLED
 			TSharedPtr<FShooterMenuItem> ShowInvitesItem = MenuHelper::AddMenuItem(RootMenuItem, LOCTEXT("Invite Players", "INVITE PLAYERS (via System UI)"));
 			ShowInvitesItem->OnConfirmMenuItem.BindRaw(this, &FShooterIngameMenu::OnShowInviteUI);
 #endif
@@ -226,7 +225,11 @@ void FShooterIngameMenu::ToggleGameMenu()
 			// Disable controls while paused
 			PCOwner->SetCinematicMode(true, false, false, true, true);
 
-			PCOwner->SetPause(true);
+			if (PCOwner->SetPause(true))
+			{
+				UShooterGameInstance* GameInstance = Cast<UShooterGameInstance>(PlayerOwner->GetGameInstance());
+				GameInstance->SetPresenceForLocalPlayers(FString(TEXT("On Pause")), FVariantData(FString(TEXT("Paused"))));
+			}
 
 			FInputModeGameAndUI InputMode;
 			PCOwner->SetInputMode(InputMode);
@@ -240,6 +243,12 @@ void FShooterIngameMenu::ToggleGameMenu()
 		{
 			// Make sure viewport has focus
 			FSlateApplication::Get().SetAllUserFocusToGameViewport();
+
+			if (PCOwner->SetPause(false))
+			{
+				UShooterGameInstance* GameInstance = Cast<UShooterGameInstance>(PlayerOwner->GetGameInstance());
+				GameInstance->SetPresenceForLocalPlayers(FString(TEXT("In Game")), FVariantData(FString(TEXT("InGame"))));
+			}
 
 			// Don't renable controls if the match is over
 			AShooterHUD* const ShooterHUD = PCOwner->GetShooterHUD();

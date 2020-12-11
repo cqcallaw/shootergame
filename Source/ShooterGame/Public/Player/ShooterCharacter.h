@@ -132,6 +132,13 @@ class AShooterCharacter : public ACharacter
 	virtual void SetupPlayerInputComponent(class UInputComponent* InputComponent) override;
 
 	/**
+	* Handle analog trigger for firing
+	*
+	* @param Val trigger input to apply
+	*/
+	void FireTrigger(float Val);
+
+	/**
 	* Move forward/back
 	*
 	* @param Val Movment input to apply

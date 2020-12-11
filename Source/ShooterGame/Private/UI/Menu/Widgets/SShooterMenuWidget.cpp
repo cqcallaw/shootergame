@@ -1,8 +1,8 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
+#include "SShooterMenuWidget.h"
 #include "ShooterGame.h"
 #include "Engine/Console.h"
-#include "SShooterMenuWidget.h"
 #include "ShooterMenuItem.h"
 #include "SShooterMenuItem.h"
 #include "ShooterStyle.h"
@@ -908,7 +908,7 @@ FReply SShooterMenuWidget::OnKeyDown(const FGeometry& MyGeometry, const FKeyEven
 			ChangeOption(1);
 			Result = FReply::Handled();
 		}
-		else if (Key == EKeys::Gamepad_FaceButton_Top)
+		else if (Key == EKeys::Gamepad_FaceButton_Top || Key == EKeys::SpaceBar)
 		{
 			ProfileUISwap(UserIndex);
 			Result = FReply::Handled();

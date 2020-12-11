@@ -1,11 +1,15 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
+#include "SShooterConfirmationDialog.h"
 #include "ShooterGame.h"
 #include "ShooterStyle.h"
-#include "SShooterConfirmationDialog.h"
 #include "ShooterMenuItemWidgetStyle.h"
 #include "ShooterGameInstance.h"
 #include "OnlineSubsystemUtils.h"
+
+#if !defined(SHOOTER_CONTROLLER_DISCONNECT_STRICT)
+	#define SHOOTER_CONTROLLER_DISCONNECT_STRICT 0
+#endif
 
 void SShooterConfirmationDialog::Construct( const FArguments& InArgs )
 {
@@ -152,7 +156,7 @@ FReply SShooterConfirmationDialog::ExecuteConfirm(const int32 UserIndex)
 	if (OnConfirm.IsBound())
 	{
 		//these two cases should be combined when we move to using PlatformUserIDs rather than ControllerIDs.
-#if PLATFORM_PS4
+#if PLATFORM_PS4 || SHOOTER_CONTROLLER_DISCONNECT_STRICT
 		bool bExecute = false;
 		// For controller reconnection, bind the confirming controller to the owner of this dialog
 		if (DialogType == EShooterDialogType::ControllerDisconnected && PlayerOwner != nullptr)
@@ -166,11 +170,27 @@ FReply SShooterConfirmationDialog::ExecuteConfirm(const int32 UserIndex)
 					TSharedPtr<const FUniqueNetId> IncomingUserId = IdentityInterface->GetUniquePlayerId(UserIndex);
 					FUniqueNetIdRepl DisconnectedId = PlayerOwner->GetCachedUniqueNetId();
 
-					if (*IncomingUserId == *DisconnectedId)
+					if (DisconnectedId.IsValid() && IncomingUserId.IsValid() && *IncomingUserId == *DisconnectedId)
 					{
 						PlayerOwner->SetControllerId(UserIndex);
 						bExecute = true;
 					}
+#if SHOOTER_CONTROLLER_PAIRING_PROMPT_FOR_NEW_USER_WHEN_RECONNECTING
+					else if (PlayerOwner->GetCachedUniqueNetId().IsValid()) //only show account picker if there is a user signed in
+					{
+						const IOnlineExternalUIPtr ExternalUIInterface = OnlineSub->GetExternalUIInterface();
+						if (ExternalUIInterface.IsValid())
+						{
+							ExternalUIInterface->ShowLoginUI(UserIndex, false, true, nullptr);
+						}
+					}
+					else
+					{
+						// no signed in user - just bind to this controller
+						PlayerOwner->SetControllerId(UserIndex);
+						bExecute = true;
+					}
+#endif
 				}
 			}
 		}

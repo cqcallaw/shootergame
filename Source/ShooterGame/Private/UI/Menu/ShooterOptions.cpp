@@ -1,7 +1,7 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
-#include "ShooterGame.h"
 #include "ShooterOptions.h"
+#include "ShooterGame.h"
 #include "ShooterTypes.h"
 #include "ShooterStyle.h"
 #include "ShooterOptionsWidgetStyle.h"
@@ -97,9 +97,18 @@ void FShooterOptions::Construct(ULocalPlayer* InPlayerOwner)
 	VibrationOption->SelectedMultiChoice = 1;
 
 	UserSettings = CastChecked<UShooterGameUserSettings>(GEngine->GetGameUserSettings());
-	ResolutionOpt = UserSettings->GetScreenResolution();
 	bFullScreenOpt = UserSettings->GetFullscreenMode();
 	GraphicsQualityOpt = UserSettings->GetGraphicsQuality();
+
+	if (UserSettings->IsForceSystemResolution())
+	{
+		// store the current system resolution
+	 	ResolutionOpt = FIntPoint(GSystemResolution.ResX, GSystemResolution.ResY);
+	}
+	else
+	{
+		ResolutionOpt = UserSettings->GetScreenResolution();
+	}
 
 	UShooterPersistentUser* PersistentUser = GetPersistentUser();
 	if(PersistentUser)
@@ -157,6 +166,11 @@ void FShooterOptions::ApplySettings()
 		PersistentUser->SaveIfDirty();
 	}
 
+	if (UserSettings->IsForceSystemResolution())
+	{
+		// store the current system resolution
+		ResolutionOpt = FIntPoint(GSystemResolution.ResX, GSystemResolution.ResY);
+	}
 	UserSettings->SetScreenResolution(ResolutionOpt);
 	UserSettings->SetFullscreenMode(bFullScreenOpt);
 	UserSettings->SetGraphicsQuality(GraphicsQualityOpt);

@@ -1,7 +1,7 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
+#include "Online/ShooterOnlineGameSettings.h"
 #include "ShooterGame.h"
-#include "ShooterOnlineGameSettings.h"
 
 
 FShooterOnlineSessionSettings::FShooterOnlineSessionSettings(bool bIsLAN, bool bIsPresence, int32 MaxNumPlayers)

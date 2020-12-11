@@ -1,8 +1,8 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
+#include "Online/ShooterGameSession.h"
 #include "ShooterGame.h"
-#include "ShooterGameSession.h"
-#include "ShooterOnlineGameSettings.h"
+#include "Online/ShooterOnlineGameSettings.h"
 #include "OnlineSubsystemSessionSettings.h"
 #include "OnlineSubsystemUtils.h"
 
@@ -218,6 +218,11 @@ bool AShooterGameSession::HostSession(TSharedPtr<const FUniqueNetId> UserId, FNa
 			HostSettings->Set(SETTING_MATCHING_HOPPER, FString("TeamDeathmatch"), EOnlineDataAdvertisementType::DontAdvertise);
 			HostSettings->Set(SETTING_MATCHING_TIMEOUT, 120.0f, EOnlineDataAdvertisementType::ViaOnlineService);
 			HostSettings->Set(SETTING_SESSION_TEMPLATE_NAME, FString("GameSession"), EOnlineDataAdvertisementType::DontAdvertise);
+			if (UserId->IsValid())
+			{
+				FSessionSettings & UserSettings =  HostSettings->MemberSettings.Add(UserId.ToSharedRef(), FSessionSettings());
+				UserSettings.Add(SETTING_GAMEMODE, FOnlineSessionSetting(FString("GameSession"), EOnlineDataAdvertisementType::ViaOnlineService));
+			}
 
 #if !PLATFORM_SWITCH
 			// On Switch, we don't have room for this in the session data (and it's not used anyway when searching), so there's no need to add it.

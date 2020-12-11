@@ -76,8 +76,8 @@
 *
 */
 
-#include "ShooterGame.h"
 #include "ShooterReplicationGraph.h"
+#include "ShooterGame.h"
 
 #include "Net/UnrealNetwork.h"
 #include "Engine/LevelStreaming.h"
@@ -604,7 +604,7 @@ void UShooterReplicationGraphNode_AlwaysRelevant_ForConnection::GatherActorLists
 		if (AShooterPlayerController* PC = Cast<AShooterPlayerController>(CurViewer.InViewer))
 		{
 			// 50% throttling of PlayerStates.
-			const bool bReplicatePS = (Params.ConnectionManager.ConnectionId % 2) == (Params.ReplicationFrameNum % 2);
+			const bool bReplicatePS = (Params.ConnectionManager.ConnectionOrderNum % 2) == (Params.ReplicationFrameNum % 2);
 			if (bReplicatePS)
 			{
 				// Always return the player state to the owning player. Simulated proxy player states are handled by UShooterReplicationGraphNode_PlayerStateFrequencyLimiter

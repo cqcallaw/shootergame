@@ -3,7 +3,7 @@
 
 #include "GauntletTestController.h"
 #include "ShooterGameInstance.h"
-#include "SharedPointer.h"
+#include "Templates/SharedPointer.h"
 #include "OnlineSessionSettings.h"
 #include "ShooterTestControllerBase.generated.h"
 
@@ -33,7 +33,6 @@ protected:
 	uint8 bInQuickMatchSearch : 1;
 	uint8 bFoundQuickMatchGame : 1;
 	TSharedPtr<FOnlineSessionSearch> QuickMatchSearchSettings;
-	FDelegateHandle OnMatchmakingCompleteDelegateHandle;
 
 	// Game Search
 	uint8 bIsSearchingForGame : 1;
@@ -47,6 +46,7 @@ protected:
 
 	// Login
 	virtual void StartPlayerLoginProcess();
+	virtual void OnLoginUIClosed(TSharedPtr<const FUniqueNetId> UniqueId, const int ControllerIndex, const FOnlineError& Error = FOnlineError());
 	virtual void OnUserCanPlay(const FUniqueNetId& UserId, EUserPrivileges::Type Privilege, uint32 PrivilegeResults);
 
 	virtual void StartLoginTask();
@@ -55,12 +55,14 @@ protected:
 	virtual void StartOnlinePrivilegeTask();
 	virtual void OnUserCanPlayOnline(const FUniqueNetId& UserId, EUserPrivileges::Type Privilege, uint32 PrivilegeResults);
 
+	void CheckApplicationLicenseValid();
+
 	// Host Game
 	virtual void HostGame();
 
 	// Quick Match
 	virtual void StartQuickMatch();
-	void OnMatchmakingComplete(FName SessionName, bool bWasSuccessful);
+	void OnMatchmakingComplete(FName SessionName, const FOnlineError& ErrorDetails, const FSessionMatchmakingResults& Results);
 
 	// Game Search
 	virtual void StartSearchingForGame();

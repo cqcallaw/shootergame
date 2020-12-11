@@ -1,10 +1,10 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
-#include "ShooterGame.h"
 #include "ShooterGameViewportClient.h"
+#include "ShooterGame.h"
 #include "SShooterConfirmationDialog.h"
-#include "SSafeZone.h"
-#include "SThrobber.h"
+#include "Widgets/Layout/SSafeZone.h"
+#include "Widgets/Images/SThrobber.h"
 #include "Player/ShooterLocalPlayer.h"
 
 UShooterGameViewportClient::UShooterGameViewportClient(const FObjectInitializer& ObjectInitializer)

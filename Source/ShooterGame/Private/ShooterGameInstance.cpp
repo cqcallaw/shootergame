@@ -4,8 +4,8 @@
 	ShooterGameInstance.cpp
 =============================================================================*/
 
-#include "ShooterGame.h"
 #include "ShooterGameInstance.h"
+#include "ShooterGame.h"
 #include "ShooterMainMenu.h"
 #include "ShooterWelcomeMenu.h"
 #include "ShooterMessageMenu.h"
@@ -153,6 +153,15 @@ void UShooterGameInstance::Init()
 	TickDelegate = FTickerDelegate::CreateUObject(this, &UShooterGameInstance::Tick);
 	TickDelegateHandle = FTicker::GetCoreTicker().AddTicker(TickDelegate);
 
+	// Register activities delegate callback
+ 	OnGameActivityActivationRequestedDelegate = FOnGameActivityActivationRequestedDelegate::CreateUObject(this, &UShooterGameInstance::OnGameActivityActivationRequestComplete);
+
+ 	const IOnlineGameActivityPtr ActivityInterface = OnlineSub->GetGameActivityInterface();
+	if (ActivityInterface.IsValid())
+	{
+		OnGameActivityActivationRequestedDelegateHandle = ActivityInterface->AddOnGameActivityActivationRequestedDelegate_Handle(OnGameActivityActivationRequestedDelegate);
+	}
+
 	// Initialize the debug key with a set value for AES256. This is not secure and for example purposes only.
 	DebugTestEncryptionKey.SetNum(32);
 
@@ -165,6 +174,12 @@ void UShooterGameInstance::Init()
 void UShooterGameInstance::Shutdown()
 {
 	Super::Shutdown();
+
+	// Clear the activities delegate
+	if (IOnlineGameActivityPtr ActivityInterface = IOnlineSubsystem::Get()->GetGameActivityInterface())
+	{
+		ActivityInterface->ClearOnGameActivityActivationRequestedDelegate_Handle(OnGameActivityActivationRequestedDelegateHandle);
+	}
 
 	// Unregister ticker delegate
 	FTicker::GetCoreTicker().RemoveTicker(TickDelegateHandle);
@@ -283,28 +298,6 @@ void UShooterGameInstance::OnUserCanPlayInvite(const FUniqueNetId& UserId, EUser
 	}
 }
 
-void UShooterGameInstance::OnUserCanPlayTogether(const FUniqueNetId& UserId, EUserPrivileges::Type Privilege, uint32 PrivilegeResults)
-{
-	CleanupOnlinePrivilegeTask();
-	if (WelcomeMenuUI.IsValid())
-	{
-		WelcomeMenuUI->LockControls(false);
-	}
-
-	if (PrivilegeResults == (uint32)IOnlineIdentity::EPrivilegeResults::NoFailures)
-	{
-		if (WelcomeMenuUI.IsValid())
-		{
-			WelcomeMenuUI->SetControllerAndAdvanceToMainMenu(PlayTogetherInfo.UserIndex);
-		}
-	}
-	else
-	{
-		DisplayOnlinePrivilegeFailureDialogs(UserId, Privilege, PrivilegeResults);
-		GotoState(ShooterGameInstanceState::WelcomeScreen);
-	}
-}
-
 void UShooterGameInstance::OnPostDemoPlay()
 {
 	GotoState( ShooterGameInstanceState::Playing );
@@ -374,11 +367,11 @@ void UShooterGameInstance::StartGameInstance()
 
 	// handle benchmark start
 	if (FParse::Param(FCommandLine::Get(), TEXT("benchmark"))) {
-			const FString StartURL = FString::Printf(TEXT("/Game/Maps/Highrise?game=FFA"));
-			SetOnlineMode(EOnlineMode::Offline);
-			// Game instance will handle success, failure and dialogs
-			this->HostGame(nullptr, TEXT("FFA"), StartURL);
-			return;
+		const FString StartURL = FString::Printf(TEXT("/Game/Maps/Highrise?game=FFA"));
+		SetOnlineMode(EOnlineMode::Offline);
+		// Game instance will handle success, failure and dialogs
+		this->HostGame(nullptr, TEXT("FFA"), StartURL);
+		return;
 	}
 
 #endif
@@ -782,14 +775,6 @@ void UShooterGameInstance::BeginMainMenuState()
 	MainMenuUI = MakeShareable(new FShooterMainMenu());
 	MainMenuUI->Construct(this, Player);
 	MainMenuUI->AddMenuToGameViewport();
-
-	// It's possible that a play together event was sent by the system while the player was in-game or didn't
-	// have the application launched. The game will automatically go directly to the main menu state in those cases
-	// so this will handle Play Together if that is why we transitioned here.
-	if (PlayTogetherInfo.UserIndex != -1)
-	{
-		MainMenuUI->OnPlayTogetherEventReceived();
-	}
 
 #if !SHOOTER_CONSOLE_UI
 	// The cached unique net ID is usually set on the welcome screen, but there isn't
@@ -1360,8 +1345,10 @@ bool UShooterGameInstance::Tick(float DeltaSeconds)
 						FText::Format(NSLOCTEXT("ProfileMessages", "PlayerReconnectControllerFmt", "Player {0}, please reconnect your controller."), FText::AsNumber(i + 1)),
 #if PLATFORM_PS4
 						NSLOCTEXT("DialogButtons", "PS4_CrossButtonContinue", "Cross Button - Continue"),
-#else
+#elif SHOOTER_XBOX_STRINGS
 						NSLOCTEXT("DialogButtons", "AButtonContinue", "A - Continue"),
+#else
+						NSLOCTEXT("DialogButtons", "EnterContinue", "Enter - Continue"),
 #endif
 						FText::GetEmpty(),
 						FOnClicked::CreateUObject(this, &UShooterGameInstance::OnControllerReconnectConfirm),
@@ -1659,7 +1646,7 @@ void UShooterGameInstance::HandleControllerPairingChanged(int GameUserIndex, FCo
 		return;
 	}
 
-	if ( PreviousUser.IsValid() && !NewUser.IsValid() )
+	if ( PreviousUser.IsValid() && !NewUser.IsValid() && SHOOTER_CONTROLLER_PAIRING_ON_DISCONNECT )
 	{
 		// Treat this as a disconnect or signout, which is handled somewhere else
 		return;
@@ -2077,9 +2064,6 @@ void UShooterGameInstance::FinishSessionCreation(EOnJoinSessionCompleteResult::T
 {
 	if (Result == EOnJoinSessionCompleteResult::Success)
 	{
-		// This will send any Play Together invites if necessary, or do nothing.
-		SendPlayTogetherInvites();
-
 		// Travel to the specified match URL
 		GetWorld()->ServerTravel(TravelURL);
 	}
@@ -2104,69 +2088,6 @@ void UShooterGameInstance::BeginHostingQuickMatch()
 
 	// Travel to the specified match URL
 	GetWorld()->ServerTravel(GetQuickMatchUrl());
-}
-
-void UShooterGameInstance::OnPlayTogetherEventReceived(const int32 UserIndex, const TArray<TSharedPtr<const FUniqueNetId>>& UserIdList)
-{
-	PlayTogetherInfo = FShooterPlayTogetherInfo(UserIndex, UserIdList);
-
-	const IOnlineSubsystem* const OnlineSub = Online::GetSubsystem(GetWorld());
-	check(OnlineSub);
-
-	const IOnlineSessionPtr SessionInterface = OnlineSub->GetSessionInterface();
-	check(SessionInterface.IsValid());
-
-	// If we have available slots to accomedate the whole party in our current sessions, we should send invites to the existing one
-	// instead of a new one according to Sony's best practices.
-	const FNamedOnlineSession* const Session = SessionInterface->GetNamedSession(NAME_GameSession);
-	if (Session != nullptr && Session->NumOpenPrivateConnections + Session->NumOpenPublicConnections >= UserIdList.Num())
-	{
-		SendPlayTogetherInvites();
-	}
-	// Always handle Play Together in the main menu since the player has session customization options.
-	else if (CurrentState == ShooterGameInstanceState::MainMenu)
-	{
-		MainMenuUI->OnPlayTogetherEventReceived();
-	}
-	else if (CurrentState == ShooterGameInstanceState::WelcomeScreen)
-	{
-		StartOnlinePrivilegeTask(IOnlineIdentity::FOnGetUserPrivilegeCompleteDelegate::CreateUObject(this, &UShooterGameInstance::OnUserCanPlayTogether), EUserPrivileges::CanPlayOnline, PendingInvite.UserId);
-	}
-	else
-	{
-		GotoState(ShooterGameInstanceState::MainMenu);
-	}
-}
-
-void UShooterGameInstance::SendPlayTogetherInvites()
-{
-	const IOnlineSubsystem* const OnlineSub = Online::GetSubsystem(GetWorld());
-	check(OnlineSub);
-
-	const IOnlineSessionPtr SessionInterface = OnlineSub->GetSessionInterface();
-	check(SessionInterface.IsValid());
-
-	if (PlayTogetherInfo.UserIndex != -1)
-	{
-		for (const ULocalPlayer* LocalPlayer : LocalPlayers)
-		{
-			if (LocalPlayer->GetControllerId() == PlayTogetherInfo.UserIndex)
-			{
-				FUniqueNetIdRepl PlayerId = LocalPlayer->GetPreferredUniqueNetId();
-				if (PlayerId.IsValid())
-				{
-					// Automatically send invites to friends in the player's PS4 party to conform with Play Together requirements
-					for (const TSharedPtr<const FUniqueNetId>& FriendId : PlayTogetherInfo.UserIdList)
-					{
-						SessionInterface->SendSessionInviteToFriend(*PlayerId, NAME_GameSession, *FriendId.ToSharedRef());
-					}
-				}
-
-			}
-		}
-
-		PlayTogetherInfo = FShooterPlayTogetherInfo();
-	}
 }
 
 void UShooterGameInstance::ReceivedNetworkEncryptionToken(const FString& EncryptionToken, const FOnEncryptionKeyResponse& Delegate)
@@ -2206,4 +2127,20 @@ void UShooterGameInstance::ReceivedNetworkEncryptionAck(const FOnEncryptionKeyRe
 	Response.EncryptionData.Key = DebugTestEncryptionKey;
 
 	Delegate.ExecuteIfBound(Response);
+}
+
+void UShooterGameInstance::OnGameActivityActivationRequestComplete(const FUniqueNetId& PlayerId, const FString& ActivityId, const FOnlineSessionSearchResult* SessionInfo)
+{
+	if (WelcomeMenuUI.IsValid())
+	{
+		WelcomeMenuUI->LockControls(false);
+
+		IOnlineSubsystem* OnlineSub = Online::GetSubsystem(GetWorld());
+		check(OnlineSub);
+		const IOnlineIdentityPtr IdentityInterface = OnlineSub->GetIdentityInterface();
+		check(IdentityInterface.IsValid());
+		int32 LocalPlayerNum = IdentityInterface->GetPlatformUserIdFromUniqueNetId(PlayerId);
+		WelcomeMenuUI->SetControllerAndAdvanceToMainMenu(LocalPlayerNum);
+	}
+
 }

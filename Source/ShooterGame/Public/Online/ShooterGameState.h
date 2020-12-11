@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "ShooterOnlineGameMatches.h"
 #include "ShooterGameState.generated.h"
 
 /** ranked PlayerState map, created from the GameState */
@@ -34,4 +35,16 @@ public:
 	void GetRankedMap(int32 TeamIndex, RankedPlayerMap& OutRankedMap) const;
 
 	void RequestFinishAndExitToMainMenu();
+
+	virtual void HandleMatchHasStarted() override;
+	virtual void HandleMatchHasEnded() override;
+
+protected:
+	UPROPERTY(config)
+	FString ActivityId;
+
+	UPROPERTY(config)
+	bool bEnableGameFeedback;
+
+	FShooterOnlineGameMatches GameMatches;
 };

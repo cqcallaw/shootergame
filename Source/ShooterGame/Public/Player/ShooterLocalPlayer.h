@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "ShooterPersistentUser.h"
+#include "Player/ShooterPersistentUser.h"
 #include "ShooterLocalPlayer.generated.h"
 
 UCLASS(config=Engine, transient)

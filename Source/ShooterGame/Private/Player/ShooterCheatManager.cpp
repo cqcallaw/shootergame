@@ -1,7 +1,7 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
-#include "ShooterGame.h"
 #include "Player/ShooterCheatManager.h"
+#include "ShooterGame.h"
 #include "Online/ShooterPlayerState.h"
 #include "Bots/ShooterAIController.h"
 
