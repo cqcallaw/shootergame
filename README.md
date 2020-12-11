@@ -28,6 +28,8 @@ The Unreal Engine Shooter Game demo with quality-of-life improvements. Improveme
 
    ```bash
    cd ~/src
+   # make sure git-lfs is initialized; see https://www.atlassian.com/git/tutorials/git-lfs#installing-git-lfs
+   git lfs install
    git clone https://github.com/cqcallaw/shootergame.git
    ```
 
@@ -53,8 +55,9 @@ The Unreal Engine Shooter Game demo with quality-of-life improvements. Improveme
 
 1. [Setup Visual Studio](https://docs.unrealengine.com/en-US/Programming/Development/VisualStudioSetup/index.html) (the Community edition works)
 2. Download and launch Unreal Engine 4
-3. Open the ShooterGame.uproject project
-4. Click File->Generate Visual Studio Solution
+3. Clone the ShooterGame project (Git LFS is required; Github Desktop works well)
+4. Open the ShooterGame.uproject project
+5. Click File->Generate Visual Studio Solution
 
 ## Command Line Options
 
