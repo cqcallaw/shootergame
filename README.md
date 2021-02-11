@@ -1,8 +1,20 @@
 # Unreal Engine 4 Shooter Game Demo
 
-The Unreal Engine Shooter Game demo with quality-of-life improvements. Improvements are licensed under [the MIT license](https://opensource.org/licenses/MIT)
+The Unreal Engine Shooter Game demo with quality-of-life improvements. Improvements are licensed under [the MIT license](https://opensource.org/licenses/MIT).
 
-## Linux Setup
+## Command Line Options
+
+`-vulkan`: Render the game using the Vulkan graphics API (supported on Linux and Windows)
+
+`-dx11`: Render the game using the DX11 graphics API (supported on Windows only)
+
+`-dx12`: Render the game using the DX12 graphics API (supported on Windows only)
+
+`-benchmark`: Launch the Shooter game in benchmarking mode. In this mode, the game will launch directly into a Free-for-All match with no bots
+
+`-timeout`: Exit benchmark after the specified number of seconds. Default: 60
+
+## Linux Build Setup
 
 1. Clone Unreal Engine 4 from source:
 
@@ -51,7 +63,7 @@ The Unreal Engine Shooter Game demo with quality-of-life improvements. Improveme
    ~/src/UnrealEngine/Engine/Binaries/Linux/UE4Editor ~/src/shootergame/ShooterGame.uproject
    ```
 
-## Windows Setup
+## Windows Build Setup
 
 1. [Setup Visual Studio](https://docs.unrealengine.com/en-US/Programming/Development/VisualStudioSetup/index.html) (the Community edition works)
 2. Download and launch Unreal Engine 4
@@ -59,14 +71,9 @@ The Unreal Engine Shooter Game demo with quality-of-life improvements. Improveme
 4. Open the ShooterGame.uproject project
 5. Click File->Generate Visual Studio Solution
 
-## Command Line Options
+## Build FAQ
 
-`-vulkan`: Render the game using the Vulkan graphics API (supported on Linux and Windows)
-
-`-dx11`: Render the game using the DX11 graphics API (supported on Windows only)
-
-`-dx12`: Render the game using the DX12 graphics API (supported on Windows only)
-
-`-benchmark`: Launch the Shooter game in benchmarking mode. In this mode, the game will launch directly into a Free-for-All match with no bots
-
-`-timeout`: Exit benchmark after the specified number of seconds. Default: 60
+* Why does time run too fast in-game?
+  * Non-Shipping and builds that without complete lighting can exhibit this behavior. Try a lighting rebuild and building a Shipping binary.
+* Why is the player start position random?
+  * Verify that benchmark mode has been enabled with the `-benchmark` command-line argument. Without this flag, the game behaves as normal Shooter Game demo.
