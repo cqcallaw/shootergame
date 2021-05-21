@@ -1,6 +1,6 @@
 # Unreal Engine 4 Shooter Game Demo
 
-The Unreal Engine Shooter Game demo with quality-of-life improvements. Improvements are licensed under [the MIT license](https://opensource.org/licenses/MIT).
+The Unreal Engine Shooter Game demo with quality-of-life improvements. Improvements are licensed under the [MIT license](https://opensource.org/licenses/MIT).
 
 ## Command Line Options
 
@@ -13,6 +13,10 @@ The Unreal Engine Shooter Game demo with quality-of-life improvements. Improveme
 `-benchmark`: Launch the Shooter game in benchmarking mode. In this mode, the game will launch directly into a Free-for-All match with no bots
 
 `-timeout`: Exit benchmark after the specified number of seconds. Default: 60
+
+## Releases
+
+Prebuilt binary packages for Linux and Windows are available on the [GitHub Releases page](https://github.com/cqcallaw/shootergame/releases).
 
 ## Linux Build Setup
 
